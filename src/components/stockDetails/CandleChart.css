@@ -1,0 +1,4 @@
+.chart-container .apexcharts-yaxis{
+    width: 50px !important;
+    border: 1px solid black !important;
+}

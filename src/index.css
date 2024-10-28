@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Pretendard'; /* 사용할 폰트의 이름을 정의 */
+    src: url('./fonts/Pretendard-Medium.ttf'); /* 폰트 파일의 위치 */
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body{
+    font-family: "Pretendard";
+}
+
+*:-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
