@@ -36,6 +36,8 @@ function TopNavBar({ color }: TopNavBarProps) {
 
   const goToHome = () => {
     navigate('/main');
+    handleClick('home');
+
   };
   const goToMyInvest = () => {
     navigate('/myinvest');
@@ -67,10 +69,7 @@ function TopNavBar({ color }: TopNavBarProps) {
         <div className="flex items-center">
           <div
             className={`text-[17px] mx-[20px] cursor-pointer ${home ? 'text-[#000000]' : 'text-[#B4BDC6]'}`}
-            onClick={() => {
-              handleClick('home');
-              goToHome();
-            }}
+            onClick={() => goToHome()}
           >
             홈
           </div>
