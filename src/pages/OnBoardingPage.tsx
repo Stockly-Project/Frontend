@@ -2,10 +2,23 @@ import OnBoarding1 from '../components/onBoardingContent/OnBoarding1';
 import OnBoarding2 from '../components/onBoardingContent/OnBoarding2';
 import OnBoarding3 from '../components/onBoardingContent/OnBoarding3';
 import OnBoarding4 from '../components/onBoardingContent/OnBoarding4';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 function OnBoardingPage() {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToIndex = (index: number) => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: index * window.innerHeight,
+        behavior: 'smooth',
+      });
+
+      setTimeout(() => setCurrentIndex(index), 500); // 약간의 딜레이를 추가
+    }
+    console.log(currentIndex);
+  };
 
   useEffect(() => {
     const handleScroll = (event: WheelEvent) => {
@@ -48,7 +61,7 @@ function OnBoardingPage() {
 
   return (
     <div className="w-full h-screen overflow-hidden" ref={containerRef}>
-      <div className="h-screen flex items-center justify-center"><OnBoarding1 /></div>
+      <div className="h-screen flex items-center justify-center"><OnBoarding1 gotoNext={() => scrollToIndex(1)}/></div>
       <div className="h-screen flex items-center justify-center"><OnBoarding2 /></div>
       <div className="h-screen flex items-center justify-center"><OnBoarding3 /></div>
       <div className="h-screen flex items-center justify-center"><OnBoarding4 gotoTop={scrollToTop}/></div>

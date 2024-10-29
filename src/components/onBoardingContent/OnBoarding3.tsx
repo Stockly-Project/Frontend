@@ -40,7 +40,7 @@ function OnBoarding3() {
               y: { duration: 2 },
             }}
           >
-            <div className="w-[700px] h-[500px] m-[50px]">{isInView && <ExampleMyInvest />}</div>
+            <div className="w-[700px] h-[500px] m-[50px] shadow-xl">{isInView && <ExampleMyInvest />}</div>
           </motion.div>
         </div>
       </motion.div>

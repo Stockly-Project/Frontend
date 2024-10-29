@@ -3,7 +3,7 @@ import OrderImg from '../../assets/images/OrderImg.svg';
 
 function OnBoarding2() {
   return (
-    <div className="w-full h-[100vh] flex flex-col justify-center items-center">
+    <div className="w-full h-[100vh] flex flex-col justify-center items-center bg-gradient-to-t from-white to-[#d4e9f5bd]">
       <motion.div
         initial={{ opacity: 0, y: 100 }} // opacity 0 - 안 보임
         whileInView={{ opacity: 1, y: 0 }} // 컴포넌트가 뷰포트에 있을 때의 상태

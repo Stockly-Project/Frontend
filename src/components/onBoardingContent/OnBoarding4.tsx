@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import { FaAnglesUp } from 'react-icons/fa6';
 import React, { useState } from 'react';
 import ApexCharts from 'react-apexcharts';
+import { IoCaretUp } from "react-icons/io5";
 
 interface OnBoarding4Props {
   gotoTop: () => void;
@@ -190,7 +190,7 @@ const data = [
     low: 1200,
     high: 1280,
     close: 1270,
-    volume: 1070,
+    volume: 300,
   },
   {
     date: '2021-02-25 13:30:00',
@@ -270,7 +270,7 @@ const data = [
     low: 950,
     high: 1160,
     close: 1090,
-    volume: 850,
+    volume: 400,
   },
   {
     date: '2021-03-07 13:30:00',
@@ -294,7 +294,7 @@ const data = [
     low: 1260,
     high: 1350,
     close: 1330,
-    volume: 830,
+    volume: 500,
   },
   {
     date: '2021-03-10 13:30:00',
@@ -475,7 +475,7 @@ const ApexChart: React.FC = () => {
 function OnBoarding4({ gotoTop }: OnBoarding4Props) {
   const [isInView, setIsInView] = useState(false);
   return (
-    <div className="w-full h-[100vh] flex flex-col justify-center items-center">
+    <div className="w-full h-[100vh] flex flex-col justify-center items-center bg-gradient-to-b from-white to-[#d4e9f5bd]">
       <motion.div
         initial={{ opacity: 0, y: 100 }} // opacity 0 - 안 보임
         whileInView={{ opacity: 1, y: 0 }} // 컴포넌트가 뷰포트에 있을 때의 상태
@@ -496,11 +496,13 @@ function OnBoarding4({ gotoTop }: OnBoarding4Props) {
               viewport={{ once: false }} // 애니메이션 최초 한 번만 실행할건지
               transition={{
                 ease: 'easeInOut',
-                duration: 2,
-                y: { duration: 2 },
+                duration: 1,
+                y: { duration: 1 },
               }}
-            ></motion.div>
-            <div className="bg-Bg-gray p-[20px] rounded-[10px] m-[80px]"><div className="bg-white">{isInView && <ApexChart />}</div></div>
+            >
+              <div className="bg-Bg-gray p-[20px] rounded-[10px] m-[80px] border-gray shadow-xl"><div className="bg-white">{isInView && <ApexChart />}</div></div>
+            </motion.div>
+
             <div className="flex flex-col justify-center items-start m-[80px]">
               <div className="text-[60px] font-bold">한눈에 보이는 차트</div>
               <div className="text-[30px] text-[#aaaaaa]">
@@ -510,9 +512,21 @@ function OnBoarding4({ gotoTop }: OnBoarding4Props) {
               </div>
             </div>
           </div>
-          <button className="flex justify-center items-center m-[50px]" onClick={gotoTop}>
-            <FaAnglesUp className="w-[40px] h-[40px] m-[10px]" /> <p className="text-[40px]">시작하기</p>
-          </button>
+          <motion.div
+          className="w-full flex justify-center items-center"
+            whileInView={{ opacity: 1 }}
+            animate={{ y: [0, -20, 0] }}
+            transition={{
+              ease: 'easeInOut',
+              duration: 2,
+              repeat: Infinity,
+            }}
+          >
+            <button className="flex justify-center items-center m-[50px]" onClick={gotoTop}>
+              <IoCaretUp className="w-[30px] h-[30px] m-[10px] text-[#929292]" /> <p className="text-[30px] text-[#929292]">시작하기</p>
+            </button>
+          </motion.div>
+
         </div>
       </motion.div>
     </div>
