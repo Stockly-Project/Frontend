@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ApexCharts from 'react-apexcharts';
-import './CandleChart.css';
 
 const data = [
   {
