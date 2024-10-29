@@ -308,7 +308,7 @@ const data = [
 
 
 const ApexChart: React.FC = () => {
-  const [xaxisRange, setXaxisRange] = useState({
+  const [xaxisRange, _] = useState({
     min: new Date(data[0].date).getTime(),
     max: new Date(data[data.length - 1].date).getTime(),
   });
@@ -330,8 +330,6 @@ const ApexChart: React.FC = () => {
     const avg = sum / Math.min(index + 1, 3); // 간단한 3일 이동평균
     return { x: price.date, y: avg.toFixed(2) };
   });
-
-  const [isInView, setIsInView] = useState(false);
 
   return (
     <div className="w-[26vw] flex flex-col justify-center items-center">
