@@ -80,6 +80,7 @@ function AssetChart() {
       },
     },
   };
+  
   return (
     <div className="w-full h-full flex flex-col items-center">
       <div className="w-full text-[23px] p-[20px]">내 자산</div>

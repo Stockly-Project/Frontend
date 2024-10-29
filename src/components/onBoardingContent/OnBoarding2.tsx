@@ -25,7 +25,7 @@ function OnBoarding2() {
               y: { duration: 2 },
             }}
           >
-            <div className="w-[500px] h-[700px] m-[50px]">
+            <div className="w-[400px] h-[600px] m-[50px]">
               <img src={OrderImg} />
             </div>
           </motion.div>
