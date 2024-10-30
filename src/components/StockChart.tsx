@@ -15,7 +15,6 @@ const tabStyles = {
 function StockChart() {
   const [sortedby, setSortedby] = useState('1');
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    console.log(event);
     setSortedby(newValue);
   };
 

@@ -158,7 +158,6 @@ const ApexChart: React.FC = () => {
   }
 
   const handleSync = (chartContext: ChartContext) => {
-    console.log(chartContext);
     const newMin = chartContext.w.globals.minX;
     const newMax = chartContext.w.globals.maxX;
 

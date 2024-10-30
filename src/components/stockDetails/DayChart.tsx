@@ -359,7 +359,7 @@ const DayChart = () => {
     legend: {
       top: 10,
       left: 'left',
-      data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30'],
+      data: ['주가', 'MA5', 'MA10', 'MA20', 'MA30'],
     },
     tooltip: {
       trigger: 'axis',
