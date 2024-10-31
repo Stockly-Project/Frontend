@@ -170,8 +170,8 @@ const MonthChart = () => {
       ],
     }],
     grid: [
-      { left: '0%', right: '8%', height: '50%' },
-      { left: '0%', right: '8%', top: '63%', height: '16%' },
+      { left: '0%', right: '8%', height: '60%' },
+      { left: '0%', right: '8%', top: '63%', height: '26%' },
     ],
     xAxis: [
       {
@@ -225,7 +225,6 @@ const MonthChart = () => {
     ],
     dataZoom: [
       { type: 'inside', xAxisIndex: [0, 1], start: 30, end: 100 },
-      { show: true, xAxisIndex: [0, 1], type: 'slider', top: '85%', start: 30, end: 100 },
     ],
     series: [
       {

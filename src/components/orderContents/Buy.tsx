@@ -39,9 +39,9 @@ function Buy() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-[20px] w-full">
+    <div className="flex flex-col justify-center items-center my-[30px] w-full">
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] content-center ">구매 가격</div>
+        <div className="w-[30%] h-[35px] content-center text-[17px]">구매 가격</div>
         <div className="bg-gray w-[70%] rounded-[7px] flex items-center relative ">
           <div
             className={`bg-white w-[50%] absolute rounded-[5px] z-1 text-white transition-transform duration-300 ease-in-out  ${purchase === "limit" ? "translate-x-[5%]" : "translate-x-[95%]"}`}
@@ -76,7 +76,7 @@ function Buy() {
         </div>
       </div>
       <div className="flex flex-column w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] ">수량</div>
+        <div className="w-[30%] h-[33px] text-[17px]">수량</div>
         <div className="flex justify-center items-center w-[70%] border border-gray rounded-[7px] px-[10px]">
           <input
             className="w-[75%] outline-none"
@@ -91,19 +91,19 @@ function Buy() {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray">10%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray">25%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray">최대</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">최대</button>
         </div>
       </div>
-      <hr className="w-[95%] border-font-gray my-[15px]" />
+      <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] ">구매 가능</div>
+        <div className="w-[30%] h-[33px] text-[17px]">구매 가능</div>
         <div className="w-[70%] text-right">0원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] ">총 금액</div>
+        <div className="w-[30%] h-[33px] text-[17px]">총 금액</div>
         <div className="w-[70%] text-right">0원</div>
       </div>
       <button

@@ -40,10 +40,10 @@ function OrderPrice() {
   }, []);
 
   return (
-    <div className="h-full">
-      <div className="h-[5%] flex justify-start items-center m-[20px] my-[10px] text-[20px]">호가</div>
-      <div className="w-full h-[90%] flex flex-col justify-center items-center p-[20px]">
-        <table className="w-full">
+    <div className="w-full h-[80vh]">
+      <div className="text-[20px] font-bold p-[15px]">호가</div>
+      <div className="w-full h-[70vh] flex flex-col justify-center items-center p-[20px]">
+        <table className="w-full h-[70vh]">
           <thead>
             <tr>
               <th className="w-[35%] text-center p-[10px]">매도수량</th>
