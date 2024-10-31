@@ -16,7 +16,7 @@ interface SplitData {
   volumes: [number, number, number][];
 }
 
-const YearChart = () => {
+const OneMinChart = () => {
   const upColor = '#da0000';
   const downColor = '#2300ec';
 
@@ -57,7 +57,55 @@ const YearChart = () => {
 
   const dummyData = [
     {
-      date: '2021-03-08 13:30:00',
+      date: '2021-02-02 13:30:00',
+      open: 1000,
+      low: 900,
+      high: 1050,
+      close: 980,
+      volume: 200,
+    },
+    {
+      date: '2021-02-02 13:31:00',
+      open: 980,
+      low: 980,
+      high: 1200,
+      close: 1100,
+      volume: 500,
+    },
+    {
+      date: '2021-02-02 13:32:00',
+      open: 1100,
+      low: 1030,
+      high: 1100,
+      close: 1080,
+      volume: 890,
+    },
+    {
+      date: '2021-02-02 13:33:00',
+      open: 1080,
+      low: 1100,
+      high: 1210,
+      close: 1210,
+      volume: 600,
+    },
+    {
+      date: '2021-02-02 13:34:00',
+      open: 1210,
+      low: 1150,
+      high: 1250,
+      close: 1230,
+      volume: 950,
+    },
+    {
+      date: '2021-02-02 13:35:00',
+      open: 1230,
+      low: 1220,
+      high: 1300,
+      close: 1280,
+      volume: 1100,
+    },
+    {
+      date: '2021-02-02 13:36:00',
       open: 1280,
       low: 1250,
       high: 1350,
@@ -65,7 +113,7 @@ const YearChart = () => {
       volume: 300,
     },
     {
-      date: '2022-04-09 13:30:00',
+      date: '2021-02-02 13:37:00',
       open: 1330,
       low: 1280,
       high: 1370,
@@ -73,7 +121,7 @@ const YearChart = () => {
       volume: 1020,
     },
     {
-      date: '2023-05-10 13:30:00',
+      date: '2021-02-02 13:38:00',
       open: 1300,
       low: 1270,
       high: 1400,
@@ -81,7 +129,7 @@ const YearChart = () => {
       volume: 600,
     },
     {
-      date: '2024-06-11 13:30:00',
+      date: '2021-02-02 13:39:00',
       open: 1370,
       low: 1340,
       high: 1420,
@@ -89,36 +137,12 @@ const YearChart = () => {
       volume: 700,
     },
     {
-      date: '2025-07-12 13:30:00',
+      date: '2021-02-02 13:40:00',
       open: 1385,
       low: 1330,
       high: 1400,
       close: 1355,
       volume: 870,
-    },
-    {
-      date: '2026-08-13 13:30:00',
-      open: 1355,
-      low: 1300,
-      high: 1380,
-      close: 1320,
-      volume: 930,
-    },
-    {
-      date: '2027-09-14 13:30:00',
-      open: 1320,
-      low: 1250,
-      high: 1350,
-      close: 1275,
-      volume: 1020,
-    },
-    {
-      date: '2028-10-15 13:30:00',
-      open: 1275,
-      low: 1250,
-      high: 1330,
-      close: 1305,
-      volume: 500,
     },
   ];
   const data = splitData(dummyData);
@@ -152,15 +176,17 @@ const YearChart = () => {
       brushLink: 'all',
       outOfBrush: { colorAlpha: 0.1 },
     },
-    visualMap: [{
-      show: false,
-      seriesIndex: 5,
-      dimension: 2,
-      pieces: [
-        { value: 1, color: downColor },
-        { value: -1, color: upColor },
-      ],
-    }],
+    visualMap: [
+      {
+        show: false,
+        seriesIndex: 5,
+        dimension: 2,
+        pieces: [
+          { value: 1, color: downColor },
+          { value: -1, color: upColor },
+        ],
+      },
+    ],
     grid: [
       { left: '0%', right: '8%', height: '50%' },
       { left: '0%', right: '8%', top: '63%', height: '16%' },
@@ -177,7 +203,9 @@ const YearChart = () => {
         axisLabel: {
           formatter: function (value: string) {
             const date = new Date(value); // 날짜 문자열을 Date 객체로 변환
-            return `${date.getFullYear()}`; // 'YYYY-MM-DD' 형식으로 변환
+            const hours = date.getHours().toString().padStart(2, '0'); // 시간을 두 자리로 맞춤
+            const minutes = date.getMinutes().toString().padStart(2, '0'); // 분을 두 자리로 맞춤
+            return `${hours}:${minutes}`; 
           },
         },
       },
@@ -241,4 +269,4 @@ const YearChart = () => {
 
   return <Echart chartOption={ChartOption} />;
 };
-export default YearChart;
+export default OneMinChart;
