@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MainLogo from '../assets/icons/main_logo.svg';
 import ProfileIcon from '../assets/icons/profile_icon.svg';
 import useNavBarStore from '../zustand/TopNavBarStore';
+import useUserStore from '../zustand/UserStore';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -19,7 +20,7 @@ const style = {
   boxShadow: 10,
   borderRadius: '20px',
   p: 4,
-  outline:"none"
+  outline: 'none',
 };
 
 interface TopNavBarProps {
@@ -28,6 +29,7 @@ interface TopNavBarProps {
 
 function TopNavBar({ color }: TopNavBarProps) {
   const { home, myinvest, handleClick } = useNavBarStore();
+  const { isLoggedin, setUserState } = useUserStore();
   const navigate = useNavigate();
 
   const [modal, setModal] = React.useState(false);
@@ -37,15 +39,19 @@ function TopNavBar({ color }: TopNavBarProps) {
   const goToHome = () => {
     navigate('/main');
     handleClick('home');
-
   };
   const goToMyInvest = () => {
     navigate('/myinvest');
   };
 
+  const goToLogin = () => {
+    navigate('/login');
+  };
+
   const goToSetting = () => {
     navigate('/setting');
-  }
+  };
+
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -100,28 +106,41 @@ function TopNavBar({ color }: TopNavBarProps) {
             </Box>
           </Modal>
         </div>
-        <button
-          className="m-[10px] cursor-pointer"
-          onClick={handleClickProfile}
-          id="basic-button"
-          aria-haspopup="true"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-        >
-          <img src={ProfileIcon} />
-        </button>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          <MenuItem onClick={handleClose}>로그아웃</MenuItem>
-          <MenuItem onClick={()=>{handleClose(); goToSetting();}}>설정</MenuItem>
-        </Menu>
+        {isLoggedin ? (
+          <>
+            <button
+              className="m-[10px] cursor-pointer"
+              onClick={handleClickProfile}
+              id="basic-button"
+              aria-haspopup="true"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <img src={ProfileIcon} />
+            </button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={()=> {handleClose(); setUserState(false, ""); goToLogin();}}>로그아웃</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  goToSetting();
+                }}
+              >
+                설정
+              </MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <button className="bg-MainBlue w-[90px] h-[40px] text-white rounded-[5px] m-[20px] hover:bg-[#1063d8]" onClick={goToLogin}>로그인</button>
+        )}
       </div>
     </>
   );

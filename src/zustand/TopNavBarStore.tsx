@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+
 interface NavBarState {
   home: boolean;
   myinvest: boolean;
