@@ -30,6 +30,7 @@ interface TopNavBarProps {
 function TopNavBar({ color }: TopNavBarProps) {
   const { home, myinvest, handleClick } = useNavBarStore();
   const { isLoggedin, setUserState } = useUserStore();
+  const clearUserStorage = useUserStore.persist.clearStorage;
   const navigate = useNavigate();
 
   const [modal, setModal] = React.useState(false);
@@ -127,7 +128,7 @@ function TopNavBar({ color }: TopNavBarProps) {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={()=> {handleClose(); setUserState(false, ""); goToLogin();}}>로그아웃</MenuItem>
+              <MenuItem onClick={()=> {handleClose(); clearUserStorage(); setUserState(false, ""); goToLogin();}}>로그아웃</MenuItem>
               <MenuItem
                 onClick={() => {
                   handleClose();
