@@ -14,6 +14,9 @@ function TopContent() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLike, setIsLike] = useState(false);
 
+  const [company, setCompany] = useState("");
+  const [symbol,setSymbol] = useState("");
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -29,6 +32,22 @@ function TopContent() {
   };
 
   useEffect(() => {
+    fetch('http://localhost.stock-server/api/v1/stockDetails/info?symbol=005930', {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setCompany(data.data.name);
+        setSymbol(data.data.symbol);
+      });
+  }, []);
+
+  useEffect(() => {
     if (Number(price) > 0 && price[0] !== '0') {
       setIsDisabled(false);
     } else {
@@ -40,32 +59,10 @@ function TopContent() {
     <div className="flex justify-between w-full ">
       {/* 회사 정보 추후에 get 해올 것 */}
       <div className="flex justify-center items-center">
-        <div className="text-[20px] font-bold m-[10px]"> 삼성 전자</div>
-        <div className="text-[19px] text-font-gray m-[10px]">005930</div>
+        <div className="text-[20px] font-bold m-[10px]"> {company}</div>
+        <div className="text-[19px] text-font-gray m-[10px]">{symbol}</div>
       </div>
       <div className="flex">
-        {/* <div className="flex p-[10px]">
-          <div className="w-[80px] border-l border-font-gray px-[7px] m-[10px]">
-            <div className="text-[15px] text-[#808080]">시가총액</div>
-            <div className="text-[15px] text-[#808080]">3691억원</div>
-          </div>
-          <div className="w-[80px] border-l border-font-gray px-[7px] m-[10px]">
-            <div className="text-[15px] text-[#808080]">1일 최저</div>
-            <div className="text-[15px] text-[#808080]">3691억원</div>
-          </div>
-          <div className="w-[80px] border-l border-font-gray px-[7px] m-[10px]">
-            <div className="text-[15px] text-[#808080]">1일 최고</div>
-            <div className="text-[15px] text-[#808080]">3691억원</div>
-          </div>
-          <div className="w-[80px] border-l border-font-gray px-[7px] m-[10px]">
-            <div className="text-[15px] text-[#808080]">1년 최저</div>
-            <div className="text-[15px] text-[#808080]">3691억원</div>
-          </div>
-          <div className="w-[80px] border-l border-font-gray px-[7px] m-[10px]">
-            <div className="text-[15px] text-[#808080]">1년 최고</div>
-            <div className="text-[15px] text-[#808080]">3691억원</div>
-          </div>
-        </div> */}
         <button
           onClick={handleClick}
           id="basic-button"
