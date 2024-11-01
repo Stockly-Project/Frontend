@@ -1,13 +1,17 @@
 import Echart from './Echart';
 import { EChartOption } from 'echarts';
+import { useEffect, useState } from 'react';
 
 interface StockData {
-  date: string;
+  year: string;
   open: number;
   low: number;
   high: number;
   close: number;
   volume: number;
+  rate: number;
+  rate_price: number;
+  symbol: string;
 }
 
 interface SplitData {
@@ -17,8 +21,25 @@ interface SplitData {
 }
 
 const YearChart = () => {
-  const upColor = '#da0000';
-  const downColor = '#2300ec';
+  const [stockData, setStockData] = useState();
+
+  useEffect(() => {
+    fetch('http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=005930&interval=1y', {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setStockData(data);
+      });
+  }, []);
+
+  const upColor = '#fe4a4a';
+  const downColor = '#5235f2';
 
   function splitData(rawData: StockData[]): SplitData {
     const categoryData: string[] = [];
@@ -27,7 +48,7 @@ const YearChart = () => {
 
     for (let i = 0; i < rawData.length; i++) {
       const item = rawData[i];
-      categoryData.push(item.date);
+      categoryData.push(item.year);
       values.push([item.open, item.close, item.low, item.high]);
       volumes.push([i, item.volume, item.open > item.close ? 1 : -1]);
     }
@@ -55,73 +76,11 @@ const YearChart = () => {
     return result;
   }
 
-  const dummyData = [
-    {
-      date: '2021-03-08 13:30:00',
-      open: 1280,
-      low: 1250,
-      high: 1350,
-      close: 1330,
-      volume: 300,
-    },
-    {
-      date: '2022-04-09 13:30:00',
-      open: 1330,
-      low: 1280,
-      high: 1370,
-      close: 1300,
-      volume: 1020,
-    },
-    {
-      date: '2023-05-10 13:30:00',
-      open: 1300,
-      low: 1270,
-      high: 1400,
-      close: 1370,
-      volume: 600,
-    },
-    {
-      date: '2024-06-11 13:30:00',
-      open: 1370,
-      low: 1340,
-      high: 1420,
-      close: 1385,
-      volume: 700,
-    },
-    {
-      date: '2025-07-12 13:30:00',
-      open: 1385,
-      low: 1330,
-      high: 1400,
-      close: 1355,
-      volume: 870,
-    },
-    {
-      date: '2026-08-13 13:30:00',
-      open: 1355,
-      low: 1300,
-      high: 1380,
-      close: 1320,
-      volume: 930,
-    },
-    {
-      date: '2027-09-14 13:30:00',
-      open: 1320,
-      low: 1250,
-      high: 1350,
-      close: 1275,
-      volume: 1020,
-    },
-    {
-      date: '2028-10-15 13:30:00',
-      open: 1275,
-      low: 1250,
-      high: 1330,
-      close: 1305,
-      volume: 500,
-    },
-  ];
-  const data = splitData(dummyData);
+  if (!stockData) {
+    return <div>Loading...</div>;
+  }
+
+  const data = splitData(stockData);
   const ChartOption: EChartOption = {
     animation: false,
     legend: {

@@ -1,5 +1,6 @@
 import Echart from './Echart';
 import { EChartOption } from 'echarts';
+import { useEffect, useState } from 'react';
 
 interface StockData {
   date: string;
@@ -8,6 +9,9 @@ interface StockData {
   high: number;
   close: number;
   volume: number;
+  rate: number;
+  rate_price: number;
+  symbol: string;
 }
 
 interface SplitData {
@@ -17,8 +21,40 @@ interface SplitData {
 }
 
 const OneMinChart = () => {
-  const upColor = '#da0000';
-  const downColor = '#2300ec';
+  const [stockData, setStockData] = useState<StockData[]>([]);
+  const [data, setData] = useState<SplitData>();
+
+  useEffect(() => {
+    const eventSource = new EventSource(
+      'http://localhost.stock-service/api/v1/stockDetails/streamFilter?symbol=005930&interval=1m',
+    );
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data);
+      if (newData.length === 1) {
+        setStockData((prev) => [...prev, newData[0]]);
+      } else {
+        setStockData(newData);
+      }
+    };
+    eventSource.onerror = () => {
+      console.error('SSE connection error');
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    setData(splitData(stockData));
+  }, [stockData]);
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const upColor = '#fe4a4a';
+  const downColor = '#5235f2';
 
   function splitData(rawData: StockData[]): SplitData {
     const categoryData: string[] = [];
@@ -31,6 +67,7 @@ const OneMinChart = () => {
       values.push([item.open, item.close, item.low, item.high]);
       volumes.push([i, item.volume, item.open > item.close ? 1 : -1]);
     }
+
     return {
       categoryData,
       values,
@@ -55,97 +92,6 @@ const OneMinChart = () => {
     return result;
   }
 
-  const dummyData = [
-    {
-      date: '2021-02-02 13:30:00',
-      open: 1000,
-      low: 900,
-      high: 1050,
-      close: 980,
-      volume: 200,
-    },
-    {
-      date: '2021-02-02 13:31:00',
-      open: 980,
-      low: 980,
-      high: 1200,
-      close: 1100,
-      volume: 500,
-    },
-    {
-      date: '2021-02-02 13:32:00',
-      open: 1100,
-      low: 1030,
-      high: 1100,
-      close: 1080,
-      volume: 890,
-    },
-    {
-      date: '2021-02-02 13:33:00',
-      open: 1080,
-      low: 1100,
-      high: 1210,
-      close: 1210,
-      volume: 600,
-    },
-    {
-      date: '2021-02-02 13:34:00',
-      open: 1210,
-      low: 1150,
-      high: 1250,
-      close: 1230,
-      volume: 950,
-    },
-    {
-      date: '2021-02-02 13:35:00',
-      open: 1230,
-      low: 1220,
-      high: 1300,
-      close: 1280,
-      volume: 1100,
-    },
-    {
-      date: '2021-02-02 13:36:00',
-      open: 1280,
-      low: 1250,
-      high: 1350,
-      close: 1330,
-      volume: 300,
-    },
-    {
-      date: '2021-02-02 13:37:00',
-      open: 1330,
-      low: 1280,
-      high: 1370,
-      close: 1300,
-      volume: 1020,
-    },
-    {
-      date: '2021-02-02 13:38:00',
-      open: 1300,
-      low: 1270,
-      high: 1400,
-      close: 1370,
-      volume: 600,
-    },
-    {
-      date: '2021-02-02 13:39:00',
-      open: 1370,
-      low: 1340,
-      high: 1420,
-      close: 1385,
-      volume: 700,
-    },
-    {
-      date: '2021-02-02 13:40:00',
-      open: 1385,
-      low: 1330,
-      high: 1400,
-      close: 1355,
-      volume: 870,
-    },
-  ];
-  const data = splitData(dummyData);
   const ChartOption: EChartOption = {
     animation: false,
     legend: {
@@ -202,10 +148,8 @@ const OneMinChart = () => {
         max: 'dataMax',
         axisLabel: {
           formatter: function (value: string) {
-            const date = new Date(value); // 날짜 문자열을 Date 객체로 변환
-            const hours = date.getHours().toString().padStart(2, '0'); // 시간을 두 자리로 맞춤
-            const minutes = date.getMinutes().toString().padStart(2, '0'); // 분을 두 자리로 맞춤
-            return `${hours}:${minutes}`; 
+            const time = value.slice(0, 5);
+            return time;
           },
         },
       },
@@ -243,9 +187,7 @@ const OneMinChart = () => {
         splitLine: { show: false },
       },
     ],
-    dataZoom: [
-      { type: 'inside', xAxisIndex: [0, 1], start: 0, end: 100 },
-    ],
+    dataZoom: [{ type: 'inside', xAxisIndex: [0, 1], start: 0, end: 100 }],
     series: [
       {
         name: '주가',

@@ -1,13 +1,18 @@
 import Echart from './Echart';
 import { EChartOption } from 'echarts';
+import { useEffect, useState } from 'react';
 
 interface StockData {
-  date: string;
+  start_date: string,
+  end_date: string,
   open: number;
   low: number;
   high: number;
   close: number;
   volume: number;
+  rate: number;
+  rate_price: number;
+  symbol: string;
 }
 
 interface SplitData {
@@ -17,8 +22,25 @@ interface SplitData {
 }
 
 const WeekChart = () => {
-  const upColor = '#da0000';
-  const downColor = '#2300ec';
+  const [stockData, setStockData] = useState();
+
+  useEffect(() => {
+    fetch('http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=005930&interval=1w', {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setStockData(data);
+      });
+  }, []);
+
+  const upColor = '#fe4a4a';
+  const downColor = '#5235f2';
 
   function splitData(rawData: StockData[]): SplitData {
     const categoryData: string[] = [];
@@ -27,7 +49,7 @@ const WeekChart = () => {
 
     for (let i = 0; i < rawData.length; i++) {
       const item = rawData[i];
-      categoryData.push(item.date);
+      categoryData.push(item.end_date);
       values.push([item.open, item.close, item.low, item.high]);
       volumes.push([i, item.volume, item.open > item.close ? 1 : -1]);
     }
@@ -55,81 +77,11 @@ const WeekChart = () => {
     return result;
   }
 
-  const dummyData = [
-    {
-      date: '2021-02-02 13:30:00',
-      open: 1000,
-      low: 900,
-      high: 1050,
-      close: 980,
-      volume: 200,
-    },
-    {
-      date: '2021-02-09 13:30:00',
-      open: 980,
-      low: 980,
-      high: 1200,
-      close: 1100,
-      volume: 500,
-    },
-    {
-      date: '2021-02-16 13:30:00',
-      open: 1100,
-      low: 1030,
-      high: 1100,
-      close: 1080,
-      volume: 890,
-    },
-    {
-      date: '2021-02-23 13:30:00',
-      open: 1080,
-      low: 1100,
-      high: 1210,
-      close: 1210,
-      volume: 600,
-    },
-    {
-      date: '2021-03-01 13:30:00',
-      open: 1210,
-      low: 1150,
-      high: 1250,
-      close: 1230,
-      volume: 950,
-    },
-    {
-      date: '2021-03-08 13:30:00',
-      open: 1230,
-      low: 1220,
-      high: 1300,
-      close: 1280,
-      volume: 1100,
-    },
-    {
-      date: '2021-03-15 13:30:00',
-      open: 1280,
-      low: 1250,
-      high: 1350,
-      close: 1330,
-      volume: 300,
-    },
-    {
-      date: '2021-03-22 13:30:00',
-      open: 1330,
-      low: 1280,
-      high: 1370,
-      close: 1300,
-      volume: 1020,
-    },
-    {
-      date: '2021-03-29 13:30:00',
-      open: 1300,
-      low: 1270,
-      high: 1400,
-      close: 1370,
-      volume: 600,
-    },
-  ];
-  const data = splitData(dummyData);
+  if (!stockData) {
+    return <div>Loading...</div>;
+  }
+
+  const data = splitData(stockData);
   const ChartOption: EChartOption = {
     animation: false,
     legend: {

@@ -1,5 +1,6 @@
 import Echart from './Echart';
 import { EChartOption } from 'echarts';
+import { useEffect, useState } from 'react';
 
 interface StockData {
   date: string;
@@ -8,6 +9,9 @@ interface StockData {
   high: number;
   close: number;
   volume: number;
+  rate: number;
+  rate_price: number;
+  symbol: string;
 }
 
 interface SplitData {
@@ -17,8 +21,41 @@ interface SplitData {
 }
 
 const DayChart = () => {
-  const upColor = '#da0000';
-  const downColor = '#2300ec';
+  const [stockData, setStockData] = useState();
+
+  useEffect(() => {
+    fetch('http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=005930&interval=1d', {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setStockData(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    // const eventSource = new EventSource("");
+    // eventSource.onmessage = (event) => {
+    //   const data: StockData = JSON.parse(event.data);
+    //   setStockData(data);
+    //   console.log(stockData);
+    // };
+    // eventSource.onerror = () => {
+    //   console.error("SSE connection error");
+    //   eventSource.close();
+    // };
+    // return () => {
+    //   eventSource.close();
+    // }
+  },);
+
+  const upColor = '#fe4a4a';
+  const downColor = '#5235f2';
 
   function splitData(rawData: StockData[]): SplitData {
     const categoryData: string[] = [];
@@ -55,305 +92,12 @@ const DayChart = () => {
     return result;
   }
 
-  const dummyData = [
-    {
-      date: '2021-02-02 13:30:00',
-      open: 1000,
-      low: 900,
-      high: 1050,
-      close: 980,
-      volume: 200,
-    },
-    {
-      date: '2021-02-03 13:30:00',
-      open: 980,
-      low: 980,
-      high: 1200,
-      close: 1100,
-      volume: 500,
-    },
-    {
-      date: '2021-02-04 13:30:00',
-      open: 1100,
-      low: 1030,
-      high: 1100,
-      close: 1080,
-      volume: 890,
-    },
-    {
-      date: '2021-02-05 13:30:00',
-      open: 1080,
-      low: 1100,
-      high: 1210,
-      close: 1210,
-      volume: 600,
-    },
-    {
-      date: '2021-02-06 13:30:00',
-      open: 1210,
-      low: 1150,
-      high: 1250,
-      close: 1230,
-      volume: 950,
-    },
-    {
-      date: '2021-02-07 13:30:00',
-      open: 1230,
-      low: 1220,
-      high: 1300,
-      close: 1280,
-      volume: 1100,
-    },
-    {
-      date: '2021-02-08 13:30:00',
-      open: 1280,
-      low: 1250,
-      high: 1350,
-      close: 1330,
-      volume: 300,
-    },
-    {
-      date: '2021-02-09 13:30:00',
-      open: 1330,
-      low: 1280,
-      high: 1370,
-      close: 1300,
-      volume: 1020,
-    },
-    {
-      date: '2021-02-10 13:30:00',
-      open: 1300,
-      low: 1270,
-      high: 1400,
-      close: 1370,
-      volume: 600,
-    },
-    {
-      date: '2021-02-11 13:30:00',
-      open: 1370,
-      low: 1340,
-      high: 1420,
-      close: 1385,
-      volume: 700,
-    },
-    {
-      date: '2021-02-12 13:30:00',
-      open: 1385,
-      low: 1330,
-      high: 1400,
-      close: 1355,
-      volume: 870,
-    },
-    {
-      date: '2021-02-13 13:30:00',
-      open: 1355,
-      low: 1300,
-      high: 1380,
-      close: 1320,
-      volume: 930,
-    },
-    {
-      date: '2021-02-14 13:30:00',
-      open: 1320,
-      low: 1250,
-      high: 1350,
-      close: 1275,
-      volume: 1020,
-    },
-    {
-      date: '2021-02-15 13:30:00',
-      open: 1275,
-      low: 1250,
-      high: 1330,
-      close: 1305,
-      volume: 500,
-    },
-    {
-      date: '2021-02-16 13:30:00',
-      open: 1305,
-      low: 1290,
-      high: 1350,
-      close: 1320,
-      volume: 960,
-    },
-    {
-      date: '2021-02-17 13:30:00',
-      open: 1320,
-      low: 1260,
-      high: 1340,
-      close: 1280,
-      volume: 1040,
-    },
-    {
-      date: '2021-02-18 13:30:00',
-      open: 1280,
-      low: 1250,
-      high: 1300,
-      close: 1265,
-      volume: 500,
-    },
-    {
-      date: '2021-02-19 13:30:00',
-      open: 1265,
-      low: 1240,
-      high: 1310,
-      close: 1290,
-      volume: 920,
-    },
-    {
-      date: '2021-02-20 13:30:00',
-      open: 1290,
-      low: 1260,
-      high: 1340,
-      close: 1335,
-      volume: 980,
-    },
-    {
-      date: '2021-02-21 13:30:00',
-      open: 1335,
-      low: 1300,
-      high: 1360,
-      close: 1320,
-      volume: 900,
-    },
-    {
-      date: '2021-02-22 13:30:00',
-      open: 1320,
-      low: 1280,
-      high: 1350,
-      close: 1315,
-      volume: 950,
-    },
-    {
-      date: '2021-02-23 13:30:00',
-      open: 1315,
-      low: 1250,
-      high: 1340,
-      close: 1260,
-      volume: 1010,
-    },
-    {
-      date: '2021-02-24 13:30:00',
-      open: 1260,
-      low: 1200,
-      high: 1280,
-      close: 1270,
-      volume: 300,
-    },
-    {
-      date: '2021-02-25 13:30:00',
-      open: 1270,
-      low: 1180,
-      high: 1250,
-      close: 1210,
-      volume: 650,
-    },
-    {
-      date: '2021-02-26 13:30:00',
-      open: 1210,
-      low: 1150,
-      high: 1230,
-      close: 1170,
-      volume: 990,
-    },
-    {
-      date: '2021-02-27 13:30:00',
-      open: 1170,
-      low: 1160,
-      high: 1230,
-      close: 1200,
-      volume: 700,
-    },
-    {
-      date: '2021-02-28 13:30:00',
-      open: 1200,
-      low: 1100,
-      high: 1250,
-      close: 1200,
-      volume: 1200,
-    },
-    {
-      date: '2021-03-01 13:30:00',
-      open: 1200,
-      low: 1150,
-      high: 1260,
-      close: 1260,
-      volume: 850,
-    },
-    {
-      date: '2021-03-02 13:30:00',
-      open: 1260,
-      low: 1050,
-      high: 1260,
-      close: 1170,
-      volume: 500,
-    },
-    {
-      date: '2021-03-03 13:30:00',
-      open: 1170,
-      low: 1100,
-      high: 1190,
-      close: 1160,
-      volume: 890,
-    },
-    {
-      date: '2021-03-04 13:30:00',
-      open: 1160,
-      low: 1140,
-      high: 1200,
-      close: 1150,
-      volume: 870,
-    },
-    {
-      date: '2021-03-05 13:30:00',
-      open: 1150,
-      low: 940,
-      high: 1150,
-      close: 960,
-      volume: 910,
-    },
-    {
-      date: '2021-03-06 13:30:00',
-      open: 960,
-      low: 950,
-      high: 1160,
-      close: 1090,
-      volume: 400,
-    },
-    {
-      date: '2021-03-07 13:30:00',
-      open: 1090,
-      low: 1070,
-      high: 1200,
-      close: 1190,
-      volume: 810,
-    },
-    {
-      date: '2021-03-08 13:30:00',
-      open: 1190,
-      low: 1100,
-      high: 1290,
-      close: 1280,
-      volume: 860,
-    },
-    {
-      date: '2021-03-09 13:30:00',
-      open: 1280,
-      low: 1260,
-      high: 1350,
-      close: 1330,
-      volume: 500,
-    },
-    {
-      date: '2021-03-10 13:30:00',
-      open: 1330,
-      low: 1300,
-      high: 1340,
-      close: 1335,
-      volume: 870,
-    },
-  ];
-  const data = splitData(dummyData);
+  if (!stockData) {
+    return <div>Loading...</div>;
+  }
+
+
+  const data = splitData(stockData);
   const ChartOption: EChartOption = {
     animation: false,
     legend: {
@@ -384,15 +128,17 @@ const DayChart = () => {
       brushLink: 'all',
       outOfBrush: { colorAlpha: 0.1 },
     },
-    visualMap: [{
-      show: false,
-      seriesIndex: 5,
-      dimension: 2,
-      pieces: [
-        { value: 1, color: downColor },
-        { value: -1, color: upColor },
-      ],
-    }],
+    visualMap: [
+      {
+        show: false,
+        seriesIndex: 5,
+        dimension: 2,
+        pieces: [
+          { value: 1, color: downColor },
+          { value: -1, color: upColor },
+        ],
+      },
+    ],
     grid: [
       { left: '0%', right: '8%', height: '60%' },
       { left: '0%', right: '8%', top: '63%', height: '26%' },
@@ -447,9 +193,7 @@ const DayChart = () => {
         splitLine: { show: false },
       },
     ],
-    dataZoom: [
-      { type: 'inside', xAxisIndex: [0, 1], start: 70, end: 100 },
-    ],
+    dataZoom: [{ type: 'inside', xAxisIndex: [0, 1], start: 99, end: 100 }],
     series: [
       {
         name: '주가',
