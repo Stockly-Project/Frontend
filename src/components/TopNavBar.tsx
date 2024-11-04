@@ -53,6 +53,27 @@ function TopNavBar({ color }: TopNavBarProps) {
     navigate('/setting');
   };
 
+  const handleLogOut = () => {
+    fetch('http://localhost.stock-server/api/v1/users/logout', {
+      method: 'POST',
+      credentials: "include",
+    }).then((res) => {
+      if (!res.ok) {
+        console.log('네트워크 응답이 올바르지 않습니다');
+        console.log(res);
+      }
+      return res.json();
+    }).then((data)=>{
+      console.log(data);
+      clearUserStorage();
+      setUserState(false, '');
+      alert('로그아웃 되었습니다.');
+      goToLogin();
+    })
+    .catch((error) => {
+      console.error('로그아웃 중 에러 발생:', error);
+    });
+  };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -128,7 +149,14 @@ function TopNavBar({ color }: TopNavBarProps) {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={()=> {handleClose(); clearUserStorage(); setUserState(false, ""); goToLogin();}}>로그아웃</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  handleLogOut();
+                }}
+              >
+                로그아웃
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -140,7 +168,12 @@ function TopNavBar({ color }: TopNavBarProps) {
             </Menu>
           </>
         ) : (
-          <button className="bg-MainBlue w-[90px] h-[40px] text-white rounded-[5px] m-[20px] hover:bg-[#1063d8]" onClick={goToLogin}>로그인</button>
+          <button
+            className="bg-MainBlue w-[90px] h-[40px] text-white rounded-[5px] m-[20px] hover:bg-[#1063d8]"
+            onClick={goToLogin}
+          >
+            로그인
+          </button>
         )}
       </div>
     </>

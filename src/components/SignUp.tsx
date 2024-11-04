@@ -65,24 +65,24 @@ function SignUp() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="w-full flex flex-col justify-center items-center">
       <div className="text-[45px] mb-[10px]">계정 생성</div>
-      <form className="flex flex-col justify-center items-center" onSubmit={handleSubmit}>
+      <form className="w-full flex flex-col justify-center items-center" onSubmit={handleSubmit}>
         <input
-          className="w-[575px] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
+          className="w-[60%] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
           placeholder="이름"
           required
           onChange={(e) => setName(e.target.value)}
         ></input>
         <input
-          className="w-[575px] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
+          className="w-[60%] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
           placeholder="이메일"
           type="email"
           required
           onChange={(e) => setEmail(e.target.value)}
         ></input>
         <input
-          className="w-[575px] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
+          className="w-[60%] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
           placeholder="비밀번호"
           type="password"
           value={password}
@@ -90,7 +90,7 @@ function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
         ></input>
         <input
-          className="w-[575px] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
+          className="w-[60%] h-[75px] m-[15px] p-[20px] rounded-[7px] shadow"
           placeholder="비밀번호 확인"
           value={checkPassword}
           type="password"

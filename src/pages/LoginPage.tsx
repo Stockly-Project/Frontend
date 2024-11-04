@@ -18,7 +18,7 @@ function LoginPage() {
 
 
   return (
-    <div className="w-[100vw] h-[100vh] flex">
+    <div className="w-[100vw] h-[100vh] flex min-w-[1270px]">
       <div className="w-[45%] flex justify-center items center">
         <div className="flex flex-col justify-center items-center">
           <div className="text-[30px]">직접 투자하며 배우는 </div>
