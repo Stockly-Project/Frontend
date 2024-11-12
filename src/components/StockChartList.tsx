@@ -228,7 +228,7 @@ function StockChart() {
   useEffect(() => {
     // Web Worker 초기화
     const dataWorker = new Worker(new URL('./DataWorker.js', import.meta.url));
-    dataWorker.postMessage({ dataUrl: 'http://localhost.stock-server/api/v1/stockDetails/stream/multiple?page=1' });
+    dataWorker.postMessage({ dataUrl: 'http://localhost.stock-service/api/v1/stockDetails/sse/stream/multiple/symbols?page=1' });
 
     // 메인 스레드에서 Web Worker로부터 받은 메시지를 처리
     dataWorker.onmessage = (event) => {

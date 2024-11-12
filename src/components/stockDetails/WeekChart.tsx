@@ -63,7 +63,7 @@ const WeekChart = ({symbol} :  WeekChartProps) => {
   // 실시간 데이터 받아오기
   useEffect(() => {
     if (!isDataLoaded) return;
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/stream/${symbol}`);
+    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
     eventSource.onmessage = (event) => {
       const today = new Date();
       const newData = {

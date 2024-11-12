@@ -33,7 +33,7 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
   // 과거 데이터 및 1분마다 들어오는 데이터
   useEffect(() => {
     const eventSource = new EventSource(
-      `http://localhost.stock-service/api/v1/stockDetails/streamFilter?symbol=${symbol}&interval=5m`,
+      `http://localhost.stock-service/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=5m`,
     );
     eventSource.onmessage = (event) => {
       setIsDataLoaded(false);
@@ -74,10 +74,10 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
   // 초단위로 실시간 데이터
   useEffect(() => {
     if (!isDataLoaded) return;
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/stream/${symbol}`);
+    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
-      const formattedDate = `${newData.date.slice(0, 2)}:${newData.date.slice(2, 4)}:${newData.date.slice(4, 6)}`;
+      const formattedDate = `${newData.date.split(" ")[1].slice(0, 8)}`;
 
       setStockData((prevStockData) => {
         const updatedStockData = [...prevStockData];
@@ -85,8 +85,8 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
         if (updatedStockData.length > 0) {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
+            ...newData,
             date: formattedDate,
-            ...newData, // 새로운 데이터로 수정
           };
         }
 

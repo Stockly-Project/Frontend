@@ -49,8 +49,6 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
   useEffect(() => {
     const eventSource = new EventSource(`http://localhost.order-service/api/v1/invests/orderBook/${symbol}`);
     eventSource.onmessage = (event) => {
-      const time = new Date();
-      console.log("데이터 들어옴", time);
       const newData = JSON.parse(event.data);
       setDatas(newData);
     };
