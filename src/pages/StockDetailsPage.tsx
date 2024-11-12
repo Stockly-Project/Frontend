@@ -5,6 +5,8 @@ import TopContent from '../components/stockDetails/TopContent';
 import ChartContainer from '../components/stockDetails/ChartContainer';
 import OrderBook from '../components/stockDetails/OrderBook';
 import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NewStockData } from "../types/NewStockData";
 
 const boxStyles = {
   backgroundColor: '#ffffff',
@@ -16,6 +18,23 @@ function StockDetailsPage() {
   const { openDrawer } = useDrawerStore();
   const location = useLocation();
   const { symbol, name } = location.state || {};
+  const [newStockData, setNewStockData] = useState<NewStockData>();
+
+  useEffect(() => {
+    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data);
+      setNewStockData(newData);
+    }
+    eventSource.onerror = () => {
+      console.error('SSE connection error');
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+  
   return (
     <>
       <div
@@ -25,11 +44,11 @@ function StockDetailsPage() {
         <div className="w-full h-[30px]"></div>
         <div className="w-full min-w-[1300px] px-[10px]">
           <div className="w-full h-[5vh] flex justify-center items-center">
-            <TopContent symbol={symbol} name={name}/>
+            <TopContent symbol={symbol} name={name} stockprice={newStockData?.close ?? 0} rate={newStockData?.rate ?? 0} rate_price={newStockData?.rate_price ?? 0}/>
           </div>
           <div className="flex h-[80vh]">
             <div className="w-[55%] h-full" style={boxStyles}>
-              <ChartContainer symbol={symbol}/>
+              <ChartContainer symbol={symbol} newStockData={newStockData!}/>
             </div>
             <div className="w-[25%] h-full" style={boxStyles}>
               <OrderBook symbol={symbol}/>

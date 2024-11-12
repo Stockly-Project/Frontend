@@ -1,6 +1,7 @@
 import Echart from './Echart';
 import { EChartOption, ECElementEvent } from 'echarts';
 import { useEffect, useState, useRef } from 'react';
+import { NewStockData } from "../../types/NewStockData";
 
 interface StockData {
   date: string;
@@ -22,9 +23,10 @@ interface SplitData {
 
 interface FiveMinChartProps {
   symbol: string;
+  newStockData: NewStockData;
 }
 
-const OneMinChart = ({symbol} : FiveMinChartProps) => {
+const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [data, setData] = useState<SplitData>();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -39,18 +41,18 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
       setIsDataLoaded(false);
       const newData = JSON.parse(event.data);
       const dummyData = {
-        date: "",
-        open: 0, 
+        date: '',
+        open: 0,
         low: 0,
         high: 0,
         close: 0,
         volume: 0,
         rate: 0,
         rate_price: 0,
-        symbol: ""
-      }
+        symbol: '',
+      };
       if (newData.length === 1) {
-        setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
+        setStockData((prev) => [...prev.slice(0, -1), newData[0], dummyData]);
         setIsDataLoaded(true);
       } else {
         setStockData([...newData, dummyData]);
@@ -70,37 +72,25 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
     setData(splitData(stockData));
   }, [stockData]);
 
-
   // 초단위로 실시간 데이터
   useEffect(() => {
-    if (!isDataLoaded) return;
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
-    eventSource.onmessage = (event) => {
-      const newData = JSON.parse(event.data);
-      const formattedDate = `${newData.date.split(" ")[1].slice(0, 8)}`;
+    if (!isDataLoaded || !newStockData || !newStockData.date) return;
 
-      setStockData((prevStockData) => {
-        const updatedStockData = [...prevStockData];
+    const formattedDate = `${newStockData.date.split(' ')[1].slice(0, 8)}`;
+    setStockData((prevStockData) => {
+      const updatedStockData = [...prevStockData];
 
-        if (updatedStockData.length > 0) {
-          updatedStockData[updatedStockData.length - 1] = {
-            ...updatedStockData[updatedStockData.length - 1],
-            ...newData,
-            date: formattedDate,
-          };
-        }
+      if (updatedStockData.length > 0) {
+        updatedStockData[updatedStockData.length - 1] = {
+          ...updatedStockData[updatedStockData.length - 1],
+          ...newStockData,
+          date: formattedDate,
+        };
+      }
 
-        return updatedStockData; // 수정된 배열 반환
-      });
-    };
-    eventSource.onerror = () => {
-      console.error('SSE connection error');
-      eventSource.close();
-    };
-    return () => {
-      eventSource.close();
-    };
-  },[isDataLoaded, symbol]);
+      return updatedStockData; // 수정된 배열 반환
+    });
+  }, [isDataLoaded, symbol, newStockData]);
 
   // 줌 상태 관리
   const onDataZoom = (event: ECElementEvent) => {
@@ -113,8 +103,6 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
   const onEvents = {
     dataZoom: onDataZoom,
   };
-
-
 
   if (!data) {
     return <div>Loading...</div>;
@@ -244,7 +232,7 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
           inside: true,
         },
         // min: (value) => value.min - (value.max - value.min) * 0.1,
-        // max: (value) => value.max + (value.max - value.min) * 0.5, 
+        // max: (value) => value.max + (value.max - value.min) * 0.5,
       },
       {
         scale: true,
@@ -277,6 +265,6 @@ const OneMinChart = ({symbol} : FiveMinChartProps) => {
     ],
   };
 
-  return <Echart chartOption={ChartOption} onEvents={onEvents}/>;
+  return <Echart chartOption={ChartOption} onEvents={onEvents} />;
 };
 export default OneMinChart;

@@ -1,6 +1,7 @@
 import Echart from './Echart';
 import { EChartOption, ECElementEvent } from 'echarts';
 import { useEffect, useState, useRef } from 'react';
+import { NewStockData } from "../../types/NewStockData";
 
 interface StockData {
   date: string;
@@ -22,9 +23,10 @@ interface SplitData {
 
 interface DayChartProps {
   symbol: string;
+  newStockData: NewStockData;
 }
 
-const DayChart = ({symbol} : DayChartProps) => {
+const DayChart = ({symbol, newStockData} : DayChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const zoomRange = useRef({ start: 99, end: 100 }); // 줌 상태 저장
@@ -60,41 +62,24 @@ const DayChart = ({symbol} : DayChartProps) => {
   // 실시간 데이터 받아오기
   useEffect(() => {
     if (!isDataLoaded) return;
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
-    eventSource.onmessage = (event) => {
-      // const time = new Date();
-      // console.log("데이터 들어옴", time);
-      const today = new Date();
-      const newData = {
-        ...JSON.parse(event.data),
-        date: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`,
-      };
-      // console.log(newData.close);
       setStockData((prevStockData) => {
         const updatedStockData = [...prevStockData];
 
         if (updatedStockData.length > 0) {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
-            ...newData, // 새로운 데이터로 수정
+            ...newStockData, // 새로운 데이터로 수정
           };
         }
 
         return updatedStockData; // 수정된 배열 반환
       });
-    };
-    eventSource.onerror = () => {
-      console.error('SSE connection error');
-      eventSource.close();
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, [isDataLoaded, symbol]);
+
+
+  }, [isDataLoaded, symbol, newStockData]);
 
   // 줌 상태 관리
   const onDataZoom = (event : ECElementEvent)=> {
-    console.log(event);
     if (event.batch) {
       const start = event.batch[0].start;
       const end = event.batch[0].end;

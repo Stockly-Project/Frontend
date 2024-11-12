@@ -10,9 +10,12 @@ import Menu from '@mui/material/Menu';
 interface TopContentProps {
   symbol: string;
   name: string;
+  stockprice: number;
+  rate: number;
+  rate_price: number;
 }
 
-const TopContent = ({symbol, name}:TopContentProps) => {
+const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentProps) => {
   const [likeSrc, setLikeSrc] = useState(like);
   const [alertSrc, setAlertSrc] = useState(alert);
   const [price, setPrice] = useState('');
@@ -42,11 +45,17 @@ const TopContent = ({symbol, name}:TopContentProps) => {
   }, [price]);
 
   return (
-    <div className="flex justify-between w-full ">
-      {/* 회사 정보 추후에 get 해올 것 */}
-      <div className="flex justify-center items-center">
-        <div className="text-[20px] font-bold m-[10px]"> {name}</div>
-        <div className="text-[19px] text-font-gray m-[10px]">{symbol}</div>
+    <div className="flex justify-between w-full">
+      <div className="flex flex-col justify-center items-start my-[10px]">
+        <div className="flex">
+          <div className="text-[20px] font-bold mx-[10px]"> {name}</div>
+          <div className="text-[19px] text-font-gray mx-[10px]">{symbol}</div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="text-[22px] mx-[10px]">{stockprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</div>
+          <p className="text-[17px] mx-[5px]">어제보다</p>
+          <p className={`${rate_price>0 ? "text-up" : "text-down"}`}>{rate_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({rate}%)</p>
+        </div>
       </div>
       <div className="flex">
         <button
@@ -124,6 +133,6 @@ const TopContent = ({symbol, name}:TopContentProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default TopContent;

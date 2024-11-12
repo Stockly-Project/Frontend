@@ -5,12 +5,14 @@ import YearChart from './YearChart';
 import OneMinChart from './OneMinChart';
 import FiveMinChart from './FiveMinChart';
 import { useState } from 'react';
+import { NewStockData } from "../../types/NewStockData";
 
 interface ChartContainerProps {
   symbol: string;
+  newStockData: NewStockData;
 }
 
-const ChartContainer = ({ symbol } : ChartContainerProps) => {
+const ChartContainer = ({ symbol, newStockData } : ChartContainerProps) => {
   const [filter, setFilter] = useState('day');
   // min, day, week, month, year
 
@@ -57,10 +59,10 @@ const ChartContainer = ({ symbol } : ChartContainerProps) => {
         <div></div>
       </div>
       <div className="flex-grow flex flex-col justify-center items-center w-full h-[93%]">
-        {filter === '1min' && <OneMinChart symbol={symbol}/>}
-        {filter === '5min' && <FiveMinChart symbol={symbol}/>}
-        {filter === 'day' && <DayChart symbol={symbol}/>}
-        {filter === 'week' && <WeekChart symbol={symbol}/>}
+        {filter === '1min' && <OneMinChart symbol={symbol} newStockData={newStockData}/>}
+        {filter === '5min' && <FiveMinChart symbol={symbol} newStockData={newStockData}/>}
+        {filter === 'day' && <DayChart symbol={symbol} newStockData={newStockData}/>}
+        {filter === 'week' && <WeekChart symbol={symbol} newStockData={newStockData}/>}
         {filter === 'month' && <MonthChart symbol={symbol}/>}
         {filter === 'year' && <YearChart symbol={symbol}/>}
       </div>

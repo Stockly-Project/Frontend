@@ -1,6 +1,7 @@
 import Echart from './Echart';
 import { EChartOption, ECElementEvent } from 'echarts';
 import { useEffect, useState, useRef } from 'react';
+import { NewStockData } from "../../types/NewStockData";
 
 interface StockData {
   date: string;
@@ -20,11 +21,13 @@ interface SplitData {
   volumes: [number, number, number][];
 }
 
+
 interface OneMinChartProps {
   symbol: string;
+  newStockData: NewStockData;
 }
 
-const OneMinChart = ({symbol} : OneMinChartProps) => {
+const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [data, setData] = useState<SplitData>();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -73,34 +76,24 @@ const OneMinChart = ({symbol} : OneMinChartProps) => {
 
   // 초단위로 실시간 데이터
   useEffect(() => {
-    if (!isDataLoaded) return;
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
-    eventSource.onmessage = (event) => {
-      const newData = JSON.parse(event.data);
-      const formattedDate = `${newData.date.split(" ")[1].slice(0, 8)}`;
+    if (!isDataLoaded || !newStockData || !newStockData.date) return;
 
+      const formattedDate = `${newStockData.date.split(" ")[1].slice(0, 8)}`;
       setStockData((prevStockData) => {
         const updatedStockData = [...prevStockData];
 
         if (updatedStockData.length > 0) {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
-            ...newData,
+            ...newStockData,
             date: formattedDate,
           };
         }
 
         return updatedStockData; // 수정된 배열 반환
       });
-    };
-    eventSource.onerror = () => {
-      console.error('SSE connection error');
-      eventSource.close();
-    };
-    return () => {
-      eventSource.close();
-    };
-  },[isDataLoaded, symbol]);
+
+  },[isDataLoaded, symbol, newStockData]);
 
   // 줌 상태 관리
   const onDataZoom = (event: ECElementEvent) => {
