@@ -266,7 +266,7 @@ function StockChart() {
     <div>
       <table className="w-full">
         <thead>
-          <tr className="border-b border-[#e5e5e5]">
+          <tr className="border-y border-[#dddddd]">
             <th className="text-left w-[20%] py-[10px] text-chart-font px-1">종목</th>
             <th className="text-right w-[15%] py-[10px] text-chart-font">현재가</th>
             <th className="text-right w-[25%] py-[10px] text-chart-font">등락률</th>
