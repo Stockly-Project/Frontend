@@ -2,7 +2,11 @@ import Buy from './Buy';
 import Sell from './Sell';
 import { useState } from 'react';
 
-function Order() {
+interface OrderProps{
+  stockprice: number;
+}
+
+function Order({stockprice}: OrderProps) {
   const [content, setContent] = useState('buy');
   const [position, setPosition] = useState(0); // 시작 위치
 
@@ -37,8 +41,8 @@ function Order() {
       <div 
         className={`flex w-[200%] transform transition-transform duration-300 ${position === 0 ? 'translate-x-0' : '-translate-x-1/2'}`}
       >
-        <Buy />
-        <Sell />
+        <Buy stockprice={stockprice}/>
+        <Sell stockprice={stockprice}/>
       </div>
     </div>
   );

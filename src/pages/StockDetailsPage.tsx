@@ -54,7 +54,7 @@ function StockDetailsPage() {
               <OrderBook symbol={symbol}/>
             </div>
             <div className="w-[20%] h-full" style={boxStyles}>
-              <Order />
+              <Order stockprice={newStockData?.close ?? 0}/>
             </div>
           </div>
         </div>

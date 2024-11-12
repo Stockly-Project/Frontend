@@ -2,7 +2,11 @@ import { GoPlus } from 'react-icons/go';
 import { HiMinus } from 'react-icons/hi2';
 import { useState, useEffect } from 'react';
 
-function Buy() {
+interface BuyProps {
+  stockprice: number;
+}
+
+function Buy({ stockprice }: BuyProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [purchase, setPurchase] = useState('limit');
@@ -11,10 +15,10 @@ function Buy() {
 
   const [price, setPrice] = useState('');
   const plusPrice = () => {
-    setPrice(String(Number(price) + 1));
+    setPrice(String(Number(price) + 100));
   };
   const minusPrice = () => {
-    setPrice(String(Number(price) - 1));
+    setPrice(String(Number(price) - 100));
   };
   const [quantity, setQuantity] = useState('');
   const plusQuantity = () => {
@@ -25,8 +29,18 @@ function Buy() {
     setQuantity(String(Number(quantity) - 1));
   };
 
+  const handleClickMarket = () => {
+    setPurchase('market');
+    setPrice(stockprice.toString());
+  };
+
+  const handleClickLimit = () => {
+    setPurchase('limit');
+    setPrice("");
+  }
+
   useEffect(() => {
-    if ((Number(price) > 0 && price[0] !== '0') && (Number(quantity) > 0 && quantity[0] !== '0')) {
+    if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0') {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -44,19 +58,19 @@ function Buy() {
         <div className="w-[30%] h-[35px] content-center text-[17px]">구매 가격</div>
         <div className="bg-gray w-[70%] rounded-[7px] flex items-center relative ">
           <div
-            className={`bg-white w-[50%] absolute rounded-[5px] z-1 text-white transition-transform duration-300 ease-in-out  ${purchase === "limit" ? "translate-x-[5%]" : "translate-x-[95%]"}`}
+            className={`bg-white w-[50%] absolute rounded-[5px] z-1 text-white transition-transform duration-300 ease-in-out  ${purchase === 'limit' ? 'translate-x-[5%]' : 'translate-x-[95%]'}`}
           >
             .
           </div>
           <button
             className="w-[50%] text-[13px] flex justify-center items-center bg-none z-10 content-center"
-            onClick={() => setPurchase('limit')}
+            onClick={handleClickLimit}
           >
             지정가
           </button>
           <button
             className="w-[50%] text-[13px] flex justify-center items-center bg-none z-10 content-center"
-            onClick={() => setPurchase('market')}
+            onClick={handleClickMarket}
           >
             시장가
           </button>
@@ -67,10 +81,11 @@ function Buy() {
         <div className="flex justify-center items-center w-[70%] border border-gray rounded-[7px] px-[10px]">
           <input
             className="w-[75%] outline-none"
-            placeholder=""
+            placeholder="가격 입력"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           ></input>
+          <p className="text-[14px] mr-[5px]">원</p>
           <GoPlus className="w-[12%] cursor-pointer" onClick={plusPrice} />
           <HiMinus className="w-[12%] cursor-pointer" onClick={minusPrice} />
         </div>
@@ -94,7 +109,9 @@ function Buy() {
           <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
           <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
           <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">최대</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
+            최대
+          </button>
         </div>
       </div>
       <hr className="w-[95%] border-font-gray my-[25px]" />

@@ -2,19 +2,21 @@ import { GoPlus } from 'react-icons/go';
 import { HiMinus } from 'react-icons/hi2';
 import { useState, useEffect } from 'react';
 
-function Sell() {
-  const [isDisabled, setIsDisabled] = useState(true);
+interface SellProps{
+  stockprice: number;
+}
 
+function Sell({stockprice}: SellProps) {
+  const [isDisabled, setIsDisabled] = useState(true);
   const [purchase, setPurchase] = useState('limit');
   //limit : 지정가
   //market : 시장가
-
   const [price, setPrice] = useState('');
   const plusPrice = () => {
-    setPrice(String(Number(price) + 1));
+    setPrice(String(Number(price) + 100));
   };
   const minusPrice = () => {
-    setPrice(String(Number(price) - 1));
+    setPrice(String(Number(price) - 100));
   };
   const [quantity, setQuantity] = useState('');
   const plusQuantity = () => {
@@ -24,6 +26,16 @@ function Sell() {
   const minusQuantity = () => {
     setQuantity(String(Number(quantity) - 1));
   };
+
+  const handleClickMarket = () => {
+    setPurchase('market');
+    setPrice(stockprice.toString());
+  }
+
+  const handleClickLimit = () => {
+    setPurchase('limit');
+    setPrice("");
+  }
 
   useEffect(() => {
     if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0') {
@@ -50,13 +62,13 @@ function Sell() {
           </div>
           <button
             className="w-[50%] text-[13px] flex justify-center items-center bg-none z-10 content-center "
-            onClick={() => setPurchase('limit')}
+            onClick={handleClickLimit}
           >
             지정가
           </button>
           <button
             className="w-[50%] text-[13px] flex justify-center items-center bg-none z-10 content-center"
-            onClick={() => setPurchase('market')}
+            onClick={handleClickMarket}
           >
             시장가
           </button>
@@ -67,10 +79,11 @@ function Sell() {
         <div className="flex justify-center items-center w-[70%] border border-gray rounded-[7px] px-[10px]">
           <input
             className="w-[75%] outline-none"
-            placeholder=""
+            placeholder="가격 입력"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           ></input>
+          <p className="text-[14px] mr-[5px]">원</p>
           <GoPlus className="w-[12%] cursor-pointer" onClick={plusPrice} />
           <HiMinus className="w-[12%] cursor-pointer" onClick={minusPrice} />
         </div>
