@@ -1,43 +1,117 @@
 import { useState, useEffect } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface OrderData {
-  volume: number;
-  price: number;
+  id: number;
+  // symbol: string;
+  // name: string;
+  sell_price_0: number;
+  sell_price_1: number;
+  sell_price_2: number;
+  sell_price_3: number;
+  sell_price_4: number;
+  sell_price_5: number;
+  sell_price_6: number;
+  sell_volume_0: number;
+  sell_volume_1: number;
+  sell_volume_2: number;
+  sell_volume_3: number;
+  sell_volume_4: number;
+  sell_volume_5: number;
+  sell_volume_6: number;
+  buy_price_0: number;
+  buy_price_1: number;
+  buy_price_2: number;
+  buy_price_3: number;
+  buy_price_4: number;
+  buy_price_5: number;
+  buy_price_6: number;
+  buy_volume_0: number;
+  buy_volume_1: number;
+  buy_volume_2: number;
+  buy_volume_3: number;
+  buy_volume_4: number;
+  buy_volume_5: number;
+  buy_volume_6: number;
+
+  [key: string]: number;
 }
 
-function OrderPrice() {
+interface OrderBookProps {
+  symbol: string;
+}
+
+const OrderBook = ({ symbol }: OrderBookProps) => {
   const [askLength, setAskLength] = useState<number[]>([]);
   const [bidLength, setBidLength] = useState<number[]>([]);
-
-  const askData: OrderData[] = [
-    { volume: 500, price: 68000 },
-    { volume: 600, price: 67000 },
-    { volume: 800, price: 66000 },
-    { volume: 400, price: 65000 },
-    { volume: 500, price: 64000 },
-    { volume: 200, price: 63000 },
-    { volume: 500, price: 62000 }
-  ];
-
-  const bidData: OrderData[] = [
-    { volume: 500, price: 62000 },
-    { volume: 600, price: 61000 },
-    { volume: 800, price: 60000 },
-    { volume: 400, price: 59000 },
-    { volume: 500, price: 58000 },
-    { volume: 200, price: 57000 },
-    { volume: 700, price: 56000 }
-  ];
+  const [datas, setDatas] = useState<OrderData>();
 
   useEffect(() => {
-    const calculateLengths = (data: OrderData[]): number[] => {
-      const maxVolume = Math.max(...data.map(item => item.volume));
-      return data.map(item => (item.volume / maxVolume) * 100);
+    const eventSource = new EventSource(`http://localhost.order-service/api/v1/invests/orderBook/${symbol}`);
+    eventSource.onmessage = (event) => {
+      const time = new Date();
+      console.log("데이터 들어옴", time);
+      const newData = JSON.parse(event.data);
+      setDatas(newData);
     };
+    eventSource.onerror = () => {
+      console.error('SSE connection error');
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
+  },[symbol]);
 
-    setAskLength(calculateLengths(askData));
-    setBidLength(calculateLengths(bidData));
-  }, []);
+  useEffect(() => {
+    const calculateLengths = (data: OrderData): void => {
+      // sell_volume과 buy_volume을 추출하여 배열로 구성
+      const sellVolumes = [
+        data.sell_volume_3,
+        data.sell_volume_4,
+        data.sell_volume_5,
+        data.sell_volume_6,
+        data.sell_volume_7,
+        data.sell_volume_8,
+        data.sell_volume_9,
+        data.sell_volume_10,
+      ];
+      const buyVolumes = [
+        data.buy_volume_1,
+        data.buy_volume_2,
+        data.buy_volume_3,
+        data.buy_volume_4,
+        data.buy_volume_5,
+        data.buy_volume_6,
+        data.buy_volume_7,
+        data.buy_volume_8,
+      ];
+
+      // sell_volume과 buy_volume 중 최대값 찾기
+      const maxVolume = Math.max(...sellVolumes, ...buyVolumes);
+
+      // sell_volume과 buy_volume 각각에 대해 (volume / maxVolume) * 100 계산하여 리스트에 저장
+      const calculatedSellLengths = sellVolumes.map((volume) => (volume / maxVolume) * 100);
+      const calculatedBuyLengths = buyVolumes.map((volume) => (volume / maxVolume) * 100);
+
+      // 상태에 계산된 길이 비율을 업데이트
+      setAskLength(calculatedSellLengths);
+      setBidLength(calculatedBuyLengths);
+    };
+    // 예시 데이터가 있을 때 함수 호출
+    if (datas) {
+      calculateLengths(datas);
+    }
+  }, [datas]);
+
+  if (datas === undefined) {
+    return (
+      <div className="w-full h-[80vh] flex flex-col justify-center items-center">
+        <CircularProgress size={50} sx={{ color: '#3182F6' }} />
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[80vh]">
@@ -52,27 +126,31 @@ function OrderPrice() {
             </tr>
           </thead>
           <tbody>
-            {askData.map((ask, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <tr key={`ask-${index}`}>
                 <td
                   className="w-[35%] text-right p-[10px] relative text-[12px]"
-                  style={{ background: `linear-gradient(to left, #dcdcff ${askLength[index]}%, transparent 0)` }}
+                  style={{ background: `linear-gradient(to left, #bebeff ${askLength[index]}%, transparent 0)` }}
                 >
-                  {ask.volume}
+                  {datas[`sell_volume_${index+3}`]}
                 </td>
-                <td className="w-[30%] text-center p-[10px] border-x border-[#c1c1c1]">{ask.price}</td>
+                <td className="w-[30%] text-center p-[10px] border-x border-[#c1c1c1]">
+                  {datas[`sell_price_${index+3}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                </td>
                 <td className="w-[35%] text-center p-[10px]"></td>
               </tr>
             ))}
-            {bidData.map((bid, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <tr key={`bid-${index}`}>
                 <td className="w-[35%] text-center p-[10px]"></td>
-                <td className="w-[30%] text-center p-[10px] border-x border-[#c1c1c1]">{bid.price}</td>
+                <td className="w-[30%] text-center p-[10px] border-x border-[#c1c1c1]">
+                  {datas[`buy_price_${index+1}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                </td>
                 <td
                   className="w-[35%] text-left p-[10px] relative text-[12px]"
-                  style={{ background: `linear-gradient(to right, #ffdcdc ${bidLength[index]}%, transparent 0)` }}
+                  style={{ background: `linear-gradient(to right, #ffbdbd ${bidLength[index]}%, transparent 0)` }}
                 >
-                  {bid.volume}
+                  {datas[`buy_volume_${index+1}`]}
                 </td>
               </tr>
             ))}
@@ -81,6 +159,6 @@ function OrderPrice() {
       </div>
     </div>
   );
-}
+};
 
-export default OrderPrice;
+export default OrderBook;

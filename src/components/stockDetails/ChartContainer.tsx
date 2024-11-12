@@ -6,7 +6,11 @@ import OneMinChart from './OneMinChart';
 import FiveMinChart from './FiveMinChart';
 import { useState } from 'react';
 
-const ChartContainer: React.FC = () => {
+interface ChartContainerProps {
+  symbol: string;
+}
+
+const ChartContainer = ({ symbol } : ChartContainerProps) => {
   const [filter, setFilter] = useState('day');
   // min, day, week, month, year
 
@@ -18,6 +22,7 @@ const ChartContainer: React.FC = () => {
           <select
             className={`w-[60px] h-[35px] mx-[5px] my-[10px] rounded-[7px] outline-none cursor-pointer text-center ${filter.includes('min') ? 'bg-gray' : 'bg-transparent'}`}
             onChange={(e) => setFilter(e.target.value)}
+            value={filter.includes('min') ? filter : ""}
             defaultValue="" // select의 초기값 설정
           >
             <option value="" disabled>분</option>
@@ -26,7 +31,7 @@ const ChartContainer: React.FC = () => {
           </select>
           <button
             className={`w-[35px] h-[35px] mx-[5px] my-[10px] rounded-[7px] transition-colors duration-300 ease-in-out ${filter === 'day' ? 'bg-gray' : 'bg-transparent'}`}
-            onClick={() => setFilter('day')}
+            onClick={() => {setFilter('day')}}
           >
             일
           </button>
@@ -52,12 +57,12 @@ const ChartContainer: React.FC = () => {
         <div></div>
       </div>
       <div className="flex-grow flex flex-col justify-center items-center w-full h-[93%]">
-        {filter === '1min' && <OneMinChart />}
-        {filter === '5min' && <FiveMinChart />}
-        {filter === 'day' && <DayChart />}
-        {filter === 'week' && <WeekChart />}
-        {filter === 'month' && <MonthChart />}
-        {filter === 'year' && <YearChart />}
+        {filter === '1min' && <OneMinChart symbol={symbol}/>}
+        {filter === '5min' && <FiveMinChart symbol={symbol}/>}
+        {filter === 'day' && <DayChart symbol={symbol}/>}
+        {filter === 'week' && <WeekChart symbol={symbol}/>}
+        {filter === 'month' && <MonthChart symbol={symbol}/>}
+        {filter === 'year' && <YearChart symbol={symbol}/>}
       </div>
     </div>
   );

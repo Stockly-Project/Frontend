@@ -1,29 +1,28 @@
 import TopNavBar from '../components/TopNavBar';
 import StockChartList from '../components/StockChart';
 import useDrawerStore from '../zustand/MenuBarStore';
-import { useEffect } from 'react';
 
 function MainPage() {
-useEffect(() => {
+// useEffect(() => {
 
-    fetch('http://localhost.stock-server/api/v1/users', {
-      method: 'GET',
-      credentials: "include",
-    })
-    .then((res) => {
-      if (!res.ok) {
-        console.log('네트워크 응답이 올바르지 않습니다');
-        console.log(res);
-      }
-      return res.json();
-    })
-    .then((data)=>{
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error('Fetch 에러:', error); // 에러 처리
-    });
-}, [])
+//     fetch('http://localhost.stock-server/api/v1/users', {
+//       method: 'GET',
+//       credentials: "include",
+//     })
+//     .then((res) => {
+//       if (!res.ok) {
+//         console.log('네트워크 응답이 올바르지 않습니다');
+//         console.log(res);
+//       }
+//       return res.json();
+//     })
+//     .then((data)=>{
+//       console.log(data);
+//     })
+//     .catch((error) => {
+//       console.error('Fetch 에러:', error); // 에러 처리
+//     });
+// }, [])
 
   const { openDrawer } = useDrawerStore();
   return (

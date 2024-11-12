@@ -3,7 +3,8 @@ import Order from '../components/orderContents/Order';
 import useDrawerStore from '../zustand/MenuBarStore';
 import TopContent from '../components/stockDetails/TopContent';
 import ChartContainer from '../components/stockDetails/ChartContainer';
-import OrderPrice from '../components/stockDetails/OrderBook';
+import OrderBook from '../components/stockDetails/OrderBook';
+import { useLocation } from 'react-router-dom';
 
 const boxStyles = {
   backgroundColor: '#ffffff',
@@ -13,6 +14,8 @@ const boxStyles = {
 
 function StockDetailsPage() {
   const { openDrawer } = useDrawerStore();
+  const location = useLocation();
+  const { symbol, name } = location.state || {};
   return (
     <>
       <div
@@ -22,14 +25,14 @@ function StockDetailsPage() {
         <div className="w-full h-[30px]"></div>
         <div className="w-full min-w-[1300px] px-[10px]">
           <div className="w-full h-[5vh] flex justify-center items-center">
-            <TopContent />
+            <TopContent symbol={symbol} name={name}/>
           </div>
           <div className="flex h-[80vh]">
             <div className="w-[55%] h-full" style={boxStyles}>
-              <ChartContainer />
+              <ChartContainer symbol={symbol}/>
             </div>
             <div className="w-[25%] h-full" style={boxStyles}>
-              <OrderPrice />
+              <OrderBook symbol={symbol}/>
             </div>
             <div className="w-[20%] h-full" style={boxStyles}>
               <Order />

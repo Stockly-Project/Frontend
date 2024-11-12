@@ -1,6 +1,6 @@
 import Echart from './Echart';
-import { EChartOption } from 'echarts';
-import { useEffect, useState } from 'react';
+import { EChartOption, ECElementEvent } from 'echarts';
+import { useEffect, useState, useRef } from 'react';
 
 interface StockData {
   date: string;
@@ -20,20 +20,41 @@ interface SplitData {
   volumes: [number, number, number][];
 }
 
-const FiveMinChart = () => {
+interface FiveMinChartProps {
+  symbol: string;
+}
+
+const OneMinChart = ({symbol} : FiveMinChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [data, setData] = useState<SplitData>();
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const zoomRange = useRef({ start: 80, end: 100 }); // 줌 상태 저장
 
+  // 과거 데이터 및 1분마다 들어오는 데이터
   useEffect(() => {
     const eventSource = new EventSource(
-      'http://localhost.stock-service/api/v1/stockDetails/streamFilter?symbol=005930&interval=5m',
+      `http://localhost.stock-service/api/v1/stockDetails/streamFilter?symbol=${symbol}&interval=5m`,
     );
     eventSource.onmessage = (event) => {
+      setIsDataLoaded(false);
       const newData = JSON.parse(event.data);
+      const dummyData = {
+        date: "",
+        open: 0, 
+        low: 0,
+        high: 0,
+        close: 0,
+        volume: 0,
+        rate: 0,
+        rate_price: 0,
+        symbol: ""
+      }
       if (newData.length === 1) {
-        setStockData((prev) => [...prev, newData[0]]);
+        setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
+        setIsDataLoaded(true);
       } else {
-        setStockData(newData);
+        setStockData([...newData, dummyData]);
+        setIsDataLoaded(true);
       }
     };
     eventSource.onerror = () => {
@@ -43,11 +64,57 @@ const FiveMinChart = () => {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [symbol]);
 
   useEffect(() => {
     setData(splitData(stockData));
   }, [stockData]);
+
+
+  // 초단위로 실시간 데이터
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/stream/${symbol}`);
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data);
+      const formattedDate = `${newData.date.slice(0, 2)}:${newData.date.slice(2, 4)}:${newData.date.slice(4, 6)}`;
+
+      setStockData((prevStockData) => {
+        const updatedStockData = [...prevStockData];
+
+        if (updatedStockData.length > 0) {
+          updatedStockData[updatedStockData.length - 1] = {
+            ...updatedStockData[updatedStockData.length - 1],
+            date: formattedDate,
+            ...newData, // 새로운 데이터로 수정
+          };
+        }
+
+        return updatedStockData; // 수정된 배열 반환
+      });
+    };
+    eventSource.onerror = () => {
+      console.error('SSE connection error');
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
+  },[isDataLoaded, symbol]);
+
+  // 줌 상태 관리
+  const onDataZoom = (event: ECElementEvent) => {
+    if (event.batch) {
+      const start = event.batch[0].start;
+      const end = event.batch[0].end;
+      zoomRange.current = { start, end };
+    }
+  };
+  const onEvents = {
+    dataZoom: onDataZoom,
+  };
+
+
 
   if (!data) {
     return <div>Loading...</div>;
@@ -55,6 +122,7 @@ const FiveMinChart = () => {
 
   const upColor = '#fe4a4a';
   const downColor = '#5235f2';
+
   function splitData(rawData: StockData[]): SplitData {
     const categoryData: string[] = [];
     const values: [number, number, number, number][] = [];
@@ -66,6 +134,7 @@ const FiveMinChart = () => {
       values.push([item.open, item.close, item.low, item.high]);
       volumes.push([i, item.volume, item.open > item.close ? 1 : -1]);
     }
+
     return {
       categoryData,
       values,
@@ -174,6 +243,8 @@ const FiveMinChart = () => {
           showMaxLabel: false,
           inside: true,
         },
+        // min: (value) => value.min - (value.max - value.min) * 0.1,
+        // max: (value) => value.max + (value.max - value.min) * 0.5, 
       },
       {
         scale: true,
@@ -185,7 +256,7 @@ const FiveMinChart = () => {
         splitLine: { show: false },
       },
     ],
-    dataZoom: [{ type: 'inside', xAxisIndex: [0, 1], start: 99, end: 100 }],
+    dataZoom: [{ type: 'inside', xAxisIndex: [0, 1], start: zoomRange.current.start, end: zoomRange.current.end }],
     series: [
       {
         name: '주가',
@@ -206,6 +277,6 @@ const FiveMinChart = () => {
     ],
   };
 
-  return <Echart chartOption={ChartOption} />;
+  return <Echart chartOption={ChartOption} onEvents={onEvents}/>;
 };
-export default FiveMinChart;
+export default OneMinChart;

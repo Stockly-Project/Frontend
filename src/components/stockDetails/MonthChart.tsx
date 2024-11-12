@@ -1,6 +1,6 @@
 import Echart from './Echart';
-import { EChartOption } from 'echarts';
-import { useEffect, useState } from 'react';
+import { EChartOption, ECElementEvent } from 'echarts';
+import { useEffect, useState, useRef } from 'react';
 
 interface StockData {
   date: string;
@@ -20,11 +20,17 @@ interface SplitData {
   volumes: [number, number, number][];
 }
 
-const MonthChart = () => {
-  const [stockData, setStockData] = useState();
+interface MonthChartProps {
+  symbol: string;
+}
+
+
+const MonthChart = ({symbol} : MonthChartProps) => {
+  const [stockData, setStockData] = useState<StockData[]>([]);
+  const zoomRange = useRef({ start: 50, end: 100 }); // 줌 상태 저장
 
   useEffect(() => {
-    fetch('http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=005930&interval=1m', {
+    fetch(`http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=${symbol}&interval=1m`, {
       method: 'GET',
     })
       .then((res) => {
@@ -34,9 +40,60 @@ const MonthChart = () => {
         return res.json();
       })
       .then((data) => {
+        // const dummyData: StockData = {
+        //   date: '',
+        //   open: 0,
+        //   low: 0,
+        //   high: 0,
+        //   close: 0,
+        //   volume: 0,
+        //   rate: 0,
+        //   rate_price: 0,
+        //   symbol: '',
+        // };
+        // setStockData([...data, dummyData]);
         setStockData(data);
       });
-  }, []);
+  }, [symbol]);
+
+  // // 실시간 데이터 받아오기
+  // useEffect(() => {
+  //   const eventSource = new EventSource('http://localhost.stock-service/api/v1/stockDetails/stream/005930');
+  //   eventSource.onmessage = (event) => {
+  //     const newData = JSON.parse(event.data);
+  //     setStockData((prevStockData) => {
+  //       const updatedStockData = [...prevStockData];
+
+  //       if (updatedStockData.length > 0) {
+  //         updatedStockData[updatedStockData.length - 1] = {
+  //           ...updatedStockData[updatedStockData.length - 1],
+  //           ...newData, // 새로운 데이터로 수정
+  //         };
+  //       }
+
+  //       return updatedStockData; // 수정된 배열 반환
+  //     });
+  //   };
+  //   eventSource.onerror = () => {
+  //     console.error('SSE connection error');
+  //     eventSource.close();
+  //   };
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // });
+
+  // 줌 상태 관리
+  const onDataZoom = (event: ECElementEvent) => {
+    if (event.batch) {
+      const start = event.batch[0].start;
+      const end = event.batch[0].end;
+      zoomRange.current = { start, end };
+    }
+  };
+  const onEvents = {
+    dataZoom: onDataZoom,
+  };
 
   const upColor = '#fe4a4a';
   const downColor = '#5235f2';
@@ -61,17 +118,17 @@ const MonthChart = () => {
 
   function calculateMA(dayCount: number, data: SplitData) {
     const result = [];
-    for (let i = 0; i < data.values.length; i++) {
+    for (let i = 0; i < data.values.length - 1; i++) {
       if (i < dayCount) {
         result.push('-');
         continue;
       }
 
       let sum = 0;
-      for (let j = 0; j < dayCount; j++) {
+      for (let j = 0; j < dayCount - 1; j++) {
         sum += data.values[i - j][1]; // 'close' 값 (index 1)을 사용하여 이동 평균 계산
       }
-      result.push((sum / dayCount).toFixed(3));
+      result.push((sum / (dayCount - 1)).toFixed(3));
     }
     return result;
   }
@@ -111,15 +168,17 @@ const MonthChart = () => {
       brushLink: 'all',
       outOfBrush: { colorAlpha: 0.1 },
     },
-    visualMap: [{
-      show: false,
-      seriesIndex: 5,
-      dimension: 2,
-      pieces: [
-        { value: 1, color: downColor },
-        { value: -1, color: upColor },
-      ],
-    }],
+    visualMap: [
+      {
+        show: false,
+        seriesIndex: 5,
+        dimension: 2,
+        pieces: [
+          { value: 1, color: downColor },
+          { value: -1, color: upColor },
+        ],
+      },
+    ],
     grid: [
       { left: '0%', right: '8%', height: '60%' },
       { left: '0%', right: '8%', top: '63%', height: '26%' },
@@ -174,9 +233,7 @@ const MonthChart = () => {
         splitLine: { show: false },
       },
     ],
-    dataZoom: [
-      { type: 'inside', xAxisIndex: [0, 1], start: 30, end: 100 },
-    ],
+    dataZoom: [{ type: 'inside', xAxisIndex: [0, 1], start: zoomRange.current.start, end: zoomRange.current.end }],
     series: [
       {
         name: '주가',
@@ -197,6 +254,6 @@ const MonthChart = () => {
     ],
   };
 
-  return <Echart chartOption={ChartOption} />;
+  return <Echart chartOption={ChartOption} onEvents={onEvents} />;
 };
 export default MonthChart;

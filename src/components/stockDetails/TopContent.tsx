@@ -7,15 +7,17 @@ import { useState, useEffect } from 'react';
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
 
-function TopContent() {
+interface TopContentProps {
+  symbol: string;
+  name: string;
+}
+
+const TopContent = ({symbol, name}:TopContentProps) => {
   const [likeSrc, setLikeSrc] = useState(like);
   const [alertSrc, setAlertSrc] = useState(alert);
   const [price, setPrice] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLike, setIsLike] = useState(false);
-
-  const [company, setCompany] = useState("");
-  const [symbol,setSymbol] = useState("");
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -32,22 +34,6 @@ function TopContent() {
   };
 
   useEffect(() => {
-    fetch('http://localhost.stock-server/api/v1/stockDetails/info?symbol=005930', {
-      method: 'GET',
-    })
-      .then((res) => {
-        if (!res.ok) {
-          console.log('네트워크 응답이 올바르지 않습니다');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setCompany(data.data.name);
-        setSymbol(data.data.symbol);
-      });
-  }, []);
-
-  useEffect(() => {
     if (Number(price) > 0 && price[0] !== '0') {
       setIsDisabled(false);
     } else {
@@ -59,7 +45,7 @@ function TopContent() {
     <div className="flex justify-between w-full ">
       {/* 회사 정보 추후에 get 해올 것 */}
       <div className="flex justify-center items-center">
-        <div className="text-[20px] font-bold m-[10px]"> {company}</div>
+        <div className="text-[20px] font-bold m-[10px]"> {name}</div>
         <div className="text-[19px] text-font-gray m-[10px]">{symbol}</div>
       </div>
       <div className="flex">
