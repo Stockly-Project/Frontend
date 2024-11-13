@@ -45,14 +45,14 @@ function StockDetailsPage() {
         <div className="w-full h-[30px]"></div>
         <div className="w-full min-w-[1300px] px-[10px]">
           <div className="w-full h-[5vh] flex justify-center items-center">
-            <TopContent symbol={symbol} name={name} stockprice={newStockData?.close ?? 0} rate={newStockData?.rate ?? 0} rate_price={newStockData?.rate_price ?? 0}/>
+            <TopContent symbol={symbol ?? ""} name={name} stockprice={newStockData?.close ?? 0} rate={newStockData?.rate ?? 0} rate_price={newStockData?.rate_price ?? 0}/>
           </div>
           <div className="flex h-[80vh]">
             <div className="w-[55%] h-full" style={boxStyles}>
-              <ChartContainer symbol={symbol} newStockData={newStockData!}/>
+              <ChartContainer symbol={symbol ?? ""} newStockData={newStockData!}/>
             </div>
             <div className="w-[25%] h-full" style={boxStyles}>
-              <OrderBook symbol={symbol}/>
+              <OrderBook symbol={symbol ?? ""}/>
             </div>
             <div className="w-[20%] h-full" style={boxStyles}>
               <Order stockprice={newStockData?.close ?? 0}/>
