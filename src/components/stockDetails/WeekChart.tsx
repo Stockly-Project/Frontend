@@ -115,17 +115,17 @@ const WeekChart = ({symbol, newStockData} :  WeekChartProps) => {
 
   function calculateMA(dayCount: number, data: SplitData) {
     const result = [];
-    for (let i = 0; i < data.values.length-1; i++) {
+    for (let i = 0; i < data.values.length - 1; i++) {
       if (i < dayCount) {
         result.push('-');
         continue;
       }
 
       let sum = 0;
-      for (let j = 0; j < dayCount-1; j++) {
+      for (let j = 0; j < dayCount; j++) {
         sum += data.values[i - j][1]; // 'close' 값 (index 1)을 사용하여 이동 평균 계산
       }
-      result.push((sum / (dayCount-1)).toFixed(3));
+      result.push((sum / dayCount ).toFixed(3));
     }
     return result;
   }
@@ -177,14 +177,14 @@ const WeekChart = ({symbol, newStockData} :  WeekChartProps) => {
       },
     ],
     grid: [
-      { left: '0%', right: '8%', height: '60%' },
-      { left: '0%', right: '8%', top: '63%', height: '26%' },
+      { left: '0%', right: '0%', height: '60%' },
+      { left: '0%', right: '0%', top: '63%', height: '26%' },
     ],
     xAxis: [
       {
         type: 'category',
         data: data.categoryData,
-        boundaryGap: false,
+        boundaryGap: true,
         axisLine: { onZero: false },
         splitLine: { show: false },
         min: 'dataMin',
@@ -200,7 +200,7 @@ const WeekChart = ({symbol, newStockData} :  WeekChartProps) => {
         type: 'category',
         gridIndex: 1,
         data: data.categoryData,
-        boundaryGap: false,
+        boundaryGap: true,
         axisLine: { onZero: false },
         axisTick: { show: false },
         splitLine: { show: false },

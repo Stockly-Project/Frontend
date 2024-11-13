@@ -19,7 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/myinvest" element={<MyInvest />} />
-        <Route path="/details" element={<StockDetailsPage />} />
+        <Route path="/details/:symbol" element={<StockDetailsPage />} />
         <Route path="/setting" element={<SettingPage />} />
       </Routes>
 

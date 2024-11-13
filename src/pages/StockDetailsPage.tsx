@@ -4,7 +4,7 @@ import useDrawerStore from '../zustand/MenuBarStore';
 import TopContent from '../components/stockDetails/TopContent';
 import ChartContainer from '../components/stockDetails/ChartContainer';
 import OrderBook from '../components/stockDetails/OrderBook';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { NewStockData } from "../types/NewStockData";
 
@@ -17,8 +17,9 @@ const boxStyles = {
 function StockDetailsPage() {
   const { openDrawer } = useDrawerStore();
   const location = useLocation();
-  const { symbol, name } = location.state || {};
+  const { name } = location.state || {};
   const [newStockData, setNewStockData] = useState<NewStockData>();
+  const { symbol } = useParams<{ symbol: string }>(); 
 
   useEffect(() => {
     const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);

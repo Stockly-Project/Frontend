@@ -14,11 +14,10 @@ interface StockData {
 }
 
 function StockChart() {
-
   const navigate = useNavigate();
   const gotoDetails = (symbol: string, name: string) => {
-    navigate("/details", { state: { symbol: symbol, name: name } });
-  }
+    navigate(`/details/${symbol}`, { state: { name: name } });
+  };
 
   const stockDatas = [
     {
@@ -226,23 +225,44 @@ function StockChart() {
   const [datas, setDatas] = useState<StockData[]>(stockDatas);
 
   useEffect(() => {
+    fetch(`http://localhost.stock-service/api/v1/stockDetails/symbols`, {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((fetchedData: StockData[]) => {
+        console.log(fetchedData);
+        setDatas((prevDatas) =>
+          prevDatas.map((data, index) => ({
+            ...data,
+            close: fetchedData[index]?.close,
+            rate: fetchedData[index]?.rate,
+            rate_price: fetchedData[index]?.rate_price,
+            volume: fetchedData[index]?.volume,
+            trading_value: fetchedData[index]?.trading_value,
+          })),
+        );
+      })
+      .catch((error) => {
+        console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
+      });
+  }, []);
+
+  useEffect(() => {
     // Web Worker 초기화
     const dataWorker = new Worker(new URL('./DataWorker.js', import.meta.url));
-    dataWorker.postMessage({ dataUrl: 'http://localhost.stock-service/api/v1/stockDetails/sse/stream/multiple/symbols?page=1' });
+    dataWorker.postMessage({
+      dataUrl: 'http://localhost.stock-service/api/v1/stockDetails/sse/stream/multiple/symbols?page=1',
+    });
 
     // 메인 스레드에서 Web Worker로부터 받은 메시지를 처리
     dataWorker.onmessage = (event) => {
       const newDataArray = event.data;
-      const time = new Date();
-      console.log("데이터 들어옴", time);
-
-      // 기존 데이터와 비교해 필요한 부분만 업데이트
-      setDatas((prevDatas) =>
-        prevDatas.map((data) => {
-          const newData = newDataArray.find((item:StockData) => item.id === data.id);
-          return newData ? { ...data, ...newData } : data;
-        })
-      );
+      setDatas(newDataArray);
     };
 
     // 컴포넌트 언마운트 시 Web Worker 종료
@@ -275,30 +295,34 @@ function StockChart() {
           </tr>
         </thead>
         <tbody>
-        {datas.map((data, index) => (
-          <tr
-            key={index}
-            className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"
-            onClick={()=>{gotoDetails(data.symbol, data.name)}}
-          >
-            <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">
-              <p className="text-MainBlue mr-10 font-bold text-[19px]">{index + 1}</p> {data.name}
-            </td>
-            <td className="text-right py-[10px] text-chart-font text-[18px]">
-              {data.close.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
-            </td>
-            <td
-              className={`text-right py-[10px] text-chart-font text-[18px] ${data.rate_price > 0 ? 'text-up' : 'text-down'}`}
+          {datas.map((data, index) => (
+            <tr
+              key={index}
+              className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"
+              onClick={() => {
+                gotoDetails(data.symbol, data.name);
+              }}
             >
-              {data.rate_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({data.rate})%
-            </td>
-            <td className="text-right py-[10px] text-chart-font text-[18px]">{data.trading_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</td>
-            <td className="text-right py-[10px] text-chart-font px-1 text-[18px]">{data.volume}</td>
-          </tr>
-        ))}
+              <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">
+                <p className="text-MainBlue w-[45px] font-bold text-[19px]">{index + 1}</p> {data.name}
+              </td>
+              <td className="text-right py-[10px] text-chart-font text-[18px]">
+                {data.close.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
+              </td>
+              <td
+                className={`text-right py-[10px] text-chart-font text-[18px] ${data.rate_price > 0 ? 'text-up' : 'text-down'}`}
+              >
+                {data.rate_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({data.rate})%
+              </td>
+              <td className="text-right py-[10px] text-chart-font text-[18px]">
+                {data.trading_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
+              </td>
+              <td className="text-right py-[10px] text-chart-font px-1 text-[18px]">{data.volume}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <div className="flex justify-center items-center my-4">{/* 페이지네이션 버튼 추가 */}</div>
+      <div className="h-[50px]"></div>
     </div>
   );
 }

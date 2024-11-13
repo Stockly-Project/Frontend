@@ -54,7 +54,7 @@ const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentPr
         <div className="flex justify-center items-center">
           <div className="text-[22px] mx-[10px]">{stockprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</div>
           <p className="text-[17px] mx-[5px]">어제보다</p>
-          <p className={`${rate_price>0 ? "text-up" : "text-down"}`}>{rate_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({rate}%)</p>
+          <p className={`${rate_price>0 ? "text-up" : "text-down"}`}>{rate_price > 0 && "+"}{rate_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({rate}%)</p>
         </div>
       </div>
       <div className="flex">
