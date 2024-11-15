@@ -56,7 +56,7 @@ const MonthChart = ({symbol} : MonthChartProps) => {
       });
   }, [symbol]);
 
-  // // 실시간 데이터 받아오기
+  // 실시간 데이터 받아오기
   // useEffect(() => {
   //   const eventSource = new EventSource('http://localhost.stock-service/api/v1/stockDetails/stream/005930');
   //   eventSource.onmessage = (event) => {
