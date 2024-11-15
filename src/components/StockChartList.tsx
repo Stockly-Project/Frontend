@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
+import useMarketStore from '../zustand/MarketStore';
 
 interface StockData {
   close: number;
@@ -15,17 +16,19 @@ interface StockData {
 
 function StockChart() {
   const navigate = useNavigate();
-  const gotoDetails = (symbol: string, name: string) => {
-    navigate(`/details/${symbol}`, { state: { name: name } });
+  const gotoDetails = (symbol: string, name: string, initPrice: number, initRate: number, initRatePrice: number) => {
+    navigate(`/details/${symbol}`, {
+      state: { name: name, initPrice: initPrice, initRate: initRate, initRatePrice: initRatePrice },
+    });
   };
 
   const stockDatas = [
     {
-      close: 0,
+      close: 100,
       id: 1,
       name: '삼성전자',
-      rate: 0,
-      rate_price: 0,
+      rate: 100,
+      rate_price: 100,
       symbol: '005930',
       volume: 0,
       trading_value: 0,
@@ -224,6 +227,8 @@ function StockChart() {
 
   const [datas, setDatas] = useState<StockData[]>(stockDatas);
 
+  const isMarketOpen = useMarketStore((state) => state.isMarketOpen);
+
   useEffect(() => {
     fetch(`http://localhost.stock-service/api/v1/stockDetails/symbols`, {
       method: 'GET',
@@ -235,7 +240,6 @@ function StockChart() {
         return res.json();
       })
       .then((fetchedData: StockData[]) => {
-        console.log(fetchedData);
         setDatas((prevDatas) =>
           prevDatas.map((data, index) => ({
             ...data,
@@ -253,6 +257,9 @@ function StockChart() {
   }, []);
 
   useEffect(() => {
+    // 주식 장 닫혀있는 시간이면 SSE 연결 하지 않음
+    if (!isMarketOpen) return;
+
     // Web Worker 초기화
     const dataWorker = new Worker(new URL('./DataWorker.js', import.meta.url));
     dataWorker.postMessage({
@@ -269,7 +276,7 @@ function StockChart() {
     return () => {
       dataWorker.terminate();
     };
-  }, []);
+  });
 
   if (datas.length === 0) {
     return (
@@ -300,7 +307,7 @@ function StockChart() {
               key={index}
               className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"
               onClick={() => {
-                gotoDetails(data.symbol, data.name);
+                gotoDetails(data.symbol, data.name, data.close, data.rate, data.rate_price);
               }}
             >
               <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">

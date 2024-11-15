@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import useMarketStore from '../../zustand/MarketStore';
 
 interface OrderData {
   id: number;
@@ -45,6 +46,7 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
   const [askLength, setAskLength] = useState<number[]>([]);
   const [bidLength, setBidLength] = useState<number[]>([]);
   const [datas, setDatas] = useState<OrderData>();
+  const isOrderBookAvailable = useMarketStore((state) => state.isOrderBookAvailable);
 
   useEffect(() => {
     const eventSource = new EventSource(`http://localhost.order-service/api/v1/invests/orderBook/${symbol}`);
@@ -59,7 +61,7 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
     return () => {
       eventSource.close();
     };
-  },[symbol]);
+  }, [symbol]);
 
   useEffect(() => {
     const calculateLengths = (data: OrderData): void => {
@@ -102,9 +104,18 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
     }
   }, [datas]);
 
+  if (!isOrderBookAvailable) {
+    return (
+      <div className="w-full h-[70vh] flex flex-col justify-center items-center">
+        <p className="text-[22px] text-[#545454]">지금은 호가 조회 시간이 아니에요</p>
+        <p className="text-[17px] text-[#cacaca] m-[10px]">호가 정보는 평일 8:30 ~ 18:00에 제공합니다.</p>
+      </div>
+    );
+  }
+
   if (datas === undefined) {
     return (
-      <div className="w-full h-[80vh] flex flex-col justify-center items-center">
+      <div className="w-full h-[70vh] flex flex-col justify-center items-center">
         <CircularProgress size={50} sx={{ color: '#3182F6' }} />
         <p>Loading...</p>
       </div>
@@ -112,49 +123,46 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
   }
 
   return (
-    <div className="w-full h-[80vh]">
-      <div className="text-[20px] font-bold p-[15px]">호가</div>
-      <div className="w-full h-[70vh] flex flex-col justify-center items-center p-[20px]">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-[#c1c1c1]">
-              <th className="w-[35%] h-[5vh] text-center p-[10px]">매도수량</th>
-              <th className="w-[30%] h-[5vh] text-center p-[10px]">금액 (원)</th>
-              <th className="w-[35%] h-[5vh] text-center p-[10px]">매수수량</th>
+    <div className="w-full h-[70vh] flex flex-col justify-center items-center p-[20px]">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-[#c1c1c1]">
+            <th className="w-[35%] h-[5vh] text-center p-[10px]">매도수량</th>
+            <th className="w-[30%] h-[5vh] text-center p-[10px]">금액 (원)</th>
+            <th className="w-[35%] h-[5vh] text-center p-[10px]">매수수량</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <tr key={`ask-${index}`}>
+              <td
+                className="w-[35%] h-[4vh] text-right px-[10px] relative text-[13px] border-b-[3px] border-white"
+                style={{ background: `linear-gradient(to left, #c6d2f6 ${askLength[index]}%, transparent 0)` }}
+              >
+                {datas[`sell_volume_${index + 3}`]} 주
+              </td>
+              <td className="w-[30%] h-[4vh] text-center py-2 px-[10px] border-x border-[#c1c1c1] bg-[#e7efff]">
+                {datas[`sell_price_${index + 3}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              </td>
+              <td className="w-[35%] h-[4vh] text-center p-[10px]"></td>
             </tr>
-          </thead>
-          <tbody>
-            {Array.from({ length: 8 }).map((_, index) => (
-              <tr key={`ask-${index}`}>
-                <td
-                  className="w-[35%] h-[4vh] text-right px-[10px] relative text-[13px] border-b-[3px] border-white"
-                  style={{ background: `linear-gradient(to left, #c6d2f6 ${askLength[index]}%, transparent 0)` }}
-                >
-                  {datas[`sell_volume_${index+3}`]} 주
-                </td>
-                <td className="w-[30%] h-[4vh] text-center py-2 px-[10px] border-x border-[#c1c1c1] bg-[#e7efff]">
-                  {datas[`sell_price_${index+3}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                </td>
-                <td className="w-[35%] h-[4vh] text-center p-[10px]"></td>
-              </tr>
-            ))}
-            {Array.from({ length: 8 }).map((_, index) => (
-              <tr key={`bid-${index}`}>
-                <td className="w-[35%] h-[4vh] text-center p-[10px]"></td>
-                <td className="w-[30%] h-[4vh] text-center py-2 px-[10px] border-x border-[#c1c1c1] bg-[#ffe6e6]">
-                  {datas[`buy_price_${index+1}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                </td>
-                <td
-                  className="w-[35%]  h-[4vh] text-left px-[10px] relative text-[13px] border-t-[3px] border-white"
-                  style={{ background: `linear-gradient(to right, #ffc9c9 ${bidLength[index]}%, transparent 0)` }}
-                >
-                  {datas[`buy_volume_${index+1}`]} 주
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+          {Array.from({ length: 8 }).map((_, index) => (
+            <tr key={`bid-${index}`}>
+              <td className="w-[35%] h-[4vh] text-center p-[10px]"></td>
+              <td className="w-[30%] h-[4vh] text-center py-2 px-[10px] border-x border-[#c1c1c1] bg-[#ffe6e6]">
+                {datas[`buy_price_${index + 1}`].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              </td>
+              <td
+                className="w-[35%]  h-[4vh] text-left px-[10px] relative text-[13px] border-t-[3px] border-white"
+                style={{ background: `linear-gradient(to right, #ffc9c9 ${bidLength[index]}%, transparent 0)` }}
+              >
+                {datas[`buy_volume_${index + 1}`]} 주
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

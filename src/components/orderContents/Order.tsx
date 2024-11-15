@@ -1,6 +1,7 @@
 import Buy from './Buy';
 import Sell from './Sell';
 import { useState } from 'react';
+import useMarketStore from '../../zustand/MarketStore';
 
 interface OrderProps{
   stockprice: number;
@@ -9,6 +10,7 @@ interface OrderProps{
 function Order({stockprice}: OrderProps) {
   const [content, setContent] = useState('buy');
   const [position, setPosition] = useState(0); // 시작 위치
+  const isMarketOpen = useMarketStore((state) => state.isMarketOpen);
 
   const handleClickBuy = () => {
     setContent('buy');
@@ -20,10 +22,17 @@ function Order({stockprice}: OrderProps) {
     setPosition(100); // 자식 div를 오른쪽으로 이동
   };
 
+  if(!isMarketOpen){
+    return (
+      <div className="w-full h-[70vh] flex flex-col justify-center items-center">
+        <p className="text-[21px] text-[#545454]">지금은 거래 시간이 아니에요</p>
+        <p className="text-[17px] text-[#cacaca] m-[10px]">정규 거래 시간은 평일 9:00 ~ 15:30입니다.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-[80vh] overflow-hidden">
-      <div className="text-[20px] font-bold p-[15px]">주문하기</div>
-      {/* <div className="w-full text-center justify-center items-center p-[20px]">지금은 거래시간이 아닙니다. </div> */}
+    <div className="w-full h-[70vh] overflow-hidden">
       <div className="flex px-[15px]">
         <button
           className={`w-[50px]  text-[17px] rounded-[18px] ${content === 'buy' ? 'text-buy-red bg-[#FFF2F2]' : 'text-font-gray'}`}

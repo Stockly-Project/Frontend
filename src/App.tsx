@@ -6,11 +6,23 @@ import MyInvest from './pages/MyInvestPage';
 import StockDetailsPage from './pages/StockDetailsPage';
 import OnBoardingPage from './pages/OnBoardingPage';
 import SettingPage from './pages/SettingPage';
+import useMarketStore from './zustand/MarketStore';
+import { useEffect } from 'react';
 
 function App() {
   const location = useLocation();
 
   const showMenuBar = !['/', '/login'].includes(location.pathname);
+
+  const startMarketStatusUpdater = useMarketStore(
+    (state) => state.startMarketStatusUpdater
+  );
+
+  useEffect(() => {
+    const stopUpdater = startMarketStatusUpdater(); // 상태 갱신 시작
+    return () => stopUpdater(); // 컴포넌트 언마운트 시 정리
+  }, [startMarketStatusUpdater]);
+
 
   return (
     <div className="flex">
