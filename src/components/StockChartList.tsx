@@ -45,7 +45,7 @@ function StockChart() {
     },
     {
       close: 0,
-      id: 2,
+      id: 3,
       name: 'SK하이닉스',
       rate: 0,
       rate_price: 0,
@@ -55,7 +55,7 @@ function StockChart() {
     },
     {
       close: 0,
-      id: 5,
+      id: 4,
       name: '삼성바이오로직스',
       rate: 0,
       rate_price: 0,
@@ -65,7 +65,7 @@ function StockChart() {
     },
     {
       close: 0,
-      id: 6,
+      id: 5,
       name: '기아',
       rate: 0,
       rate_price: 0,
