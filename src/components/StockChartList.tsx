@@ -42,7 +42,38 @@ function StockChart() {
       symbol: '003550',
       volume: 0,
       trading_value: 0,
-    }
+    },
+    {
+      close: 0,
+      id: 2,
+      name: 'SK하이닉스',
+      rate: 0,
+      rate_price: 0,
+      symbol: '000660',
+      volume: 0,
+      trading_value: 0,
+    },
+    {
+      close: 0,
+      id: 5,
+      name: '삼성바이오로직스',
+      rate: 0,
+      rate_price: 0,
+      symbol: '207940',
+      volume: 0,
+      trading_value: 0,
+    },
+    {
+      close: 0,
+      id: 6,
+      name: '기아',
+      rate: 0,
+      rate_price: 0,
+      symbol: '000270',
+      volume: 0,
+      trading_value: 0,
+    },
+
   ]
 
   // const stockDatas = [
