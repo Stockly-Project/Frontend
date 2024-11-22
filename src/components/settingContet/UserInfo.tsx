@@ -1,5 +1,5 @@
 import { GrFormNext } from 'react-icons/gr';
-import Modal from '../components/Modal';
+import Modal from '../Modal';
 import { useState } from 'react';
 
 function UserInfo() {
@@ -17,8 +17,18 @@ function UserInfo() {
         <div className="text-[20px] m-[10px] p-[10px]">로그아웃 하시겠습니까?</div>
         <div className="h-[30px]" />
         <div className="flex justify-end">
-          <button className="text-[#5c5c5c] p-[7px] mx-[5px] border rounded-[10px] w-[60px] border-gray" onClick={closeLogoutModal}>취소</button>
-          <button className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]" onClick={closeLogoutModal}>확인</button>
+          <button
+            className="text-[#5c5c5c] p-[7px] mx-[5px] border rounded-[10px] w-[60px] border-gray"
+            onClick={closeLogoutModal}
+          >
+            취소
+          </button>
+          <button
+            className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]"
+            onClick={closeLogoutModal}
+          >
+            확인
+          </button>
         </div>
       </div>
     );
@@ -28,11 +38,23 @@ function UserInfo() {
     return (
       <div>
         <div className="text-[20px] p-[10px]">회원 탈퇴 하시겠습니까?</div>
-        <div className="p-[10px] text-[#6c6c6c] text-[15x]">탈퇴할 경우 사용자의 모든 투자 기록과 자산 정보가 삭제됩니다.</div>
+        <div className="p-[10px] text-[#6c6c6c] text-[15x]">
+          탈퇴할 경우 사용자의 모든 투자 기록과 자산 정보가 삭제됩니다.
+        </div>
         <div className="h-[30px]" />
         <div className="flex justify-end">
-          <button className="text-[#5c5c5c] p-[7px] mx-[5px] border rounded-[10px] w-[60px] border-gray" onClick={closeWithdrawModal}>취소</button>
-          <button className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]" onClick={closeWithdrawModal}>확인</button>
+          <button
+            className="text-[#5c5c5c] p-[7px] mx-[5px] border rounded-[10px] w-[60px] border-gray"
+            onClick={closeWithdrawModal}
+          >
+            취소
+          </button>
+          <button
+            className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]"
+            onClick={closeWithdrawModal}
+          >
+            확인
+          </button>
         </div>
       </div>
     );
@@ -70,7 +92,7 @@ function UserInfo() {
             </div>
           </div>
           <Modal isOpen={withdrawModalOpen} onClose={closeWithdrawModal}>
-            <WithdrawModalContent/>
+            <WithdrawModalContent />
           </Modal>
           <div
             className="flex justify-between cursor-pointer hover:bg-Bg-gray rounded-[15px]"
@@ -88,4 +110,3 @@ function UserInfo() {
 }
 
 export default UserInfo;
-

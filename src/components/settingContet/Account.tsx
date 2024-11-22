@@ -1,7 +1,7 @@
 import { GrFormNext } from 'react-icons/gr';
 import { useState } from 'react';
-import Modal from '../components/Modal';
-import Charge from '../components/Charge';
+import Modal from '../Modal';
+import Charge from './Charge';
 import { MdErrorOutline } from 'react-icons/md';
 
 function UserInfo() {
