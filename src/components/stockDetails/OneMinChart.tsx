@@ -76,9 +76,9 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
 
   // 초단위로 실시간 데이터
   useEffect(() => {
-    if (!isDataLoaded || !newStockData || !newStockData.date) return;
+    if (!isDataLoaded) return;
 
-      const formattedDate = `${newStockData.date.split(" ")[1].slice(0, 8)}`;
+      //const formattedDate = `${newStockData.date.split(" ")[1].slice(0, 8)}`;
       setStockData((prevStockData) => {
         const updatedStockData = [...prevStockData];
 
@@ -86,7 +86,7 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
             ...newStockData,
-            date: formattedDate,
+            //date: formattedDate,
           };
         }
 

@@ -1,6 +1,7 @@
 import Echart from './Echart';
 import { EChartOption, ECElementEvent } from 'echarts';
 import { useEffect, useState, useRef } from 'react';
+import { NewStockData } from "../../types/NewStockData";
 
 interface StockData {
   date: string;
@@ -22,11 +23,13 @@ interface SplitData {
 
 interface MonthChartProps {
   symbol: string;
+  newStockData: NewStockData;
 }
 
 
-const MonthChart = ({symbol} : MonthChartProps) => {
+const MonthChart = ({symbol, newStockData} : MonthChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const zoomRange = useRef({ start: 50, end: 100 }); // 줌 상태 저장
 
   useEffect(() => {
@@ -40,48 +43,38 @@ const MonthChart = ({symbol} : MonthChartProps) => {
         return res.json();
       })
       .then((data) => {
-        // const dummyData: StockData = {
-        //   date: '',
-        //   open: 0,
-        //   low: 0,
-        //   high: 0,
-        //   close: 0,
-        //   volume: 0,
-        //   rate: 0,
-        //   rate_price: 0,
-        //   symbol: '',
-        // };
-        // setStockData([...data, dummyData]);
-        setStockData(data);
+        const dummyData: StockData = {
+          date: '',
+          open: 0,
+          low: 0,
+          high: 0,
+          close: 0,
+          volume: 0,
+          rate: 0,
+          rate_price: 0,
+          symbol: '',
+        };
+        setStockData([...data, dummyData]);
+        setIsDataLoaded(true);
       });
   }, [symbol]);
 
   // 실시간 데이터 받아오기
-  // useEffect(() => {
-  //   const eventSource = new EventSource('http://localhost.stock-service/api/v1/stockDetails/stream/005930');
-  //   eventSource.onmessage = (event) => {
-  //     const newData = JSON.parse(event.data);
-  //     setStockData((prevStockData) => {
-  //       const updatedStockData = [...prevStockData];
+  useEffect(() => {
+    if (!isDataLoaded) return;
+      setStockData((prevStockData) => {
+        const updatedStockData = [...prevStockData];
 
-  //       if (updatedStockData.length > 0) {
-  //         updatedStockData[updatedStockData.length - 1] = {
-  //           ...updatedStockData[updatedStockData.length - 1],
-  //           ...newData, // 새로운 데이터로 수정
-  //         };
-  //       }
+        if (updatedStockData.length > 0) {
+          updatedStockData[updatedStockData.length - 1] = {
+            ...updatedStockData[updatedStockData.length - 1],
+            ...newStockData, // 새로운 데이터로 수정
+          };
+        }
 
-  //       return updatedStockData; // 수정된 배열 반환
-  //     });
-  //   };
-  //   eventSource.onerror = () => {
-  //     console.error('SSE connection error');
-  //     eventSource.close();
-  //   };
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // });
+        return updatedStockData; // 수정된 배열 반환
+      });
+  }, [isDataLoaded, symbol, newStockData]);
 
   // 줌 상태 관리
   const onDataZoom = (event: ECElementEvent) => {

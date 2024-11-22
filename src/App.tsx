@@ -5,7 +5,7 @@ import MenuBar from './components/menuBar/MenuBar';
 import MyInvest from './pages/MyInvestPage';
 import StockDetailsPage from './pages/StockDetailsPage';
 import OnBoardingPage from './pages/OnBoardingPage';
-import SettingPage from './pages/SettingPage';
+import SettingsPage from './pages/SettingsPage';
 import useMarketStore from './zustand/MarketStore';
 import { useEffect } from 'react';
 
@@ -32,7 +32,7 @@ function App() {
         <Route path="/main" element={<MainPage />} />
         <Route path="/myinvest" element={<MyInvest />} />
         <Route path="/details/:symbol" element={<StockDetailsPage />} />
-        <Route path="/setting" element={<SettingPage />} />
+        <Route path="/setting" element={<SettingsPage />} />
       </Routes>
 
       {showMenuBar && (

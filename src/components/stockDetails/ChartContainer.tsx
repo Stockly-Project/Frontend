@@ -63,8 +63,8 @@ const ChartContainer = ({ symbol, newStockData } : ChartContainerProps) => {
         {filter === '5min' && <FiveMinChart symbol={symbol} newStockData={newStockData}/>}
         {filter === 'day' && <DayChart symbol={symbol} newStockData={newStockData}/>}
         {filter === 'week' && <WeekChart symbol={symbol} newStockData={newStockData}/>}
-        {filter === 'month' && <MonthChart symbol={symbol}/>}
-        {filter === 'year' && <YearChart symbol={symbol}/>}
+        {filter === 'month' && <MonthChart symbol={symbol} newStockData={newStockData}/>}
+        {filter === 'year' && <YearChart symbol={symbol} newStockData={newStockData}/>}
       </div>
     </div>
   );
