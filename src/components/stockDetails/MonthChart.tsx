@@ -43,8 +43,9 @@ const MonthChart = ({symbol, newStockData} : MonthChartProps) => {
         return res.json();
       })
       .then((data) => {
+        const today = new Date();
         const dummyData: StockData = {
-          date: '',
+          date:  `${today.getFullYear()}-${today.getMonth()+1}`,
           open: 0,
           low: 0,
           high: 0,

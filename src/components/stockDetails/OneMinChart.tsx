@@ -71,6 +71,7 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
 
   useEffect(() => {
     setData(splitData(stockData));
+
   }, [stockData]);
 
 
@@ -78,7 +79,6 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
   useEffect(() => {
     if (!isDataLoaded) return;
 
-      //const formattedDate = `${newStockData.date.split(" ")[1].slice(0, 8)}`;
       setStockData((prevStockData) => {
         const updatedStockData = [...prevStockData];
 
@@ -86,7 +86,6 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
             ...newStockData,
-            //date: formattedDate,
           };
         }
 
@@ -208,7 +207,7 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
         max: 'dataMax',
         axisLabel: {
           formatter: function (value: string) {
-            const time = value.slice(0, 5);
+            const time = value.slice(11, 16);
             return time;
           },
         },

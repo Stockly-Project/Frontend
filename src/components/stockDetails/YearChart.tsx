@@ -42,8 +42,9 @@ const YearChart = ({symbol, newStockData} : YearChartProps) => {
         return res.json();
       })
       .then((data) => {
+        const today = new Date();
         const dummyData: StockData = {
-          year: '',
+          year: `${today.getFullYear()}`,
           open: 0,
           low: 0,
           high: 0,

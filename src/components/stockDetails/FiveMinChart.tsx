@@ -76,7 +76,6 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
   useEffect(() => {
     if (!isDataLoaded) return;
 
-    //const formattedDate = `${newStockData.date.split(' ')[1].slice(0, 8)}`;
     setStockData((prevStockData) => {
       const updatedStockData = [...prevStockData];
 
@@ -84,7 +83,6 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
         updatedStockData[updatedStockData.length - 1] = {
           ...updatedStockData[updatedStockData.length - 1],
           ...newStockData,
-          //date: formattedDate,
         };
       }
 
@@ -203,7 +201,7 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
         max: 'dataMax',
         axisLabel: {
           formatter: function (value: string) {
-            const time = value.slice(0, 5);
+            const time = value.slice(11, 16);
             return time;
           },
         },
