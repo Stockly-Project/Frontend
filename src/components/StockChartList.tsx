@@ -14,7 +14,7 @@ interface StockData {
   trading_value: number;
 }
 
-function StockChart() {
+function StockChartList() {
   const navigate = useNavigate();
   const gotoDetails = (symbol: string, name: string, initPrice: number, initRate: number, initRatePrice: number) => {
     navigate(`/details/${symbol}`, {
@@ -410,4 +410,4 @@ function StockChart() {
   );
 }
 
-export default StockChart;
+export default StockChartList;
