@@ -13,59 +13,8 @@ interface StockData {
 }
 
 function SearchContent() {
-  const stockDatas = [
-    {
-      close: 0,
-      id: 1,
-      name: '삼성전자',
-      rate: 0,
-      rate_price: 0,
-      symbol: '005930',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 2,
-      name: 'LG',
-      rate: 0,
-      rate_price: 0,
-      symbol: '003550',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 3,
-      name: 'SK하이닉스',
-      rate: 0,
-      rate_price: 0,
-      symbol: '000660',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 4,
-      name: '삼성바이오로직스',
-      rate: 0,
-      rate_price: 0,
-      symbol: '207940',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 5,
-      name: '기아',
-      rate: 0,
-      rate_price: 0,
-      symbol: '000270',
-      volume: 0,
-      trading_value: 0,
-    },
-  ];
-  const [datas, setDatas] = useState<StockData[]>(stockDatas);
+  
+  const [datas, setDatas] = useState<StockData[]>([]);
   const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 관리
   const [filteredCompanies, setFilteredCompanies] = useState(datas); // 필터된 회사 리스트 상태
 
@@ -87,24 +36,7 @@ function SearchContent() {
         return res.json();
       })
       .then((fetchedData: StockData[]) => {
-        setDatas((prevDatas) =>
-          prevDatas.map((data) => {
-            // 서버에서 받은 데이터 중, symbol이 같은 항목 찾기
-            const updatedData = fetchedData.find((item) => item.symbol === data.symbol);
-
-            // 같은 symbol을 가진 데이터가 있으면 업데이트, 없으면 기존 데이터 유지
-            return updatedData
-              ? {
-                  ...data,
-                  close: updatedData.close,
-                  rate: updatedData.rate,
-                  rate_price: updatedData.rate_price,
-                  volume: updatedData.volume,
-                  trading_value: updatedData.trading_value,
-                }
-              : data;
-          }),
-        );
+        setDatas(fetchedData);
       })
       .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
