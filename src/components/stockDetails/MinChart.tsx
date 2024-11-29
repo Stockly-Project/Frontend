@@ -21,42 +21,41 @@ interface SplitData {
   volumes: [number, number, number][];
 }
 
-interface FiveMinChartProps {
+
+interface MinChartProps {
   symbol: string;
   newStockData: NewStockData;
+  filter: number;
 }
 
-const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
+const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [data, setData] = useState<SplitData>();
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const zoomRange = useRef({ start: 80, end: 100 }); // 줌 상태 저장
 
   // 과거 데이터 및 1분마다 들어오는 데이터
   useEffect(() => {
     const eventSource = new EventSource(
-      `http://localhost.stock-service/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=5m`,
+      `http://localhost.stock-service/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=${filter}m`,
     );
     eventSource.onmessage = (event) => {
-      setIsDataLoaded(false);
+      console.log(event);
       const newData = JSON.parse(event.data);
       const dummyData = {
-        date: '',
-        open: 0,
+        date: "",
+        open: 0, 
         low: 0,
         high: 0,
         close: 0,
         volume: 0,
         rate: 0,
         rate_price: 0,
-        symbol: '',
-      };
+        symbol: ""
+      }
       if (newData.length === 1) {
-        setStockData((prev) => [...prev.slice(0, -1), newData[0], dummyData]);
-        setIsDataLoaded(true);
+        setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
       } else {
         setStockData([...newData, dummyData]);
-        setIsDataLoaded(true);
       }
     };
     eventSource.onerror = () => {
@@ -70,26 +69,28 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
 
   useEffect(() => {
     setData(splitData(stockData));
+
   }, [stockData]);
+
 
   // 초단위로 실시간 데이터
   useEffect(() => {
-    if (!isDataLoaded) return;
 
-    setStockData((prevStockData) => {
-      const updatedStockData = [...prevStockData];
+      setStockData((prevStockData) => {
+        var updatedStockData = [...prevStockData];
 
-      if (updatedStockData.length > 0) {
-        updatedStockData[updatedStockData.length - 1] = {
-          ...updatedStockData[updatedStockData.length - 1],
-          ...newStockData,
-          date:""
-        };
-      }
+        if (updatedStockData.length > 0) {
+          updatedStockData[updatedStockData.length - 1] = {
+            ...updatedStockData[updatedStockData.length - 1],
+            ...newStockData,
+            date:"",
+            open:updatedStockData[updatedStockData.length - 1].close
+          };
+        } 
+        return updatedStockData; // 수정된 배열 반환
+      });
 
-      return updatedStockData; // 수정된 배열 반환
-    });
-  }, [isDataLoaded, symbol, newStockData]);
+  },[symbol, newStockData]);
 
   // 줌 상태 관리
   const onDataZoom = (event: ECElementEvent) => {
@@ -102,6 +103,8 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
   const onEvents = {
     dataZoom: onDataZoom,
   };
+
+
 
   if (!data) {
     return <div>Loading...</div>;
@@ -131,14 +134,14 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
 
   function calculateMA(dayCount: number, data: SplitData) {
     const result = [];
-    for (let i = 0; i < data.values.length; i++) {
+    for (let i = 0; i < data.values.length - 1; i++) {
       if (i < dayCount) {
         result.push('-');
         continue;
       }
 
       let sum = 0;
-      for (let j = 0; j < dayCount; j++) {
+      for (let j = 0; j < dayCount ; j++) {
         sum += Number(data.values[i - j][1]); // 'close' 값 (index 1)을 사용하여 이동 평균 계산
       }
       result.push((sum / dayCount).toFixed(3));
@@ -231,7 +234,7 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
           inside: true,
         },
         min: (value) => value.min - (value.max - value.min) * 0.1,
-        max: (value) => value.max + (value.max - value.min) * 0.1,
+        max: (value) => value.max + (value.max - value.min) * 0.1, 
       },
       {
         scale: true,
@@ -264,6 +267,6 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
     ],
   };
 
-  return <Echart chartOption={ChartOption} onEvents={onEvents} />;
+  return <Echart chartOption={ChartOption} onEvents={onEvents}/>;
 };
-export default OneMinChart;
+export default MinChart;
