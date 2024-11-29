@@ -39,7 +39,7 @@ function StockDetailsPage() {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [symbol, isMarketOpen]);
 
   return (
     <>

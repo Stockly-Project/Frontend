@@ -4,13 +4,16 @@ import CircularProgress from '@mui/material/CircularProgress';
 import useMarketStore from '../zustand/MarketStore';
 
 interface StockData {
-  close: number;
-  id: number;
+  symbol: string;
   name: string;
+  high: number;
+  low: number;
+  volume: number;
+  date: string;
+  open: number;
+  close: number;
   rate: number;
   rate_price: number;
-  symbol: string;
-  volume: number;
   trading_value: number;
 }
 
@@ -22,267 +25,12 @@ function StockChartList() {
     });
   };
 
-  const stockDatas = [
-    {
-      close: 0,
-      id: 1,
-      name: '삼성전자',
-      rate: 0,
-      rate_price: 0,
-      symbol: '005930',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 2,
-      name: 'LG',
-      rate: 0,
-      rate_price: 0,
-      symbol: '003550',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 3,
-      name: 'SK하이닉스',
-      rate: 0,
-      rate_price: 0,
-      symbol: '000660',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 4,
-      name: '삼성바이오로직스',
-      rate: 0,
-      rate_price: 0,
-      symbol: '207940',
-      volume: 0,
-      trading_value: 0,
-    },
-    {
-      close: 0,
-      id: 5,
-      name: '기아',
-      rate: 0,
-      rate_price: 0,
-      symbol: '000270',
-      volume: 0,
-      trading_value: 0,
-    },
-  ];
-
-  // const stockDatas = [
-  //   {
-  //     close: 100,
-  //     id: 1,
-  //     name: '삼성전자',
-  //     rate: 100,
-  //     rate_price: 100,
-  //     symbol: '005930',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 2,
-  //     name: 'SK하이닉스',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '000660',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 3,
-  //     name: 'LG엔솔',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '373220',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 4,
-  //     name: '현대차',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '005380',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 5,
-  //     name: '삼성바이오로직스',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '207940',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 6,
-  //     name: '기아',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '000270',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 7,
-  //     name: '셀트리온',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '068270',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 8,
-  //     name: 'LG화학',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '051910',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 9,
-  //     name: 'POSCO홀딩스',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '005490',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 10,
-  //     name: 'NAVER',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '035420',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 11,
-  //     name: '삼성SDI',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '006400',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 12,
-  //     name: 'KB금융',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '105560',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 13,
-  //     name: '삼성물산',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '028260',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 14,
-  //     name: '현대모비스',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '012330',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 15,
-  //     name: '신한지주',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '055550',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 16,
-  //     name: '카카오',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '035720',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 17,
-  //     name: '포스코케미칼',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '003670',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 18,
-  //     name: 'LG전자',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '066570',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 19,
-  //     name: '하나금융지주',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '086790',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  //   {
-  //     close: 0,
-  //     id: 20,
-  //     name: '삼성생명',
-  //     rate: 0,
-  //     rate_price: 0,
-  //     symbol: '032830',
-  //     volume: 0,
-  //     trading_value: 0,
-  //   },
-  // ];
-
-  const [datas, setDatas] = useState<StockData[]>(stockDatas);
-
+  const [datas, setDatas] = useState<StockData[]>([]);
   const isMarketOpen = useMarketStore((state) => state.isMarketOpen);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    setIsLoaded(false);
     fetch(`http://localhost.stock-service/api/v1/stockDetails/symbols`, {
       method: 'GET',
     })
@@ -293,24 +41,8 @@ function StockChartList() {
         return res.json();
       })
       .then((fetchedData: StockData[]) => {
-        setDatas((prevDatas) =>
-          prevDatas.map((data) => {
-            // 서버에서 받은 데이터 중, symbol이 같은 항목 찾기
-            const updatedData = fetchedData.find((item) => item.symbol === data.symbol);
-
-            // 같은 symbol을 가진 데이터가 있으면 업데이트, 없으면 기존 데이터 유지
-            return updatedData
-              ? {
-                  ...data,
-                  close: updatedData.close,
-                  rate: updatedData.rate,
-                  rate_price: updatedData.rate_price,
-                  volume: updatedData.volume,
-                  trading_value: updatedData.trading_value,
-                }
-              : data;
-          }),
-        );
+        setDatas(fetchedData);
+        setIsLoaded(true);
       })
       .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
@@ -319,7 +51,7 @@ function StockChartList() {
 
   useEffect(() => {
     // 주식 장 닫혀있는 시간이면 SSE 연결 하지 않음
-    if (!isMarketOpen) return;
+    if (!isMarketOpen || !isLoaded) return;
 
     // Web Worker 초기화
     const dataWorker = new Worker(new URL('./DataWorker.js', import.meta.url));
@@ -329,7 +61,6 @@ function StockChartList() {
 
     // 메인 스레드에서 Web Worker로부터 받은 메시지를 처리
     dataWorker.onmessage = (event) => {
-
       const newData = event.data[0];
 
       setDatas((prevDatas) =>
@@ -337,11 +68,15 @@ function StockChartList() {
           data.symbol === newData.symbol
             ? {
                 ...data,
+                open: newData.open,
                 close: newData.close,
+                high: newData.high,
+                low: newData.low,
                 rate: newData.rate,
                 rate_price: newData.rate_price,
                 volume: newData.volume,
                 trading_value: newData.trading_value,
+                date: newData.timestamp
               }
             : data,
         ),
@@ -352,7 +87,7 @@ function StockChartList() {
     return () => {
       dataWorker.terminate();
     };
-  });
+  }, [isLoaded]);
 
   if (datas.length === 0) {
     return (
@@ -400,7 +135,7 @@ function StockChartList() {
               <td className="text-right py-[10px] text-chart-font text-[18px]">
                 {data.trading_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
               </td>
-              <td className="text-right py-[10px] text-chart-font px-1 text-[18px]">{data.volume}</td>
+              <td className="text-right py-[10px] text-chart-font px-1 text-[18px]">{data.volume}주</td>
             </tr>
           ))}
         </tbody>

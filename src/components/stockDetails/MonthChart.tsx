@@ -43,9 +43,8 @@ const MonthChart = ({symbol, newStockData} : MonthChartProps) => {
         return res.json();
       })
       .then((data) => {
-        const today = new Date();
         const dummyData: StockData = {
-          date:  `${today.getFullYear()}-${today.getMonth()+1}`,
+          date:  "",
           open: 0,
           low: 0,
           high: 0,
@@ -69,7 +68,7 @@ const MonthChart = ({symbol, newStockData} : MonthChartProps) => {
         if (updatedStockData.length > 0) {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
-            ...newStockData, // 새로운 데이터로 수정
+            ...newStockData,
           };
         }
 
@@ -188,6 +187,7 @@ const MonthChart = ({symbol, newStockData} : MonthChartProps) => {
         max: 'dataMax',
         axisLabel: {
           formatter: function (value: string) {
+            if(value==="") return ""
             const date = new Date(value); // 날짜 문자열을 Date 객체로 변환
             return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`; // 'YYYY-MM-DD' 형식으로 변환
           },

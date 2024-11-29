@@ -83,6 +83,7 @@ const OneMinChart = ({ symbol, newStockData }: FiveMinChartProps) => {
         updatedStockData[updatedStockData.length - 1] = {
           ...updatedStockData[updatedStockData.length - 1],
           ...newStockData,
+          date:""
         };
       }
 

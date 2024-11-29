@@ -42,9 +42,8 @@ const YearChart = ({symbol, newStockData} : YearChartProps) => {
         return res.json();
       })
       .then((data) => {
-        const today = new Date();
         const dummyData: StockData = {
-          year: `${today.getFullYear()}`,
+          year: "",
           open: 0,
           low: 0,
           high: 0,
@@ -183,6 +182,7 @@ const YearChart = ({symbol, newStockData} : YearChartProps) => {
         max: 'dataMax',
         axisLabel: {
           formatter: function (value: string) {
+            if(value==="") return "";
             const date = new Date(value); // 날짜 문자열을 Date 객체로 변환
             return `${date.getFullYear()}`;
           },

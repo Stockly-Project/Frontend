@@ -86,8 +86,10 @@ const OneMinChart = ({symbol, newStockData} : OneMinChartProps) => {
           updatedStockData[updatedStockData.length - 1] = {
             ...updatedStockData[updatedStockData.length - 1],
             ...newStockData,
+            date:"", // newStockData의 timestamp를 변환하여 date로 설정
           };
         }
+      
 
         return updatedStockData; // 수정된 배열 반환
       });
