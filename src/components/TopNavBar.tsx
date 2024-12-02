@@ -28,9 +28,14 @@ interface TopNavBarProps {
 }
 
 function TopNavBar({ color }: TopNavBarProps) {
+  // navigation바 상태
   const { home, myinvest, handleClick } = useNavBarStore();
-  const { isLoggedin, setUserState } = useUserStore();
+
+  // zustand에서 사용자 정보 불러오기
+  const { isLoggedin, name, setUserState } = useUserStore();
   const clearUserStorage = useUserStore.persist.clearStorage;
+
+
   const navigate = useNavigate();
 
   const [modal, setModal] = React.useState(false);
@@ -54,25 +59,27 @@ function TopNavBar({ color }: TopNavBarProps) {
   };
 
   const handleLogOut = () => {
-    fetch('http://localhost.stock-server/api/v1/users/logout', {
+    fetch('http://localhost:30080/api/v1/users/logout', {
       method: 'POST',
-      credentials: "include",
-    }).then((res) => {
-      if (!res.ok) {
-        console.log('네트워크 응답이 올바르지 않습니다');
-        console.log(res);
-      }
-      return res.json();
-    }).then((data)=>{
-      console.log(data);
-      clearUserStorage();
-      setUserState(false, '');
-      alert('로그아웃 되었습니다.');
-      goToLogin();
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
     })
-    .catch((error) => {
-      console.error('로그아웃 중 에러 발생:', error);
-    });
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+          console.log(res);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('로그아웃 데이터', data);
+        clearUserStorage();
+        setUserState(false, '', '');
+        alert('로그아웃 되었습니다.');
+      })
+      .catch((error) => {
+        console.error('로그아웃 중 에러 발생:', error);
+      });
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -149,14 +156,7 @@ function TopNavBar({ color }: TopNavBarProps) {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  handleLogOut();
-                }}
-              >
-                로그아웃
-              </MenuItem>
+              <MenuItem> {name} 님, 반가워요</MenuItem>
               <MenuItem
                 onClick={() => {
                   handleClose();
@@ -164,6 +164,14 @@ function TopNavBar({ color }: TopNavBarProps) {
                 }}
               >
                 설정
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  handleLogOut();
+                }}
+              >
+                로그아웃
               </MenuItem>
             </Menu>
           </>

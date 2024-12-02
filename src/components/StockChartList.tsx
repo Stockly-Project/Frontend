@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMarketStore from '../zustand/MarketStore';
+import useChartListStore from '../zustand/ChartListStore';
 
 interface StockData {
   symbol: string;
@@ -25,9 +26,10 @@ function StockChartList() {
     });
   };
 
-  const [datas, setDatas] = useState<StockData[]>([]);
+  // const [datas, setDatas] = useState<StockData[]>([]);
   const isMarketOpen = useMarketStore((state) => state.isMarketOpen);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { stockData, setStockData, updateStockData } = useChartListStore();
 
   useEffect(() => {
     setIsLoaded(false);
@@ -41,7 +43,8 @@ function StockChartList() {
         return res.json();
       })
       .then((fetchedData: StockData[]) => {
-        setDatas(fetchedData);
+        // setDatas(fetchedData);
+        setStockData(fetchedData);
         setIsLoaded(true);
       })
       .catch((error) => {
@@ -62,25 +65,28 @@ function StockChartList() {
     // 메인 스레드에서 Web Worker로부터 받은 메시지를 처리
     dataWorker.onmessage = (event) => {
       const newData = event.data[0];
+      updateStockData(newData);
 
-      setDatas((prevDatas) =>
-        prevDatas.map((data) =>
-          data.symbol === newData.symbol
-            ? {
-                ...data,
-                open: newData.open,
-                close: newData.close,
-                high: newData.high,
-                low: newData.low,
-                rate: newData.rate,
-                rate_price: newData.rate_price,
-                volume: newData.volume,
-                trading_value: newData.trading_value,
-                date: newData.timestamp
-              }
-            : data,
-        ),
-      );
+      // setDatas((prevDatas) =>
+      //   prevDatas.map((data) =>
+      //     data.symbol === newData.symbol
+      //       ? {
+      //           ...data,
+      //           open: newData.open,
+      //           close: newData.close,
+      //           high: newData.high,
+      //           low: newData.low,
+      //           rate: newData.rate,
+      //           rate_price: newData.rate_price,
+      //           volume: newData.volume,
+      //           trading_value: newData.trading_value,
+      //           date: newData.timestamp
+      //         }
+      //       : data,
+      //   ),
+      // );
+
+
     };
 
     // 컴포넌트 언마운트 시 Web Worker 종료
@@ -89,7 +95,7 @@ function StockChartList() {
     };
   }, [isLoaded]);
 
-  if (datas.length === 0) {
+  if (stockData.length === 0) {
     return (
       <>
         <div className="w-full h-[70vh] flex flex-col justify-center items-center">
@@ -113,7 +119,7 @@ function StockChartList() {
           </tr>
         </thead>
         <tbody>
-          {datas.map((data, index) => (
+          {stockData.map((data, index) => (
             <tr
               key={index}
               className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"

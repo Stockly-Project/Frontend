@@ -1,16 +1,83 @@
 import { GrFormNext } from 'react-icons/gr';
 import Modal from '../Modal';
 import { useState } from 'react';
+import useUserStore from '../../zustand/UserStore';
+import { useNavigate } from 'react-router-dom';
 
 function UserInfo() {
+  const navigate = useNavigate();
+
+  // 로그아웃 모달 상태 관리
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
 
+  // 회원탈퇴 모달 상태 관리
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const openWithdrawModal = () => setWithdrawModalOpen(true);
   const closeWithdrawModal = () => setWithdrawModalOpen(false);
 
+  // zustand에서 사용자 정보 불러오기
+  const { name, email, setUserState } = useUserStore();
+  const clearUserStorage = useUserStore.persist.clearStorage;
+
+  // 로그인 페이지로 이동
+  const goToLogin = () => {
+    navigate('/login');
+  };
+
+  // 로그아웃 함수
+  const handleLogOut = () => {
+    fetch('http://localhost:30080/api/v1/users/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('로그아웃 데이터', data);
+        clearUserStorage();
+        setUserState(false, '', '');
+        alert('로그아웃 되었습니다.');
+        goToLogin();
+      })
+      .catch((error) => {
+        console.error('로그아웃 중 에러 발생:', error);
+      });
+  };
+
+  // 회원탈퇴 함수
+
+  const handleWithdraw = () => {
+    fetch('http://localhost:30080/api/v1/users', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('회원탈퇴', data);
+        clearUserStorage();
+        setUserState(false, '', '');
+        alert('계정이 삭제 되었습니다.');
+        goToLogin();
+      })
+      .catch((error) => {
+        console.error('회원탈퇴 중 에러 발생:', error);
+      });
+  };
+
+  // 로그아웃 모달 내용
   const LogoutModalContent = () => {
     return (
       <div>
@@ -25,7 +92,10 @@ function UserInfo() {
           </button>
           <button
             className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]"
-            onClick={closeLogoutModal}
+            onClick={() => {
+              closeLogoutModal();
+              handleLogOut();
+            }}
           >
             확인
           </button>
@@ -34,6 +104,7 @@ function UserInfo() {
     );
   };
 
+  // 회원탈퇴 모달 내용
   const WithdrawModalContent = () => {
     return (
       <div>
@@ -51,7 +122,10 @@ function UserInfo() {
           </button>
           <button
             className="text-white bg-MainBlue p-[7px] mx-[5px] rounded-[10px] w-[60px]"
-            onClick={closeWithdrawModal}
+            onClick={() => {
+              closeWithdrawModal();
+              handleWithdraw();
+            }}
           >
             확인
           </button>
@@ -67,11 +141,11 @@ function UserInfo() {
         <div className="my-[10px]">
           <div className="flex justify-between">
             <div className="text-[18px] p-[10px] my-[5px] text-[#6a6a6a]">이름</div>
-            <div className="text-[18px] p-[10px] ">강서영</div>
+            <div className="text-[18px] p-[10px] ">{name}</div>
           </div>
           <div className="flex justify-between">
             <div className="text-[18px] p-[10px] my-[5px] text-[#6a6a6a]">이메일 주소</div>
-            <div className="text-[18px] p-[10px]">aaa@gmail.com</div>
+            <div className="text-[18px] p-[10px]">{email}</div>
           </div>
         </div>
       </div>

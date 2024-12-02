@@ -28,8 +28,20 @@ interface MinChartProps {
   filter: number;
 }
 
+const dummyData = {
+  date: "",
+  open: 0, 
+  low: 0,
+  high: 0,
+  close: 0,
+  volume: 0,
+  rate: 0,
+  rate_price: 0,
+  symbol: ""
+}
+
 const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
-  const [stockData, setStockData] = useState<StockData[]>([]);
+  const [stockData, setStockData] = useState<StockData[]>([dummyData]);
   const [data, setData] = useState<SplitData>();
   const zoomRange = useRef({ start: 80, end: 100 }); // 줌 상태 저장
 
@@ -39,19 +51,7 @@ const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
       `http://localhost.stock-service/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=${filter}m`,
     );
     eventSource.onmessage = (event) => {
-      console.log(event);
       const newData = JSON.parse(event.data);
-      const dummyData = {
-        date: "",
-        open: 0, 
-        low: 0,
-        high: 0,
-        close: 0,
-        volume: 0,
-        rate: 0,
-        rate_price: 0,
-        symbol: ""
-      }
       if (newData.length === 1) {
         setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
       } else {
@@ -84,7 +84,9 @@ const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
             ...updatedStockData[updatedStockData.length - 1],
             ...newStockData,
             date:"",
-            open:updatedStockData[updatedStockData.length - 1].close
+            open:updatedStockData[updatedStockData.length - 1].close,
+            low: updatedStockData[updatedStockData.length - 1].rate_price > 0 ? updatedStockData[updatedStockData.length - 1].open : updatedStockData[updatedStockData.length - 1].close,
+            high: updatedStockData[updatedStockData.length - 1].rate_price > 0 ? updatedStockData[updatedStockData.length - 1].close : updatedStockData[updatedStockData.length - 1].open
           };
         } 
         return updatedStockData; // 수정된 배열 반환

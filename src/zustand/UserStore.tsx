@@ -4,7 +4,8 @@ import { persist } from 'zustand/middleware';
 interface UserState {
   isLoggedin: boolean;
   email: string;
-  setUserState: (login: boolean, name: string) => void;
+  name: string;
+  setUserState: (login: boolean, name: string, email: string) => void;
 }
 
 const useUserStore = create(
@@ -12,8 +13,9 @@ const useUserStore = create(
     (set) => ({
       isLoggedin: false,
       email: '',
-      setUserState: (login: boolean, name: string) => {
-        set({ isLoggedin: login, email: name });
+      name: '',
+      setUserState: (login: boolean, name: string, email: string) => {
+        set({ isLoggedin: login, name: name, email: email });
       },
     }),
     {
