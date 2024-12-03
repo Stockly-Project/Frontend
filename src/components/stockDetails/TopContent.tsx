@@ -19,9 +19,9 @@ interface TopContentProps {
 const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentProps) => {
   const [likeSrc, setLikeSrc] = useState(like);
   const [alertSrc, setAlertSrc] = useState(alert);
-  const [price, setPrice] = useState('');
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isLike, setIsLike] = useState(false);
+  const [price, setPrice] = useState(''); // 사용자가 알림 받기 입력한 값 
+  const [isDisabled, setIsDisabled] = useState(true); // 알림 받기 버튼 활성/비활성
+  const [isLike, setIsLike] = useState(false); // 좋아요 유무
 
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,6 +45,26 @@ const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentPr
       setIsDisabled(true);
     }
   }, [price]);
+
+  const handleSubmitAlert = () => {
+    fetch(`http://localhost:30080/api/v1/alert/prices`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({symbol, price: Number(price)})
+    })
+    .then((res) => {
+      if (!res.ok){
+        console.log("네트워크 응답이 올바르지 않습니다.");
+        console.log(res)
+        console.log(JSON.stringify({symbol, price: Number(price)}));
+      }
+      return res.json();
+    })
+    .then((data)=>{
+      console.log(data);
+    })
+  }
 
   return (
     <div className="flex justify-between w-full">
@@ -117,6 +137,7 @@ const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentPr
               <button
                 className=" m-[20px] bg-MainBlue text-white w-[60px] h-[30px] text-[13px] rounded-[3px]"
                 disabled={isDisabled}
+                onClick={handleSubmitAlert}
               >
                 알림 받기
               </button>

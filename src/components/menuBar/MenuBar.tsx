@@ -5,11 +5,9 @@ import MenuBarLikeContent from './MenuBarLikeContent';
 import MenuBarChartContent from './/MenuBarChartContent';
 import MenuBarAlertContent from './MenuBarAlertContent';
 import useDrawerStore from '../../zustand/MenuBarStore';
-import useUserStore from '../../zustand/UserStore';
 
 function MenuBar() {
   const { openDrawer, like, alert, chart, handleDrawer } = useDrawerStore();
-  const { isLoggedin } = useUserStore();
 
   return (
     <div className={`flex h-[100vh] fixed top-0 right-0 `}>
@@ -18,15 +16,11 @@ function MenuBar() {
           openDrawer ? 'w-[260px] border-l solid border-[#cfcfcf] ' : 'w-0'
         }`}
       >
-        {isLoggedin ? (
-          <>
-            {like && <MenuBarLikeContent />}
-            {alert && <MenuBarAlertContent />}
-            {chart && <MenuBarChartContent />}
-          </>
-        ) : (
-          <div className="w-full text-center">로그인 후 이용하세요</div>
-        )}
+        <>
+          {like && <MenuBarLikeContent />}
+          {alert && <MenuBarAlertContent />}
+          {chart && <MenuBarChartContent />}
+        </>
       </div>
       <div className="w-[65px] bg-Bg-gray border-l solid border-[#cfcfcf] flex flex-col z-10">
         <button
