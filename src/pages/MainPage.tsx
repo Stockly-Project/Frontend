@@ -1,5 +1,5 @@
 import TopNavBar from '../components/TopNavBar';
-import StockChartList from '../components/StockChart';
+import StockChartList from '../components/StockChartList';
 import useDrawerStore from '../zustand/MenuBarStore';
 
 function MainPage() {

@@ -8,6 +8,7 @@ import OnBoardingPage from './pages/OnBoardingPage';
 import SettingsPage from './pages/SettingsPage';
 import useMarketStore from './zustand/MarketStore';
 import { useEffect } from 'react';
+import RealTimeData from './hooks/RealTimeData';
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,9 @@ function App() {
     const stopUpdater = startMarketStatusUpdater(); // 상태 갱신 시작
     return () => stopUpdater(); // 컴포넌트 언마운트 시 정리
   }, [startMarketStatusUpdater]);
+
+  // 실시간 주식 리스트 zustand에 저장
+  RealTimeData();
 
 
   return (
