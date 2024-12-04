@@ -9,7 +9,7 @@ function SettingPage() {
   const [selectedMenu, setSelectedMenu] = useState('myinfo');
   return (
     <>
-      <div className={`w-full transition-all duration-300 ${openDrawer ? 'mr-[325px]' : 'mr-[65px]'}`}>
+      <div className={`w-full transition-all duration-300 ${openDrawer ? 'mr-[335px]' : 'mr-[65px]'}`}>
         <TopNavBar color={'white'} />
         <div className="w-full h-[30px]"></div>
         <div className="flex justify-center">

@@ -16,7 +16,7 @@ import AlertStore from './zustand/AlertStore';
 
 function App() {
   const location = useLocation();
-  const { isModalOpen, openModal, closeModal } = AlertStore();
+  const { isModalOpen, closeModal } = AlertStore();
   const showMenuBar = !['/', '/login'].includes(location.pathname);
 
   const startMarketStatusUpdater = useMarketStore((state) => state.startMarketStatusUpdater);

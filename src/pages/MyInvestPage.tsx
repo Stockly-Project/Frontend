@@ -11,7 +11,7 @@ function MyInvestPage() {
   const {openDrawer} = useDrawerStore();
   return (
     <>
-      <div className={`w-full bg-Bg-gray transition-all duration-300 ${openDrawer ? 'mr-[325px]' : 'mr-[65px]' }`}>
+      <div className={`w-full bg-Bg-gray transition-all duration-300 ${openDrawer ? 'mr-[335px]' : 'mr-[65px]' }`}>
         <TopNavBar color={"gray"}/>
         <div className="w-full h-[50px]"></div>
         <div className="flex justify-center ">

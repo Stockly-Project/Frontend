@@ -69,7 +69,7 @@ function MenuBarAlertContent() {
               <div className="m-[10px] text-[14px] text-[#acacacd4]">{message.date}</div>
               <img src={Delete} className="m-[10px] cursor-pointer" onClick={()=>handleDelete(message.notification_id)}/>
             </div>
-            <div className="m-[10px] text-[16px]">
+            <div className="m-[10px] text-[15px]">
               {message.company_name} (이)가 <br/> {message.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원에
               도달했습니다.
             </div>

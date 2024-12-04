@@ -67,9 +67,9 @@ function AlertList() {
             key={index}
             className="flex justify-between items-center m-[5px] rounded-[10px] transition-color duration-300"
           >
-            <div className="mx-[10px] text-[17px] text-chart-font">{alert.company_name}</div>
+            <div className="mx-[10px] text-[16px] text-chart-font">{alert.company_name}</div>
             <div className="flex justify-center items-center m-[10px]">
-              <div className="m-[10px] text-[17px]">
+              <div className="m-[10px] text-[16px]">
                 {alert.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
               </div>
               <div

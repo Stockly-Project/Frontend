@@ -13,7 +13,7 @@ function MenuBar() {
     <div className={`flex h-[100vh] fixed top-0 right-0 `}>
       <div
         className={`transition-all duration-300 bg-Bg-gray overflow-auto  ${
-          openDrawer ? 'w-[260px] border-l solid border-[#cfcfcf] ' : 'w-0'
+          openDrawer ? 'w-[270px] border-l solid border-[#cfcfcf] ' : 'w-0'
         }`}
       >
         <>

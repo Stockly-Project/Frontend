@@ -25,12 +25,12 @@ function MenuBarChartContent() {
             }}
           >
             <div className="m-[10px] text-[16px] flex text-chart-font">
-              <p className="mr-[10px] text-MainBlue font-bold text-[16px]">{index + 1}</p>
+              <p className="mr-[10px] text-MainBlue font-bold text-[15px]">{index + 1}</p>
               {data.name}
             </div>
             <div className="flex flex-col jsutify-center items-center m-[10px]">
-              <div className="text-[16px]">{data.close}원</div>
-              <div className={`text-[12px] font-thin ${data.rate_price > 0 ? 'text-up' : 'text-down'}`}>
+              <div className="text-[15px]">{data.close}원</div>
+              <div className={`text-[11px] font-thin ${data.rate_price > 0 ? 'text-up' : 'text-down'}`}>
                 {data.rate_price > 0 ? '+' : ''}
                 {data.rate_price}원 ({data.rate}%)
               </div>
