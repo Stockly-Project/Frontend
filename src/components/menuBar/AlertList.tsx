@@ -1,6 +1,6 @@
 import { IoMdTrash } from 'react-icons/io';
 import { useState, useEffect } from 'react';
-import useUserStore from '../../zustand/UserStore';
+import AlertStore from '../../zustand/AlertStore';
 
 interface Alert {
   notification_id: number;
@@ -11,9 +11,10 @@ interface Alert {
 }
 
 function AlertList() {
-  const { isLoggedin } = useUserStore();
 
   const [alertList, setAlertList] = useState<Alert[]>([]);
+
+  const {flag, setFlagState} = AlertStore(); // 알림목록에 변경사항 있으면 바뀌는 변수(useEffect 의존)
 
   const handleDelete = (notification_id: number) => {
     fetch(`http://localhost:30080/api/v1/alert/prices/${notification_id}`, {
@@ -30,6 +31,7 @@ function AlertList() {
       })
       .then((data) => {
         console.log(data);
+        setFlagState(!flag);
       })
       .catch((error) => {
         console.error('Fetch 에러:', error); // 에러 처리
@@ -55,7 +57,7 @@ function AlertList() {
       .catch((error) => {
         console.error('Fetch 에러:', error); // 에러 처리
       });
-  }, [isLoggedin]);
+  }, [flag]);
 
   return (
     <div className="mt-[70px]">

@@ -9,15 +9,17 @@ import SettingsPage from './pages/SettingsPage';
 import useMarketStore from './zustand/MarketStore';
 import { useEffect } from 'react';
 import RealTimeData from './hooks/RealTimeData';
+import AlertMessageData from './hooks/AlertMessageData';
+import Modal from './components/Modal';
+import NewAlertContent from './components/NewAlertContent';
+import AlertStore from './zustand/AlertStore';
 
 function App() {
   const location = useLocation();
-
+  const { isModalOpen, openModal, closeModal } = AlertStore();
   const showMenuBar = !['/', '/login'].includes(location.pathname);
 
-  const startMarketStatusUpdater = useMarketStore(
-    (state) => state.startMarketStatusUpdater
-  );
+  const startMarketStatusUpdater = useMarketStore((state) => state.startMarketStatusUpdater);
 
   useEffect(() => {
     const stopUpdater = startMarketStatusUpdater(); // 상태 갱신 시작
@@ -26,10 +28,13 @@ function App() {
 
   // 실시간 주식 리스트 zustand에 저장
   RealTimeData();
-
+  AlertMessageData();
 
   return (
     <div className="flex">
+      <Modal isOpen={isModalOpen} onClose={closeModal} >
+        <NewAlertContent />
+      </Modal>
       <Routes>
         <Route path="/" element={<OnBoardingPage />} />
         <Route path="/login" element={<LoginPage />} />

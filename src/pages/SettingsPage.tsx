@@ -1,6 +1,6 @@
 import TopNavBar from '../components/TopNavBar';
-import UserInfo from '../components/settingContet/UserInfo';
-import Account from '../components/settingContet/Account';
+import UserInfo from '../components/settingContent/UserInfo';
+import Account from '../components/settingContent/Account';
 import useDrawerStore from '../zustand/MenuBarStore';
 import { useState } from 'react';
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Modal from '../Modal';
 import Charge from './Charge';
 import { MdErrorOutline } from 'react-icons/md';
+import NewAlertContent from '../NewAlertContent';
 
 function UserInfo() {
   const [chargeModalOpen, setLogoutModalOpen] = useState(false);

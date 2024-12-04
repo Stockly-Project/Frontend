@@ -1,11 +1,12 @@
 import like from '../../assets/icons/like.svg';
-import alert from '../../assets/icons/alert.svg';
+import alerticon from '../../assets/icons/alert.svg';
 import alert_hover from '../../assets/icons/alert_hover.svg';
 import like2 from '../../assets/icons/like2.svg';
 import like2_hover from '../../assets/icons/like2_hover.svg';
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
+import AlertStore from '../../zustand/AlertStore';
 
 interface TopContentProps {
   symbol: string;
@@ -18,10 +19,11 @@ interface TopContentProps {
 
 const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentProps) => {
   const [likeSrc, setLikeSrc] = useState(like);
-  const [alertSrc, setAlertSrc] = useState(alert);
+  const [alertSrc, setAlertSrc] = useState(alerticon);
   const [price, setPrice] = useState(''); // 사용자가 알림 받기 입력한 값 
   const [isDisabled, setIsDisabled] = useState(true); // 알림 받기 버튼 활성/비활성
   const [isLike, setIsLike] = useState(false); // 좋아요 유무
+  const {flag, setFlagState} = AlertStore();
 
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -51,20 +53,27 @@ const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentPr
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({symbol, price: Number(price)})
+      body: JSON.stringify({ symbol, price: Number(price) }),
     })
-    .then((res) => {
-      if (!res.ok){
-        console.log("네트워크 응답이 올바르지 않습니다.");
-        console.log(res)
-        console.log(JSON.stringify({symbol, price: Number(price)}));
-      }
-      return res.json();
-    })
-    .then((data)=>{
-      console.log(data);
-    })
-  }
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다.');
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        alert('알림받기를 신청하였습니다.');
+        setFlagState(!flag);
+        handleClose();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('알림받기 신청 중 문제가 발생했습니다.');
+      });
+  };
+  
 
   return (
     <div className="flex justify-between w-full">
@@ -93,7 +102,7 @@ const TopContent = ({ symbol, name, stockprice, rate, rate_price }: TopContentPr
             className="cursor-pointer w-full h-full "
             alt="알림"
             onMouseEnter={() => setAlertSrc(alert_hover)} // hover 상태일 때
-            onMouseLeave={() => setAlertSrc(alert)} // 기본 상태로 복귀
+            onMouseLeave={() => setAlertSrc(alerticon)} // 기본 상태로 복귀
           />
         </button>
         <Menu
