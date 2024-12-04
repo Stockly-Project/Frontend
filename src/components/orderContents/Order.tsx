@@ -22,14 +22,14 @@ function Order({stockprice}: OrderProps) {
     setPosition(100); // 자식 div를 오른쪽으로 이동
   };
 
-  if(!isMarketOpen){
-    return (
-      <div className="w-full h-[70vh] flex flex-col justify-center items-center">
-        <p className="text-[21px] text-[#545454]">지금은 거래 시간이 아니에요</p>
-        <p className="text-[17px] text-[#cacaca] m-[10px] text-center">정규 거래 시간은 평일 9:00 ~ 15:30입니다.</p>
-      </div>
-    );
-  }
+  // if(!isMarketOpen){
+  //   return (
+  //     <div className="w-full h-[70vh] flex flex-col justify-center items-center">
+  //       <p className="text-[21px] text-[#545454]">지금은 거래 시간이 아니에요</p>
+  //       <p className="text-[17px] text-[#cacaca] m-[10px] text-center">정규 거래 시간은 평일 9:00 ~ 15:30입니다.</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="w-full h-[70vh] overflow-hidden">
