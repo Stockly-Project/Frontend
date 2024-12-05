@@ -2,10 +2,9 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 import MenuBar from './components/menuBar/MenuBar';
-import MyInvest from './pages/MyInvestPage';
 import StockDetailsPage from './pages/StockDetailsPage';
 import OnBoardingPage from './pages/OnBoardingPage';
-import SettingsPage from './pages/SettingsPage';
+import MypagePage from './pages/MypagePage';
 import useMarketStore from './zustand/MarketStore';
 import { useEffect } from 'react';
 import RealTimeData from './hooks/RealTimeData';
@@ -39,9 +38,8 @@ function App() {
         <Route path="/" element={<OnBoardingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/myinvest" element={<MyInvest />} />
         <Route path="/details/:symbol" element={<StockDetailsPage />} />
-        <Route path="/setting" element={<SettingsPage />} />
+        <Route path="/mypage" element={<MypagePage />} />
       </Routes>
 
       {showMenuBar && (

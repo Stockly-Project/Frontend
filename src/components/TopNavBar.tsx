@@ -29,7 +29,7 @@ interface TopNavBarProps {
 
 function TopNavBar({ color }: TopNavBarProps) {
   // navigation바 상태
-  const { home, myinvest, handleClick } = useNavBarStore();
+  const { home, mypage, handleClick } = useNavBarStore();
 
   // zustand에서 사용자 정보 불러오기
   const { isLoggedin, name, setUserState } = useUserStore();
@@ -51,8 +51,8 @@ function TopNavBar({ color }: TopNavBarProps) {
     navigate('/login');
   };
 
-  const goToSetting = () => {
-    navigate('/setting');
+  const goToMypage = () => {
+    navigate('/mypage');
   };
 
   const handleLogOut = () => {
@@ -107,10 +107,10 @@ function TopNavBar({ color }: TopNavBarProps) {
           </div>
 
           <div
-            className={`text-[17px] mx-[20px] cursor-pointer ${myinvest ? 'text-[#000000]' : 'text-[#B4BDC6]'}`}
+            className={`text-[17px] mx-[20px] cursor-pointer ${mypage ? 'text-[#000000]' : 'text-[#B4BDC6]'}`}
             onClick={() => {
               handleClick('myinvest');
-              goToSetting();
+              goToMypage();
             }}
           >
             마이페이지

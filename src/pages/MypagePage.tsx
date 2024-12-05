@@ -1,9 +1,9 @@
 import TopNavBar from '../components/TopNavBar';
-import UserInfo from '../components/settingContent/UserInfo';
-import Account from '../components/settingContent/Account';
+import UserInfo from '../components/mypageContent/UserInfo';
+import Account from '../components/mypageContent/Account';
 import useDrawerStore from '../zustand/MenuBarStore';
 import { useState } from 'react';
-import OrderList from '../components/settingContent/OrderList';
+import OrderList from '../components/mypageContent/OrderList';
 
 function SettingPage() {
   const { openDrawer } = useDrawerStore();
