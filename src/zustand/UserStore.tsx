@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist} from 'zustand/middleware';
 
 interface UserState {
   isLoggedin: boolean;
@@ -20,6 +20,18 @@ const useUserStore = create(
     }),
     {
       name: 'userStorage',
+      storage: {
+        getItem: (name) => {
+          const storedValue = sessionStorage.getItem(name);
+          return storedValue ? JSON.parse(storedValue) : null;
+        },
+        setItem: (name, value) => {
+          sessionStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => {
+          sessionStorage.removeItem(name);
+        },
+      },
     },
   ),
 );

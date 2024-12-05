@@ -56,7 +56,7 @@ function SignIn() {
   };
 
   const gotoMain = () => {
-    navigate('/main');
+    navigate('/');
   };
 
   return (

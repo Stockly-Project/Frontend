@@ -47,8 +47,8 @@ function TopNavBar({ color }: TopNavBarProps) {
     handleClick('home');
   };
 
-  const goToLogin = () => {
-    navigate('/login');
+  const goToOnboarding = () => {
+    navigate('/onboarding');
   };
 
   const goToMypage = () => {
@@ -167,7 +167,7 @@ function TopNavBar({ color }: TopNavBarProps) {
         ) : (
           <button
             className="bg-MainBlue w-[90px] h-[40px] text-white rounded-[5px] m-[20px] hover:bg-[#1063d8]"
-            onClick={goToLogin}
+            onClick={goToOnboarding}
           >
             로그인
           </button>

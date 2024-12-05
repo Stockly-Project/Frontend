@@ -12,11 +12,13 @@ import AlertMessageData from './hooks/AlertMessageData';
 import Modal from './components/Modal';
 import NewAlertContent from './components/NewAlertContent';
 import AlertStore from './zustand/AlertStore';
+import ProtectedRoute from './routes/ProtectedRoute';
+import GuestRoute from './routes/GuestRoute';
 
 function App() {
   const location = useLocation();
   const { isModalOpen, closeModal } = AlertStore();
-  const showMenuBar = !['/', '/login'].includes(location.pathname);
+  const showMenuBar = !['/onboarding', '/login'].includes(location.pathname);
 
   const startMarketStatusUpdater = useMarketStore((state) => state.startMarketStatusUpdater);
 
@@ -35,11 +37,11 @@ function App() {
         <NewAlertContent />
       </Modal>
       <Routes>
-        <Route path="/" element={<OnBoardingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/main" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+        <Route path="/onboarding" element={<GuestRoute><OnBoardingPage /></GuestRoute>} />
         <Route path="/details/:symbol" element={<StockDetailsPage />} />
-        <Route path="/mypage" element={<MypagePage />} />
+        <Route path="/mypage" element={<ProtectedRoute><MypagePage /></ProtectedRoute>} />
       </Routes>
 
       {showMenuBar && (
