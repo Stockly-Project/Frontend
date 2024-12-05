@@ -109,7 +109,7 @@ function TopNavBar({ color }: TopNavBarProps) {
           <div
             className={`text-[17px] mx-[20px] cursor-pointer ${mypage ? 'text-[#000000]' : 'text-[#B4BDC6]'}`}
             onClick={() => {
-              handleClick('myinvest');
+              handleClick('mypage');
               goToMypage();
             }}
           >
