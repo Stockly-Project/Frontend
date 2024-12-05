@@ -46,9 +46,6 @@ function TopNavBar({ color }: TopNavBarProps) {
     navigate('/main');
     handleClick('home');
   };
-  const goToMyInvest = () => {
-    navigate('/myinvest');
-  };
 
   const goToLogin = () => {
     navigate('/login');
@@ -113,10 +110,10 @@ function TopNavBar({ color }: TopNavBarProps) {
             className={`text-[17px] mx-[20px] cursor-pointer ${myinvest ? 'text-[#000000]' : 'text-[#B4BDC6]'}`}
             onClick={() => {
               handleClick('myinvest');
-              goToMyInvest();
+              goToSetting();
             }}
           >
-            내 투자
+            마이페이지
           </div>
           <div
             className="m-[10px] bg-Box-gray w-[230px] h-[40px] rounded-[30px] p-[15px] cursor-pointer flex items-center text-[#9e9ea2]"
@@ -157,14 +154,6 @@ function TopNavBar({ color }: TopNavBarProps) {
               }}
             >
               <MenuItem> {name} 님, 반가워요</MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  goToSetting();
-                }}
-              >
-                설정
-              </MenuItem>
               <MenuItem
                 onClick={() => {
                   handleClose();
