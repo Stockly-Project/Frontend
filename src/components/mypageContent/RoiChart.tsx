@@ -6,14 +6,9 @@ import { useState, useEffect } from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, zoomPlugin);
 
-interface RoiData {
-  total_roi: number;
-  created_at: string;
-}
-
 function RoiChart() {
-  const [roi, setRoi] = useState([]);
-  const [label, setLabel] = useState([]);
+  const [roi, setRoi] = useState<number[]>([]);
+  const [label, setLabel] = useState<string[]>([]);
 
   const labels = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
   const datas = [10, 10, 15, 20, 25, 20, 10, -2, -8, 0, 10, 12];
@@ -90,10 +85,9 @@ function RoiChart() {
         }
         return res.json();
       })
-      .then((data) => {
-        console.log(data);
-        const roiData = data.map((item: RoiData) => item.total_roi);
-        const dateData = data.map((item: RoiData) => item.created_at);
+      .then((data:[number, string][]) => {
+        const roiData = data.map((item) => item[0]); // 첫 번째 요소를 roi 배열로 추출
+        const dateData = data.map((item) => item[1]); // 두 번째 요소를 date 배열로 추출
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
       });
