@@ -32,7 +32,6 @@ function MyOrderList() {
       })
       .then((fetchedData) => {
         setOrderList(fetchedData.data);
-        console.log(fetchedData.data);
       })
       .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생하였습니다:', error);
@@ -153,7 +152,7 @@ function MyOrderList() {
         </tr>
         {filteredOrderList.map((order) => (
           <tr className="rounded-[5px] hover:bg-Bg-gray">
-            <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">{order.date}</td>
+            <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">{(order.date).split('T')[0]}</td>
             <td className="text-right py-[10px] text-chart-font text-[18px]">{order.company_name}</td>
             <td
               className={`text-right py-[10px] text-chart-font text-[18px] ${order.order_type === '매수' ? 'text-up' : 'text-down'}`}
