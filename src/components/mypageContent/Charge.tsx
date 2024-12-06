@@ -12,8 +12,25 @@ function Charge() {
     }
   }, [price]); // price 가 변경되면 실행
 
-  const handleClick = () => {
-    console.log(price);
+  const handleClick = async () => {
+    try {
+      const response = await fetch('http://localhost.order-service/api/v1/invests/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ amount:price }),
+      });
+      // 응답 상태 확인
+      if (response.status === 200) {
+        alert('충전이 완료되었습니다.')
+      } else {
+        alert('충전에 실패하였습니다.');
+        console.log(response)
+      }
+    } catch (error) {
+      console.error('네트워크 오류:', error); // 네트워크 에러 출력
+      alert('네트워크 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    }
   };
 
   return (
@@ -36,7 +53,7 @@ function Charge() {
           <div className="text-[18px]">충전 후 잔액</div>
           <div className="m-[10px]">0원</div>
         </div>
-        <div className="h-[100px]"/>
+        <div className="h-[100px]" />
         <button
           className={`w-full h-[45px] rounded-[7px] ${isDisabled ? 'bg-[#eeeeee] text-[#a6a6a6]' : 'bg-MainBlue text-white'}`}
           onClick={handleClick}

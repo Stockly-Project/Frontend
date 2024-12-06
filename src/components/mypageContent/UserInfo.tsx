@@ -93,6 +93,29 @@ function UserInfo() {
       });
   };
 
+  // 파산 함수
+  const handleReset = async () => {
+    try {
+      const response = await fetch('http://localhost.order-service/api/v1/invests/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('초기화 성공:', data);
+        alert('자산을 초기화 하였습니다.');
+      } else {
+        console.log('초기화 실패:', response.status, response.statusText);
+        alert('자산 초기화 실패');
+      }
+    } catch (error) {
+      console.error('네트워크 오류:', error);
+      alert('네트워크 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    }
+  };
+  
   // 로그아웃 모달 내용
   const LogoutModalContent = () => {
     return (
@@ -149,6 +172,7 @@ function UserInfo() {
       </div>
     );
   };
+
   // 파산 모달 내용
   const ResetContet = () => {
     return (
@@ -172,7 +196,7 @@ function UserInfo() {
           </button>
           <button
             className="text-white bg-[#c20000] p-[7px] mx-[5px] rounded-[10px] w-[80px]"
-            onClick={closeResetModal}
+            onClick={handleReset}
           >
             파산하기
           </button>
