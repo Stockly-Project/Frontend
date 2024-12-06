@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 
 interface BuyMarketProps {
   price: number;
+  symbol: string;
 }
 
-function BuyMarket({ price }: BuyMarketProps) {
+function BuyMarket({ price, symbol }: BuyMarketProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [quantity, setQuantity] = useState('');
@@ -27,7 +28,32 @@ function BuyMarket({ price }: BuyMarketProps) {
   }, [quantity]); // price 또는 quantity가 변경되면 실행
 
   const handleClick = () => {
-    console.log(quantity);
+    fetch('http://localhost.order-service/api/v1/invests/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        order_type: '매수',
+        price_type: '시장가',
+        symbol: symbol,
+        quantity: Number(quantity),
+      }),
+    })
+      .then((res) => {
+        if (res.status === 400) {
+          // 돈 부족 에러
+          alert('계좌에 돈이 부족합니다. 충전 후 이용해주세요.');
+        } else if (!res.ok) {
+          alert('네트워크 응답이 올바르지 않습니다.');
+        }
+        return res.json();
+      })
+      .then(() => {
+        alert('주문이 정상적으로 처리되었습니다.');
+      })
+      .catch((error) => {
+        console.error('오류가 발생하였습니다:', error);
+      });
   };
 
   return (

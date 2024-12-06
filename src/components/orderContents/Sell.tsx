@@ -4,9 +4,10 @@ import SellMarket from './SellMarket';
 
 interface SellProps{
   stockprice: number;
+  symbol: string;
 }
 
-function Sell({stockprice}: SellProps) {
+function Sell({stockprice, symbol}: SellProps) {
   const [purchase, setPurchase] = useState('limit');
   //limit : 지정가
   //market : 시장가
@@ -42,7 +43,7 @@ function Sell({stockprice}: SellProps) {
           </button>
         </div>
       </div>
-      {purchase === "limit" ? <SellLimit/> : <SellMarket price={stockprice}/>}
+      {purchase === "limit" ? <SellLimit symbol={symbol}/> : <SellMarket price={stockprice} symbol={symbol}/>}
     </div>
   );
 }

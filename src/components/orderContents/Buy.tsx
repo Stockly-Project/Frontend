@@ -3,10 +3,11 @@ import BuyLimit from './BuyLimit';
 import BuyMarket from './BuyMarket';
 
 interface BuyProps {
+  symbol: string;
   stockprice: number;
 }
 
-function Buy({ stockprice }: BuyProps) {
+function Buy({ symbol, stockprice }: BuyProps) {
   const [purchase, setPurchase] = useState('limit');
   //limit : 지정가
   //market : 시장가
@@ -44,7 +45,7 @@ function Buy({ stockprice }: BuyProps) {
           </button>
         </div>
       </div>
-      {purchase === "limit" ? <BuyLimit/> : <BuyMarket price={stockprice}/>}
+      {purchase === "limit" ? <BuyLimit symbol={symbol}/> : <BuyMarket price={stockprice} symbol={symbol}/>}
       
     </div>
   );

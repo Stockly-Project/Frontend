@@ -68,7 +68,7 @@ function StockDetailsPage() {
             </div>
             <div className="w-[20%] h-[80vh]" style={boxStyles}>
               <div className="text-[20px] font-bold p-[15px]">주문하기</div>
-              <Order stockprice={newStockData?.close ?? 0} />
+              <Order symbol={symbol ?? ''} stockprice={newStockData?.close ?? 0} />
             </div>
           </div>
         </div>

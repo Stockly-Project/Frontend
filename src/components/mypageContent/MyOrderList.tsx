@@ -1,44 +1,47 @@
 import { useState, useEffect } from 'react';
 
-const order = [
-  {
-    name: '삼성전자',
-    type: '매도',
-    date: '2022-11-10',
-    price: 58000,
-    volume: 100,
-    status: '체결',
-  },
-  {
-    name: 'LG',
-    type: '매수',
-    date: '2023-01-01',
-    price: 58000,
-    volume: 100,
-    status: '미체결',
-  },
-  {
-    name: '기아',
-    type: '매도',
-    date: '2024-12-10',
-    price: 58000,
-    volume: 100,
-    status: '미체결',
-  }
-];
+interface orderListItem {
+  name: string;
+  type: string;
+  date: string;
+  price: number;
+  volume: number;
+  status: string;
+}
 
 function MyOrderList() {
+  const [orderList, setOrderList] = useState<orderListItem[]>([]);
   const [latest, setLatest] = useState(false); // 최신순
   const [buy, setBuy] = useState(false); // 매수
   const [sell, setSell] = useState(false); // 매도
   const [success, setSuccess] = useState(false); // 체결
   const [fail, setFail] = useState(false); // 미체결
-  const [filteredOrderList, setFilteredOrderList] = useState(order);
+  const [filteredOrderList, setFilteredOrderList] = useState(orderList);
+
+  useEffect(() => {
+    fetch('http://localhost.order-service/api/v1/invests/stocks', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('네트워크 응답이 올바르지 않습니다.');
+        }
+        return res.json();
+      })
+      .then((fetchedData) => {
+        setOrderList(fetchedData);
+      })
+      .catch((error)=>{
+        console.error('데이터를 가져오는 중 오류가 발생하였습니다:', error);
+      })
+  }, []);
 
   useEffect(() => {
     const filterOrders = () => {
       // 매수/매도 필터링
-      const buySellFiltered = order.filter((item) => {
+      const buySellFiltered = orderList.filter((item) => {
         if ((buy && sell) || (!buy && !sell)) return true; // 둘 다 눌린 경우 모두 표시
         if (buy) return item.type === '매수';
         if (sell) return item.type === '매도';
@@ -132,7 +135,7 @@ function MyOrderList() {
           </div>
         </div>
       </div>
-      <div className="h-[20px]"/>
+      <div className="h-[20px]" />
       <table className="w-[98%]">
         <tr className="">
           <th className="text-left w-[17%] py-[10px] text-chart-font px-1">날짜</th>
