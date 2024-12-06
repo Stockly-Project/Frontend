@@ -91,6 +91,7 @@ function RoiChart() {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         const roiData = data.map((item: RoiData) => item.total_roi);
         const dateData = data.map((item: RoiData) => item.created_at);
         setRoi(roiData); // roi 상태 업데이트
