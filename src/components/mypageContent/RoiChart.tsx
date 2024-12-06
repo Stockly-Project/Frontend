@@ -89,7 +89,7 @@ function RoiChart() {
       })
       .then((data) => {
         const roiData = data.total_roi.map((item:RoiData) => item.roi); // roi 값 배열 생성
-        const dateData = data.total_roi.map((item:RoiData) => item.date); // date 값 배열 생성
+        const dateData = data.total_roi.map((item:RoiData) => (item.date).split("T")[0]); // date 값 배열 생성
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
         console.log(label);
