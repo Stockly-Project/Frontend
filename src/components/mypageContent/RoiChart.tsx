@@ -93,6 +93,8 @@ function RoiChart() {
 
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
+        console.log(labels);
+        console.log(roi);
       });
   }, []);
   return (
