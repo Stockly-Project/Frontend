@@ -6,6 +6,11 @@ import { useState, useEffect } from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, zoomPlugin);
 
+interface RoiData {
+  roi: number;
+  date: string;
+}
+
 function RoiChart() {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
@@ -83,11 +88,8 @@ function RoiChart() {
         return res.json();
       })
       .then((data) => {
-        const roiData = data.total_roi.map((item: { value: number; date: string }) => item.value);
-        const dateData = data.total_roi.map((item: { value: number; date: string }) =>
-          new Date(item.date).toLocaleDateString('ko-KR') // 날짜를 한국 형식으로 변환
-        );
-
+        const roiData = data.total_roi.map((item:RoiData) => item.roi); // roi 값 배열 생성
+        const dateData = data.total_roi.map((item:RoiData) => item.date); // date 값 배열 생성
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
         console.log(label);
