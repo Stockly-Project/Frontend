@@ -40,6 +40,11 @@ function MyOrderList() {
       });
   }, []);
 
+  // orderList가 변경될 때 filteredOrderList 동기화
+  useEffect(() => {
+    setFilteredOrderList(orderList);
+  }, [orderList]);
+
   useEffect(() => {
     const filterOrders = () => {
       // 매수/매도 필터링

@@ -10,12 +10,9 @@ function RoiChart() {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
 
-  const labels = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-  const datas = [10, 10, 15, 20, 25, 20, 10, -2, -8, 0, 10, 12];
-
-  const maxAbsoluteValue = datas.reduce((max, num) => {
+  const maxAbsoluteValue = roi.reduce((max, num) => {
     return Math.abs(num) > Math.abs(max) ? num : max;
-  }, datas[0]);
+  }, roi[0]);
 
   const y_range = (Math.floor(maxAbsoluteValue / 10) + 1) * 10;
 
@@ -42,8 +39,8 @@ function RoiChart() {
         grid: {
           display: true, // 세로선
         },
-        min: labels.length - 7,
-        max: labels.length, // 처음에 최근 7개의 데이터만 표시
+        min: label.length - 7,
+        max: label.length, // 처음에 최근 7개의 데이터만 표시
       },
       y: {
         grid: {
@@ -93,7 +90,7 @@ function RoiChart() {
 
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
-        console.log(labels);
+        console.log(label);
         console.log(roi);
       });
   }, []);
