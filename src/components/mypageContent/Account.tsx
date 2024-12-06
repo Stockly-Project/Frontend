@@ -30,6 +30,7 @@ function UserInfo() {
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       console.log(newData);
+      setUserAccount(newData);
     };
     eventSource.onerror = () => {
       console.error('SSE connection error');
