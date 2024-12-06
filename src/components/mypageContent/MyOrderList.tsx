@@ -31,9 +31,8 @@ function MyOrderList() {
         return res.json();
       })
       .then((fetchedData) => {
-        setOrderList(fetchedData);
-        console.log(orderList);
-        console.log(fetchedData);
+        setOrderList(fetchedData.data);
+        console.log(fetchedData.data);
       })
       .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생하였습니다:', error);
