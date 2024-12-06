@@ -96,12 +96,12 @@ function UserInfo() {
   // 파산 함수
   const handleReset = async () => {
     try {
-      const response = await fetch('http://localhost.order-service/api/v1/invests/reset', {
+      const response = await fetch('http://localhost.:30082/api/v1/invests/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('초기화 성공:', data);
@@ -115,7 +115,7 @@ function UserInfo() {
       alert('네트워크 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.');
     }
   };
-  
+
   // 로그아웃 모달 내용
   const LogoutModalContent = () => {
     return (
@@ -194,10 +194,7 @@ function UserInfo() {
           >
             취소
           </button>
-          <button
-            className="text-white bg-[#c20000] p-[7px] mx-[5px] rounded-[10px] w-[80px]"
-            onClick={handleReset}
-          >
+          <button className="text-white bg-[#c20000] p-[7px] mx-[5px] rounded-[10px] w-[80px]" onClick={handleReset}>
             파산하기
           </button>
         </div>

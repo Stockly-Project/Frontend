@@ -2,11 +2,11 @@ import { GoPlus } from 'react-icons/go';
 import { HiMinus } from 'react-icons/hi2';
 import { useState, useEffect } from 'react';
 
-interface SellLimitProps{
-  symbol:string;
+interface SellLimitProps {
+  symbol: string;
 }
 
-function SellLimit({symbol}:SellLimitProps) {
+function SellLimit({ symbol }: SellLimitProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [price, setPrice] = useState('');
@@ -34,7 +34,7 @@ function SellLimit({symbol}:SellLimitProps) {
   }, [price, quantity]); // price 또는 quantity가 변경되면 실행
 
   const handleClick = () => {
-    fetch('http://localhost.order-service/api/v1/invests/order', {
+    fetch('http://localhost.:30082/api/v1/invests/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

@@ -19,7 +19,7 @@ function MyOrderList() {
   const [filteredOrderList, setFilteredOrderList] = useState(orderList);
 
   useEffect(() => {
-    fetch('http://localhost.order-service/api/v1/invests/stocks', {
+    fetch('http://localhost.:30082/api/v1/invests/stocks', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -33,9 +33,9 @@ function MyOrderList() {
       .then((fetchedData) => {
         setOrderList(fetchedData);
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생하였습니다:', error);
-      })
+      });
   }, []);
 
   useEffect(() => {

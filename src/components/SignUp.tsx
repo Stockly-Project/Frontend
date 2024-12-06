@@ -31,7 +31,7 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost.stock-server/api/v1/users/signup', {
+      const response = await fetch('http://localhost:30080/api/v1/users/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),

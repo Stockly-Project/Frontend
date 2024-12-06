@@ -48,7 +48,7 @@ const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
   // 과거 데이터 및 1분마다 들어오는 데이터
   useEffect(() => {
     const eventSource = new EventSource(
-      `http://localhost.stock-service/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=${filter}m`,
+      `http://localhost:30081/api/v1/stockDetails/sse/streamFilter?symbol=${symbol}&interval=${filter}m`,
     );
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);

@@ -34,7 +34,7 @@ const WeekChart = ({symbol, newStockData} :  WeekChartProps) => {
   const zoomRange = useRef({ start: 99, end: 100 }); // 줌 상태 저장
 
   useEffect(() => {
-    fetch(`http://localhost.stock-service/api/v1/stockDetails/historicalFilter?symbol=${symbol}&interval=1w`, {
+    fetch(`http://localhost:30081/api/v1/stockDetails/historicalFilter?symbol=${symbol}&interval=1w`, {
       method: 'GET',
     })
       .then((res) => {

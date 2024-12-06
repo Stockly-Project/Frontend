@@ -14,7 +14,7 @@ function Charge() {
 
   const handleClick = async () => {
     try {
-      const response = await fetch('http://localhost.order-service/api/v1/invests/deposit', {
+      const response = await fetch('http://localhost:30082/api/v1/invests/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

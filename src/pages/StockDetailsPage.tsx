@@ -27,7 +27,7 @@ function StockDetailsPage() {
     // 주식 장 닫혀있는 시간이면 SSE 연결 하지 않음
     if (!isMarketOpen) return;
 
-    const eventSource = new EventSource(`http://localhost.stock-service/api/v1/stockDetails/sse/stream/${symbol}`);
+    const eventSource = new EventSource(`http://localhost:30081/api/v1/stockDetails/sse/stream/${symbol}`);
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       setNewStockData(newData);

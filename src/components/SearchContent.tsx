@@ -26,7 +26,7 @@ function SearchContent() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost.stock-service/api/v1/stockDetails/symbols`, {
+    fetch(`http://localhost:30080/api/v1/stockDetails/symbols`, {
       method: 'GET',
     })
       .then((res) => {
