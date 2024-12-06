@@ -19,7 +19,7 @@ function MyOrderList() {
   const [filteredOrderList, setFilteredOrderList] = useState(orderList);
 
   useEffect(() => {
-    fetch('http://localhost.:30082/api/v1/invests/stocks', {
+    fetch('http://localhost:30082/api/v1/invests/stocks', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

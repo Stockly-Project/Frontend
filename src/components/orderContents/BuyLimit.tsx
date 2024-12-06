@@ -34,7 +34,7 @@ function BuyLimit({ symbol }: BuyLimitProps) {
   }, [price, quantity]); // price 또는 quantity가 변경되면 실행
 
   const handleClick = () => {
-    fetch('http://localhost.:30082/api/v1/invests/order', {
+    fetch('http://:30082/api/v1/invests/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

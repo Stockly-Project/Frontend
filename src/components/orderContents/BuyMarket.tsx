@@ -28,7 +28,7 @@ function BuyMarket({ price, symbol }: BuyMarketProps) {
   }, [quantity]); // price 또는 quantity가 변경되면 실행
 
   const handleClick = () => {
-    fetch('http://localhost.:30082/api/v1/invests/order', {
+    fetch('http://localhost:30082/api/v1/invests/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
