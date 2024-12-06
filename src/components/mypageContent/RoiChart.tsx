@@ -85,9 +85,12 @@ function RoiChart() {
         }
         return res.json();
       })
-      .then((data:[number, string][]) => {
-        const roiData = data.map((item) => item[0]); // 첫 번째 요소를 roi 배열로 추출
-        const dateData = data.map((item) => item[1]); // 두 번째 요소를 date 배열로 추출
+      .then((data) => {
+        const roiData = data.total_roi.map((item: { value: number; date: string }) => item.value);
+        const dateData = data.total_roi.map((item: { value: number; date: string }) =>
+          new Date(item.date).toLocaleDateString('ko-KR') // 날짜를 한국 형식으로 변환
+        );
+
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
       });

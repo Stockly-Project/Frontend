@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 interface orderListItem {
-  name: string;
-  type: string;
   date: string;
+  company_name: string;
+  order_type: string;
+  quantity: number;
   price: number;
-  volume: number;
   status: string;
 }
 
@@ -43,8 +43,8 @@ function MyOrderList() {
       // 매수/매도 필터링
       const buySellFiltered = orderList.filter((item) => {
         if ((buy && sell) || (!buy && !sell)) return true; // 둘 다 눌린 경우 모두 표시
-        if (buy) return item.type === '매수';
-        if (sell) return item.type === '매도';
+        if (buy) return item.order_type === '매수';
+        if (sell) return item.order_type === '매도';
         return true;
       });
 
@@ -148,13 +148,13 @@ function MyOrderList() {
         {filteredOrderList.map((order) => (
           <tr className="rounded-[5px] hover:bg-Bg-gray">
             <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">{order.date}</td>
-            <td className="text-right py-[10px] text-chart-font text-[18px]">{order.name}</td>
+            <td className="text-right py-[10px] text-chart-font text-[18px]">{order.company_name}</td>
             <td
-              className={`text-right py-[10px] text-chart-font text-[18px] ${order.type === '매수' ? 'text-up' : 'text-down'}`}
+              className={`text-right py-[10px] text-chart-font text-[18px] ${order.order_type === '매수' ? 'text-up' : 'text-down'}`}
             >
-              {order.type}
+              {order.order_type}
             </td>
-            <td className="text-right py-[10px] text-chart-font text-[18px]">{order.volume}</td>
+            <td className="text-right py-[10px] text-chart-font text-[18px]">{order.quantity}</td>
             <td className="text-right py-[10px] text-chart-font px-1 text-[18px]">
               {order.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
             </td>
