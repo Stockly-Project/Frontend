@@ -5,9 +5,11 @@ import { useState } from 'react';
 import Modal from '../Modal';
 import Charge from './Charge';
 import { MdErrorOutline } from 'react-icons/md';
+import useNavBarStore from '../../zustand/TopNavBarStore';
 
 function UserInfo() {
   const navigate = useNavigate();
+  const { handleClick } = useNavBarStore();
 
   // 로그아웃 모달 상태 관리
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -55,6 +57,7 @@ function UserInfo() {
         console.log('로그아웃 데이터', data);
         clearUserStorage();
         setUserState(false, '', '');
+        handleClick('home');
         alert('로그아웃 되었습니다.');
         goToLogin();
       })
@@ -81,6 +84,7 @@ function UserInfo() {
         console.log('회원탈퇴', data);
         clearUserStorage();
         setUserState(false, '', '');
+        handleClick('home');
         alert('계정이 삭제 되었습니다.');
         goToLogin();
       })

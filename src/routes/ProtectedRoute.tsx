@@ -11,6 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!isLoggedin) {
     // 로그아웃 상태에서 접근 시 로그인 페이지로 리디렉션
+    alert("로그인 후 이용하세요.")
     return <Navigate to="/login" replace />;
   }
 

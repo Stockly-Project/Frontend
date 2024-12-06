@@ -43,7 +43,7 @@ function TopNavBar({ color }: TopNavBarProps) {
   const handleModalClose = () => setModal(false);
 
   const goToHome = () => {
-    navigate('/main');
+    navigate('/');
     handleClick('home');
   };
 
@@ -72,6 +72,8 @@ function TopNavBar({ color }: TopNavBarProps) {
         console.log('로그아웃 데이터', data);
         clearUserStorage();
         setUserState(false, '', '');
+        handleClick('home');
+
         alert('로그아웃 되었습니다.');
       })
       .catch((error) => {

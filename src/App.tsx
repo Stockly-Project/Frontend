@@ -33,15 +33,36 @@ function App() {
 
   return (
     <div className="flex">
-      <Modal isOpen={isModalOpen} onClose={closeModal} >
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
         <NewAlertContent />
       </Modal>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
-        <Route path="/onboarding" element={<GuestRoute><OnBoardingPage /></GuestRoute>} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/onboarding"
+          element={
+            <GuestRoute>
+              <OnBoardingPage />
+            </GuestRoute>
+          }
+        />
         <Route path="/details/:symbol" element={<StockDetailsPage />} />
-        <Route path="/mypage" element={<ProtectedRoute><MypagePage /></ProtectedRoute>} />
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MypagePage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       {showMenuBar && (
