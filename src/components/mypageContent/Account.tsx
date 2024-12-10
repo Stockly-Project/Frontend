@@ -39,7 +39,7 @@ function UserInfo() {
       .then((data) => {
         console.log(data);
         setUserAccount(data);
-        useState(true);
+        setIsLoaded(true);
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
