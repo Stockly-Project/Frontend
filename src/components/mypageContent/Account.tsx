@@ -20,6 +20,7 @@ function UserInfo() {
   const {isMarketOpen} = useMarketStore();
   const initData = { roi: 0, cash: 0, total_investment: 0, total_stock_value: 0, asset_difference: 0 };
   const [userAccount, setUserAccount] = useState<userAccountData>(initData); // 총자산, 예수금, 주식, 수익률 정보
+  const [isLoaded ,setIsLoaded] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:30082/api/v1/invests/roi/realtime/total', {
@@ -38,14 +39,15 @@ function UserInfo() {
       .then((data) => {
         console.log(data);
         setUserAccount(data);
+        useState(true);
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
       });
-  })
+  },[])
 
   useEffect(() => {
-    if (!isMarketOpen) return ;
+    if (!isMarketOpen || !isLoaded) return ;
 
     const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime/total`, {
       withCredentials: true,
@@ -62,7 +64,7 @@ function UserInfo() {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [isLoaded]);
 
   const [openHoldings, setOpenHoldings] = useState(false);
   return (
