@@ -23,17 +23,15 @@ function UserInfo() {
   const [isLoaded ,setIsLoaded] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:30082e/api/v1/invests/roi/total/latest', {
+    fetch('http://localhost:30082/api/v1/invests/roi/total/latest', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     })
       .then((res) => {
         if (!res.ok) {
-          // 돈 부족 에러
           console.log('자산 정보를 받아오지 못했습니다.')
         } 
-        
         return res.json();
       })
       .then((data) => {
