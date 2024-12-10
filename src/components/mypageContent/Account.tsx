@@ -35,8 +35,7 @@ function UserInfo() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
-        setUserAccount(data);
+        setUserAccount(data.data);
         setIsLoaded(true);
       })
       .catch((error) => {

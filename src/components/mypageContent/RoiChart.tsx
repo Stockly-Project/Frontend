@@ -18,7 +18,6 @@ interface RoiChartProps {
 function RoiChart({roistream}:RoiChartProps) {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
-  console.log(roistream);
 
   const maxAbsoluteValue = roi.reduce((max, num) => {
     return Math.abs(num) > Math.abs(max) ? num : max;
@@ -97,10 +96,13 @@ function RoiChart({roistream}:RoiChartProps) {
         const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]); // date 값 배열 생성
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
-        console.log();
-        console.log(roi);
+
       });
   }, []);
+
+  useEffect(()=>{
+    console.log(roi);
+  },[roistream])
   return (
     <div className="w-full flex-grow flex justify-center items-center">
       <Line options={options} data={data} className="h-full" />
