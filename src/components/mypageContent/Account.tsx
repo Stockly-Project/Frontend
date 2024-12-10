@@ -23,7 +23,7 @@ function UserInfo() {
   const [isLoaded ,setIsLoaded] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:30082/api/v1/invests/roi/realtime/total', {
+    fetch('http://localhost:30082e/api/v1/invests/roi/total/latest', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
