@@ -12,6 +12,8 @@ function Buy({ symbol, stockprice }: BuyProps) {
   //limit : 지정가
   //market : 시장가
 
+  const [userCash, setUserCash] = useState(0);
+
   const handleClickMarket = () => {
     setPurchase('market');
   };
@@ -22,20 +24,22 @@ function Buy({ symbol, stockprice }: BuyProps) {
 
   // 매수 가능 수량 조회
   useEffect(() => {
-    fetch(`http://localhost:30082/api/v1/invests/info`, {
+    fetch(`http://localhost:30082/api/v1/invests/info?symbol=${symbol}&type=buy`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({symbol:symbol, type:"매수"})
     })
-    .then((res) => {
-      if (!res.ok){ console.log("매수 가능 수량 조회 실패")}
+      .then((res) => {
+        if (!res.ok) {
+          console.log('매수 가능 수량 조회 실패');
+        }
 
-    })
-    .then((data) => {
-      console.log(data);
-    })
-  },[]);
+        return res.json();
+      })
+      .then((data) => {
+        setUserCash(data.data.user_cash);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center my-[30px] w-full">
@@ -61,7 +65,7 @@ function Buy({ symbol, stockprice }: BuyProps) {
           </button>
         </div>
       </div>
-      {purchase === 'limit' ? <BuyLimit symbol={symbol} /> : <BuyMarket price={stockprice} symbol={symbol} />}
+      {purchase === 'limit' ? <BuyLimit symbol={symbol} cash={userCash}/> : <BuyMarket price={stockprice} symbol={symbol} cash={userCash}/>}
     </div>
   );
 }

@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 interface BuyMarketProps {
   price: number;
   symbol: string;
+  cash: number
 }
 
-function BuyMarket({ price, symbol }: BuyMarketProps) {
+function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [quantity, setQuantity] = useState('');
@@ -90,12 +91,12 @@ function BuyMarket({ price, symbol }: BuyMarketProps) {
       </div>
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">구매 가능</div>
-        <div className="w-[70%] text-right">0원</div>
+        <div className="w-[40%] h-[33px] text-[17px]">구매 가능</div>
+        <div className="w-[60%] text-right">{cash}원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">예상 총 금액</div>
-        <div className="w-[70%] text-right">
+        <div className="w-[40%] h-[33px] text-[17px]">예상 총 금액</div>
+        <div className="w-[60%] text-right">
           {!isDisabled ? (price * Number(quantity)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>

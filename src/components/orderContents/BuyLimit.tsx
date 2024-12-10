@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 
 interface BuyLimitProps {
   symbol: string;
+  cash: number;
 }
 
-function BuyLimit({ symbol }: BuyLimitProps) {
+function BuyLimit({ symbol, cash }: BuyLimitProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [price, setPrice] = useState('');
@@ -105,12 +106,12 @@ function BuyLimit({ symbol }: BuyLimitProps) {
       </div>
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">구매 가능</div>
-        <div className="w-[70%] text-right">0원</div>
+        <div className="w-[40%] h-[33px] text-[17px]">구매 가능</div>
+        <div className="w-[60%] text-right">{cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">총 금액</div>
-        <div className="w-[70%] text-right">
+        <div className="w-[40%] h-[33px] text-[17px]">총 금액</div>
+        <div className="w-[60%] text-right">
           {!isDisabled ? (Number(quantity) * Number(price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>
