@@ -18,6 +18,7 @@ interface RoiChartProps {
 function RoiChart({roistream}:RoiChartProps) {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
+  console.log(roistream);
 
   const maxAbsoluteValue = roi.reduce((max, num) => {
     return Math.abs(num) > Math.abs(max) ? num : max;
