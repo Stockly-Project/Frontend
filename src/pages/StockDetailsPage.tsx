@@ -60,7 +60,7 @@ function StockDetailsPage() {
           </div>
           <div className="flex h-[80vh]">
             <div className="w-[55%] h-full" style={boxStyles}>
-              {/* <ChartContainer symbol={symbol ?? ''} newStockData={newStockData!} /> */}
+              <ChartContainer symbol={symbol ?? ''} newStockData={newStockData!} />
             </div>
             <div className="w-[25%] h-[80vh]" style={boxStyles}>
               <div className="text-[20px] font-bold p-[15px]">호가</div>
