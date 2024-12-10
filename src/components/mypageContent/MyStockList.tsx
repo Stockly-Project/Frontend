@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useMarketStore from '../../zustand/MarketStore';
 
 interface stockListItem {
   symbol: string;
@@ -12,9 +13,13 @@ interface stockListItem {
 }
 
 function MyStockList() {
+  const {isMarketOpen} = useMarketStore();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [stocklist, setStockList] = useState<stockListItem[]>([]);
 
+  // 보유 주식 조회
   useEffect(() => {
+    setIsLoaded(false);
     fetch('http://localhost:30082/api/v1/invests/roi/latest', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -28,10 +33,41 @@ function MyStockList() {
       })
       .then((fetchedData) => {
         setStockList(fetchedData.data);
+        setIsLoaded(true);
       })
       .catch((error) => {
         console.error('데이터를 가져오는 중 오류가 발생하였습니다:', error);
       });
+  }, []);
+
+  // 보유주식 실시간 가격 변동
+  useEffect(() => {
+    if (!isMarketOpen || !isLoaded) return ;
+    
+    const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime`,{withCredentials: true});
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data)
+      console.log(newData);
+      
+      setStockList((prevData)=>
+      prevData.map((item=>
+        item.symbol === newData.symbol?
+        {...item, 
+          current_price:newData.current_price, 
+          price_difference:newData.price_difference, 
+          roi:newData.roi, 
+          total_stock_price:newData.total_stock_price 
+        }
+        : item
+      )))
+
+    };
+    eventSource.onerror = (error) => {
+      console.error('SSE connection error', error);
+    };
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   return (

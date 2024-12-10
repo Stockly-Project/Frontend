@@ -11,7 +11,11 @@ interface RoiData {
   date: string;
 }
 
-function RoiChart() {
+interface RoiChartProps {
+  roistream: number;
+}
+
+function RoiChart({roistream}:RoiChartProps) {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
 
@@ -88,11 +92,11 @@ function RoiChart() {
         return res.json();
       })
       .then((data) => {
-        const roiData = data.total_roi.map((item:RoiData) => item.roi); // roi 값 배열 생성
-        const dateData = data.total_roi.map((item:RoiData) => (item.date).split("T")[0]); // date 값 배열 생성
+        const roiData = data.total_roi.map((item: RoiData) => item.roi); // roi 값 배열 생성
+        const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]); // date 값 배열 생성
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
-        console.log(label);
+        console.log();
         console.log(roi);
       });
   }, []);

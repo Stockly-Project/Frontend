@@ -22,9 +22,32 @@ function UserInfo() {
   const [userAccount, setUserAccount] = useState<userAccountData>(initData); // 총자산, 예수금, 주식, 수익률 정보
 
   useEffect(() => {
+    fetch('http://localhost:30082/api/v1/invests/roi/realtime/total', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          // 돈 부족 에러
+          console.log('자산 정보를 받아오지 못했습니다.')
+        } 
+        
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setUserAccount(data);
+      })
+      .catch((error) => {
+        console.error('오류가 발생하였습니다:', error);
+      });
+  })
+
+  useEffect(() => {
     if (!isMarketOpen) return ;
 
-    const eventSource = new EventSource(`http://localhost.order-service/api/v1/invests/roi/realtime/total`, {
+    const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime/total`, {
       withCredentials: true,
     });
     eventSource.onmessage = (event) => {
@@ -54,7 +77,7 @@ function UserInfo() {
           <div className="text-[15px] text-up">{userAccount.asset_difference} 원 ({userAccount.roi}%) </div>
         </div>
         <div>
-          <RoiChart />
+          <RoiChart roistream={userAccount.roi}/>
         </div>
         <div className="h-[30px]" />
 

@@ -106,7 +106,7 @@ function SellLimit({ symbol }: SellLimitProps) {
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
         <div className="w-[30%] h-[33px] text-[17px]">판매 가능</div>
-        <div className="w-[70%] text-right">0원</div>
+        <div className="w-[70%] text-right">0주</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
         <div className="w-[30%] h-[33px] text-[17px]">총 금액</div>
