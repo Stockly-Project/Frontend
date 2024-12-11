@@ -14,13 +14,14 @@ interface userAccountData {
   total_investment: number;
   total_stock_value: number;
   asset_difference: number;
+  total_asset: number;
 }
 
 function UserInfo() {
-  const {isMarketOpen} = useMarketStore();
-  const initData = { roi: 0, cash: 0, total_investment: 0, total_stock_value: 0, asset_difference: 0 };
+  const { isMarketOpen } = useMarketStore();
+  const initData = { roi: 0, cash: 0, total_investment: 0, total_stock_value: 0, asset_difference: 0, total_asset:0};
   const [userAccount, setUserAccount] = useState<userAccountData>(initData); // 총자산, 예수금, 주식, 수익률 정보
-  const [isLoaded ,setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:30082/api/v1/invests/roi/total/latest', {
@@ -30,21 +31,23 @@ function UserInfo() {
     })
       .then((res) => {
         if (!res.ok) {
-          console.log('자산 정보를 받아오지 못했습니다.')
-        } 
+          console.log('자산 정보를 받아오지 못했습니다.');
+        }
         return res.json();
       })
       .then((data) => {
         setUserAccount(data.data);
         setIsLoaded(true);
+        console.log(data)
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
       });
-  },[])
+  }, []);
 
+  // 실시간 내 자산 변동
   useEffect(() => {
-    if (!isMarketOpen || !isLoaded) return ;
+    if (!isMarketOpen || !isLoaded) return;
 
     const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime/total`, {
       withCredentials: true,
@@ -71,12 +74,15 @@ function UserInfo() {
         <div className="text-[25px] border-b border-gray text-[#373737] p-[10px]">수익률</div>
         <div className="w-full flex flex-col text-[25px] my-[20px] mx-[10px] items-start">
           <div className="text-[22px] text-[#373737]">
-            <span className="text-[#7d7d7d] text-[18px]">총 자산&nbsp; </span>{userAccount.total_investment} 원{' '}
+            <span className="text-[#7d7d7d] text-[18px]">총 자산&nbsp; </span>
+            {userAccount.total_asset.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원{' '}
           </div>
-          <div className="text-[15px] text-up">{userAccount.asset_difference} 원 ({userAccount.roi}%) </div>
+          <div className={`text-[15px] ${userAccount.roi > 0 ? 'text-[#ee5858]' : 'text-down'}`}>
+            {userAccount.asset_difference.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원 ({userAccount.roi}%){' '}
+          </div>
         </div>
         <div>
-          <RoiChart roistream={userAccount.roi}/>
+          <RoiChart roistream={userAccount.roi} />
         </div>
         <div className="h-[30px]" />
 
@@ -88,14 +94,18 @@ function UserInfo() {
                 <img src={AssetsIcon} className="mx-[10px] w-[23px] h-[23px]" />
                 <span className="font-medium text-[#A2A5AC]">총자산</span>
               </div>
-              <div className="mx-[20px] text-[21px] text-[#373737]">{userAccount.total_investment} 원</div>
+              <div className="mx-[20px] text-[21px] text-[#373737]">
+                {userAccount.total_asset.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
+              </div>
             </div>
             <div className="w-[50%] h-[120px] m-[10px] rounded-[10px] bg-Bg-gray">
               <div className="flex items-center mx-[10px] my-[15px]">
                 <img src={MoneyIcon} className="mx-[10px] w-[25px] h-[25px]" />
                 <span className="font-medium text-[#A2A5AC]">예수금</span>
               </div>
-              <div className="mx-[20px] text-[21px] text-[#373737]">{userAccount.cash} 원</div>
+              <div className="mx-[20px] text-[21px] text-[#373737]">
+                {userAccount.cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
+              </div>
             </div>
           </div>
           <div className="flex w-full">
@@ -104,14 +114,18 @@ function UserInfo() {
                 <img src={StockIcon} className="mx-[10px] w-[25px] h-[25px]" />
                 <span className="font-medium text-[#A2A5AC]">주식</span>
               </div>
-              <div className="mx-[20px] text-[21px] text-[#373737]">{userAccount.total_stock_value} 원</div>
+              <div className="mx-[20px] text-[21px] text-[#373737]">
+                {userAccount.total_stock_value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
+              </div>
             </div>
             <div className="w-[50%] h-[120px] m-[10px] rounded-[10px] bg-Bg-gray">
               <div className="flex items-start mx-[10px] my-[15px]">
                 <img src={RoiIcon} className="mx-[10px] w-[21px] h-[21px]" />
                 <span className="font-medium text-[#A2A5AC]">수익률</span>
               </div>
-              <div className={`mx-[20px] text-[21px] ${userAccount.roi > 0 ? "text-[#ee5858]" : "text-down" }`}>{userAccount.asset_difference} 원({userAccount.roi}%)</div>
+              <div className={`mx-[20px] text-[21px] ${userAccount.roi > 0 ? 'text-[#ee5858]' : 'text-down'}`}>
+                {userAccount.asset_difference.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원({userAccount.roi}%)
+              </div>
             </div>
           </div>
         </div>

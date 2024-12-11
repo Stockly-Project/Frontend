@@ -40,7 +40,7 @@ function MyStockList() {
       });
   }, []);
 
-  // 보유주식 실시간 가격 변동
+  // 보유 주식 실시간 가격 변동
   useEffect(() => {
     if (!isMarketOpen || !isLoaded) return ;
     
