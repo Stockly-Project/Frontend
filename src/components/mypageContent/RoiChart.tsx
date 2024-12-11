@@ -92,7 +92,6 @@ function RoiChart({ roistream }: RoiChartProps) {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         const roiData = data.total_roi.map((item: RoiData) => item.roi);
         roiData.push(0);
 
