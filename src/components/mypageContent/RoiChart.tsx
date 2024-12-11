@@ -2,7 +2,7 @@ import { Line } from 'react-chartjs-2';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 import { ChartOptions } from 'chart.js';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, zoomPlugin);
 

@@ -21,7 +21,7 @@ function SellMarket({ price, symbol, volume }: SellMarketProps) {
   };
 
   useEffect(() => {
-    if (Number(quantity) > 0 && quantity[0] !== '0') {
+    if (Number(quantity) > 0 && quantity[0] !== '0' && volume >= Number(quantity)) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);

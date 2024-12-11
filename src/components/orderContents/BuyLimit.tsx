@@ -35,7 +35,7 @@ function BuyLimit({ symbol, cash }: BuyLimitProps) {
   };
 
   useEffect(() => {
-    if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0') {
+    if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0' && Number(price)*Number(quantity) <= cash) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -138,7 +138,7 @@ function BuyLimit({ symbol, cash }: BuyLimitProps) {
       <div className="flex flex-column  w-[90%] my-[5px]">
         <div className="w-[40%] h-[33px] text-[17px]">총 금액</div>
         <div className="w-[60%] text-right">
-          {!isDisabled ? (Number(quantity) * Number(price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
+          {quantity!=="" && price!=="" ? (Number(quantity) * Number(price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>
       <button

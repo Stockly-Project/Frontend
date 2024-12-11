@@ -21,7 +21,7 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
   };
 
   useEffect(() => {
-    if (Number(quantity) > 0 && quantity[0] !== '0') {
+    if (Number(quantity) > 0 && quantity[0] !== '0' && price*Number(quantity) <= cash) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -116,12 +116,12 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
         <div className="w-[40%] h-[33px] text-[17px]">구매 가능</div>
-        <div className="w-[60%] text-right">{cash}원</div>
+        <div className="w-[60%] text-right">{cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
         <div className="w-[40%] h-[33px] text-[17px]">예상 총 금액</div>
         <div className="w-[60%] text-right">
-          {!isDisabled ? (price * Number(quantity)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
+          {quantity!=="" ? (price * Number(quantity)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>
       <button
