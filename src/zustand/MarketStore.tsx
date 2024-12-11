@@ -14,11 +14,8 @@ const useMarketStore = create<MarketState>((set) => {
     const minute = now.getMinutes();
 
     const isWeekday = day >= 1 && day <= 5;
-    const isMarketOpen =
-      isWeekday && ((hour >= 9 && hour < 15) || (hour === 15 && minute < 30));
-    const isOrderBookAvailable =
-      isWeekday &&
-      ((hour === 8 && minute >= 30) || (hour > 8 && hour < 18));
+    const isMarketOpen = isWeekday && ((hour >= 9 && hour < 15) || (hour === 15 && minute < 30));
+    const isOrderBookAvailable = isWeekday && ((hour >= 9 && hour < 15) || (hour === 15 && minute < 30));
 
     set({ isMarketOpen, isOrderBookAvailable });
   };

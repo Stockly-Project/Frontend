@@ -108,7 +108,7 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
     return (
       <div className="w-full h-[70vh] flex flex-col justify-center items-center">
         <p className="text-[22px] text-[#545454]">지금은 호가 조회 시간이 아니에요</p>
-        <p className="text-[17px] text-[#cacaca] m-[10px]">호가 정보는 평일 8:30 ~ 18:00에 제공합니다.</p>
+        <p className="text-[17px] text-[#cacaca] m-[10px]">호가 정보는 평일 9:00 ~ 15:30에 제공합니다.</p>
       </div>
     );
   }

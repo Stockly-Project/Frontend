@@ -3,7 +3,7 @@ import OrderImg from '../../assets/images/OrderImg.svg';
 
 function OnBoarding2() {
   return (
-    <div className="w-full h-[100vh] flex flex-col justify-center items-center bg-gradient-to-t from-white to-[#d4e9f5bd]">
+    <div className="w-full h-[100vh] flex flex-col justify-center items-center bg-gradient-to-t from-white to-[#e9f1f6bb]">
       <motion.div
         initial={{ opacity: 0, y: 100 }} // opacity 0 - 안 보임
         whileInView={{ opacity: 1, y: 0 }} // 컴포넌트가 뷰포트에 있을 때의 상태
@@ -25,12 +25,12 @@ function OnBoarding2() {
               y: { duration: 2 },
             }}
           >
-            <div className="w-[400px] h-[600px] m-[50px]">
+            <div className="w-[400px] h-[600px] m-[50px] mx-[100px]">
               <img src={OrderImg} />
             </div>
           </motion.div>
 
-          <div className="flex flex-col jsutify-center items-start m-[50px]">
+          <div className="flex flex-col jsutify-center items-start m-[50px] mx-[100px]">
             <div className="text-[60px] font-bold">주식 투자를 게임처럼</div>
             <div className="text-[30px] text-[#aaaaaa]">
               주식을 처음 구매하는 사람도,

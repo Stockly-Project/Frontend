@@ -106,6 +106,7 @@ function UserInfo() {
         const data = await response.json();
         console.log('초기화 성공:', data);
         alert('자산을 초기화 하였습니다.');
+        closeResetModal();
       } else {
         console.log('초기화 실패:', response.status, response.statusText);
         alert('자산 초기화 실패');

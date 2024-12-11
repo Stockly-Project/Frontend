@@ -19,7 +19,7 @@ function OnBoarding3() {
         }}
       >
         <div className=" flex justify-center items-center">
-          <div className="flex flex-col jsutify-center items-start m-[50px]">
+          <div className="flex flex-col jsutify-center items-start m-[50px] mx-[60px]">
             <div className="text-[60px] font-bold">사용자별 대시보드</div>
             <div className="text-[30px] text-[#aaaaaa]">
               그래프와 차트를 이용한
@@ -40,7 +40,7 @@ function OnBoarding3() {
               y: { duration: 2 },
             }}
           >
-            <div className="w-[700px] h-[500px] m-[50px] shadow-xl">{isInView && <ExampleMyInvest />}</div>
+            <div className="w-[700px] m-[50px] mx-[60px]">{isInView && <ExampleMyInvest />}</div>
           </motion.div>
         </div>
       </motion.div>
