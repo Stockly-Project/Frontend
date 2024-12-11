@@ -7,21 +7,20 @@ import { useState, useEffect } from 'react';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, zoomPlugin);
 
 interface RoiData {
-  roi: number;
-  date: string;
+  total_roi: number;
+  created_at: string;
 }
 
-interface RoiChartProps {
-  roistream: number;
-}
+function RoiChart() {
+  const [roi, setRoi] = useState([]);
+  const [label, setLabel] = useState([]);
 
-function RoiChart({roistream}:RoiChartProps) {
-  const [roi, setRoi] = useState<number[]>([]);
-  const [label, setLabel] = useState<string[]>([]);
+  const labels = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+  const datas = [10, 10, 15, 20, 25, 20, 10, -2, -8, 0, 10, 12];
 
-  const maxAbsoluteValue = roi.reduce((max, num) => {
+  const maxAbsoluteValue = datas.reduce((max, num) => {
     return Math.abs(num) > Math.abs(max) ? num : max;
-  }, roi[0]);
+  }, datas[0]);
 
   const y_range = (Math.floor(maxAbsoluteValue / 10) + 1) * 10;
 
@@ -48,8 +47,8 @@ function RoiChart({roistream}:RoiChartProps) {
         grid: {
           display: true, // 세로선
         },
-        min: label.length - 7,
-        max: label.length, // 처음에 최근 7개의 데이터만 표시
+        min: labels.length - 7,
+        max: labels.length, // 처음에 최근 7개의 데이터만 표시
       },
       y: {
         grid: {
@@ -92,17 +91,12 @@ function RoiChart({roistream}:RoiChartProps) {
         return res.json();
       })
       .then((data) => {
-        const roiData = data.total_roi.map((item: RoiData) => item.roi); // roi 값 배열 생성
-        const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]); // date 값 배열 생성
+        const roiData = data.map((item: RoiData) => item.total_roi);
+        const dateData = data.map((item: RoiData) => item.created_at);
         setRoi(roiData); // roi 상태 업데이트
         setLabel(dateData); // label 상태 업데이트
-
       });
   }, []);
-
-  useEffect(()=>{
-    console.log(roi);
-  },[roistream])
   return (
     <div className="w-full flex-grow flex justify-center items-center">
       <Line options={options} data={data} className="h-full" />

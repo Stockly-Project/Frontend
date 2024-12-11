@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react';
 interface BuyMarketProps {
   price: number;
   symbol: string;
-  cash: number;
 }
 
-function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
+function BuyMarket({ price, symbol }: BuyMarketProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [quantity, setQuantity] = useState('');
@@ -28,14 +27,8 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
     }
   }, [quantity]); // price 또는 quantity가 변경되면 실행
 
-  const handleChangeQuantity = (percent: number) => {
-    const can_buy = Math.floor(Math.floor(cash / Number(price)) * percent);
-    setQuantity(can_buy.toString());
-    console.log(can_buy);
-  };
-
   const handleClick = () => {
-    fetch('http://localhost:30082/api/v1/invests/order', {
+    fetch('http://localhost.:30082/api/v1/invests/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -87,40 +80,22 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button
-            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
-            onClick={() => handleChangeQuantity(0.1)}
-          >
-            10%
-          </button>
-          <button
-            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
-            onClick={() => handleChangeQuantity(0.25)}
-          >
-            25%
-          </button>
-          <button
-            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
-            onClick={() => handleChangeQuantity(0.5)}
-          >
-            50%
-          </button>
-          <button
-            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
-            onClick={() => handleChangeQuantity(1)}
-          >
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
             최대
           </button>
         </div>
       </div>
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[40%] h-[33px] text-[17px]">구매 가능</div>
-        <div className="w-[60%] text-right">{cash}원</div>
+        <div className="w-[30%] h-[33px] text-[17px]">구매 가능</div>
+        <div className="w-[70%] text-right">0원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[40%] h-[33px] text-[17px]">예상 총 금액</div>
-        <div className="w-[60%] text-right">
+        <div className="w-[30%] h-[33px] text-[17px]">예상 총 금액</div>
+        <div className="w-[70%] text-right">
           {!isDisabled ? (price * Number(quantity)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>
