@@ -37,6 +37,7 @@ function Buy({ symbol, stockprice }: BuyProps) {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         setUserCash(data.data.user_cash);
       });
   }, []);

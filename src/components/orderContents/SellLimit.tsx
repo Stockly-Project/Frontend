@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 interface SellLimitProps {
   symbol: string;
-  volume: number
+  volume: number;
 }
 
 function SellLimit({ symbol, volume }: SellLimitProps) {
@@ -24,6 +24,12 @@ function SellLimit({ symbol, volume }: SellLimitProps) {
 
   const minusQuantity = () => {
     setQuantity(String(Number(quantity) - 1));
+  };
+
+  const handleChangeVolume = (percent: number) => {
+    const can_sell = Math.floor(Math.floor(volume * percent));
+    setQuantity(can_sell.toString());
+    console.log(can_sell);
   };
 
   useEffect(() => {
@@ -96,10 +102,28 @@ function SellLimit({ symbol, volume }: SellLimitProps) {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeVolume(0.1)}
+          >
+            10%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeVolume(0.25)}
+          >
+            25%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeVolume(0.5)}
+          >
+            50%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeVolume(1)}
+          >
             최대
           </button>
         </div>

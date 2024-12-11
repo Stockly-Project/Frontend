@@ -36,7 +36,7 @@ function Sell({ stockprice, symbol }: SellProps) {
         return res.json();
       })
       .then((data) => {
-        setUserVolume(data.data.total_bought);
+        setUserVolume(data.data.sellable_quantity);
       });
   }, []);
 

@@ -26,6 +26,14 @@ function BuyLimit({ symbol, cash }: BuyLimitProps) {
     setQuantity(String(Number(quantity) - 1));
   };
 
+  const handleChangeQuantity = (percent: number) => {
+    if (price === '') return;
+
+    const can_buy = Math.floor(Math.floor(cash / Number(price)) * percent);
+    setQuantity(can_buy.toString());
+    console.log(can_buy);
+  };
+
   useEffect(() => {
     if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0') {
       setIsDisabled(false);
@@ -96,10 +104,28 @@ function BuyLimit({ symbol, cash }: BuyLimitProps) {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.1)}
+          >
+            10%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.25)}
+          >
+            25%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.5)}
+          >
+            50%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(1)}
+          >
             최대
           </button>
         </div>

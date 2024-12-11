@@ -28,6 +28,12 @@ function SellMarket({ price, symbol, volume }: SellMarketProps) {
     }
   }, [quantity]); // price 또는 quantity가 변경되면 실행
 
+  const handleChangeVolume = (percent: number) => {
+    const can_sell = Math.floor(Math.floor(volume * percent));
+    setQuantity(can_sell.toString());
+    console.log(can_sell);
+  };
+
   const handleClick = () => {
     fetch('http://localhost:30082/api/v1/invests/order', {
       method: 'POST',
@@ -81,10 +87,10 @@ function SellMarket({ price, symbol, volume }: SellMarketProps) {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]" onClick={()=>handleChangeVolume(0.1)}>10%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]" onClick={()=>handleChangeVolume(0.25)}>25%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]" onClick={()=>handleChangeVolume(0.5)}>50%</button>
+          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]" onClick={()=>handleChangeVolume(1)}>
             최대
           </button>
         </div>
