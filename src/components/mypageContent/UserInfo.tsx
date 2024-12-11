@@ -96,7 +96,7 @@ function UserInfo() {
   // 파산 함수
   const handleReset = async () => {
     try {
-      const response = await fetch('http://localhost.:30082/api/v1/invests/reset', {
+      const response = await fetch('http://localhost:30082/api/v1/invests/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

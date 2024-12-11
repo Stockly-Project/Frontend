@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 
 interface BuyLimitProps {
   symbol: string;
+  cash: number;
 }
 
-function BuyLimit({ symbol }: BuyLimitProps) {
+function BuyLimit({ symbol, cash }: BuyLimitProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [price, setPrice] = useState('');
@@ -25,6 +26,14 @@ function BuyLimit({ symbol }: BuyLimitProps) {
     setQuantity(String(Number(quantity) - 1));
   };
 
+  const handleChangeQuantity = (percent: number) => {
+    if (price === '') return;
+
+    const can_buy = Math.floor(Math.floor(cash / Number(price)) * percent);
+    setQuantity(can_buy.toString());
+    console.log(can_buy);
+  };
+
   useEffect(() => {
     if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0') {
       setIsDisabled(false);
@@ -34,7 +43,7 @@ function BuyLimit({ symbol }: BuyLimitProps) {
   }, [price, quantity]); // price 또는 quantity가 변경되면 실행
 
   const handleClick = () => {
-    fetch('http://localhost.:30082/api/v1/invests/order', {
+    fetch('http://localhost:30082/api/v1/invests/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -95,22 +104,40 @@ function BuyLimit({ symbol }: BuyLimitProps) {
       <div className="flex flex-column  w-[90%]">
         <div className="w-[30%] h-[33px]"></div>
         <div className="w-[70%] flex justify-between">
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">10%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">25%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">50%</button>
-          <button className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]">
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.1)}
+          >
+            10%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.25)}
+          >
+            25%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(0.5)}
+          >
+            50%
+          </button>
+          <button
+            className="w-[23%] h-[25px] border rounded-[5px] text-[13px] border border-gray my-[5px]"
+            onClick={() => handleChangeQuantity(1)}
+          >
             최대
           </button>
         </div>
       </div>
       <hr className="w-[95%] border-font-gray my-[25px]" />
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">구매 가능</div>
-        <div className="w-[70%] text-right">0원</div>
+        <div className="w-[40%] h-[33px] text-[17px]">구매 가능</div>
+        <div className="w-[60%] text-right">{cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</div>
       </div>
       <div className="flex flex-column  w-[90%] my-[5px]">
-        <div className="w-[30%] h-[33px] text-[17px]">총 금액</div>
-        <div className="w-[70%] text-right">
+        <div className="w-[40%] h-[33px] text-[17px]">총 금액</div>
+        <div className="w-[60%] text-right">
           {!isDisabled ? (Number(quantity) * Number(price)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}원
         </div>
       </div>

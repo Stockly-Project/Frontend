@@ -1,23 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SellLimit from './SellLimit';
 import SellMarket from './SellMarket';
 
-interface SellProps{
+interface SellProps {
   stockprice: number;
   symbol: string;
 }
 
-function Sell({stockprice, symbol}: SellProps) {
+function Sell({ stockprice, symbol }: SellProps) {
   const [purchase, setPurchase] = useState('limit');
   //limit : 지정가
   //market : 시장가
+
+  const [userVolume, setUserVolume] = useState(0);
+
   const handleClickMarket = () => {
     setPurchase('market');
-  }
+  };
 
   const handleClickLimit = () => {
     setPurchase('limit');
-  }
+  };
+
+  // 매도 가능 수량 조회
+  useEffect(() => {
+    fetch(`http://localhost:30082/api/v1/invests/info?symbol=${symbol}&type=sell`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('매도 가능 수량 조회 실패');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setUserVolume(data.data.sellable_quantity);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center my-[30px] w-full">
@@ -43,7 +64,7 @@ function Sell({stockprice, symbol}: SellProps) {
           </button>
         </div>
       </div>
-      {purchase === "limit" ? <SellLimit symbol={symbol}/> : <SellMarket price={stockprice} symbol={symbol}/>}
+      {purchase === 'limit' ? <SellLimit symbol={symbol} volume={userVolume}/> : <SellMarket price={stockprice} symbol={symbol} volume={userVolume}/>}
     </div>
   );
 }

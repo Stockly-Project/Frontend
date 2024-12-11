@@ -2,7 +2,7 @@ import TopNavBar from '../components/TopNavBar';
 import Order from '../components/orderContents/Order';
 import useDrawerStore from '../zustand/MenuBarStore';
 import TopContent from '../components/stockDetails/TopContent';
-import ChartContainer from '../components/stockDetails/ChartContainer';
+//import ChartContainer from '../components/stockDetails/ChartContainer';
 import OrderBook from '../components/stockDetails/OrderBook';
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -60,7 +60,7 @@ function StockDetailsPage() {
           </div>
           <div className="flex h-[80vh]">
             <div className="w-[55%] h-full" style={boxStyles}>
-              <ChartContainer symbol={symbol ?? ''} newStockData={newStockData!} />
+              {/* <ChartContainer symbol={symbol ?? ''} newStockData={newStockData!} /> */}
             </div>
             <div className="w-[25%] h-[80vh]" style={boxStyles}>
               <div className="text-[20px] font-bold p-[15px]">호가</div>

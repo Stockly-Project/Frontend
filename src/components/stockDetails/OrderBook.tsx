@@ -49,7 +49,7 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
   const isOrderBookAvailable = useMarketStore((state) => state.isOrderBookAvailable);
 
   useEffect(() => {
-    const eventSource = new EventSource(`http://localhost.:30082/api/v1/invests/orderBook/${symbol}`);
+    const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/orderBook/${symbol}`);
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       setDatas(newData);
