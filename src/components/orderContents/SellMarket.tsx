@@ -40,7 +40,7 @@ function SellMarket({ price, symbol, volume }: SellMarketProps) {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({
-        order_type: '매수',
+        order_type: '매도',
         price_type: '시장가',
         symbol: symbol,
         quantity: Number(quantity),
