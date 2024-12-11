@@ -2,10 +2,31 @@ import { useState, useEffect } from 'react';
 
 function Charge() {
   const [isDisabled, setIsDisabled] = useState(true);
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(0);
+  const [userCash, setUserCash] = useState(0);
 
   useEffect(() => {
-    if (Number(price) > 0 && price[0] !== '0') {
+    fetch('http://localhost:30082/api/v1/invests/roi/total/latest', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.log('자산 정보를 받아오지 못했습니다.');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setUserCash(data.data.cash);
+      })
+      .catch((error) => {
+        console.error('오류가 발생하였습니다:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (Number(price) > 0 ) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -42,7 +63,7 @@ function Charge() {
             <input
               className="outline-none w-[90%]"
               placeholder="충전할 금액을 입력하세요"
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(Number(e.target.value))}
               value={price}
             />
             <p className="w-[10%] text-end">원</p>
@@ -51,7 +72,7 @@ function Charge() {
         <hr className="border-gray my-[20px]" />
         <div className="w-[100%] flex justify-between items-center ">
           <div className="text-[18px]">충전 후 잔액</div>
-          <div className="m-[10px]">0원</div>
+          <div className="m-[10px]">{(userCash + price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</div>
         </div>
         <div className="h-[100px]" />
         <button

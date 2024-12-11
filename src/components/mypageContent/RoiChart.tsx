@@ -2,7 +2,7 @@ import { Line } from 'react-chartjs-2';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 import { ChartOptions } from 'chart.js';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, zoomPlugin);
 
@@ -15,17 +15,17 @@ interface RoiChartProps {
   roistream: number;
 }
 
-function RoiChart({roistream}:RoiChartProps) {
+function RoiChart({ roistream }: RoiChartProps) {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
 
-  const maxAbsoluteValue = roi.reduce((max, num) => {
-    return Math.abs(num) > Math.abs(max) ? num : max;
-  }, roi[0]);
+  const maxAbsoluteValue = useMemo(() => {
+    return roi.reduce((max, num) => Math.abs(num) > Math.abs(max) ? num : max, roi[0] || 0);
+  }, [roi]);
 
-  const y_range = (Math.floor(maxAbsoluteValue / 10) + 1) * 10;
+  const y_range = useMemo(() => (Math.floor(maxAbsoluteValue / 10) + 1) * 10, [maxAbsoluteValue]);
 
-  const data = {
+  const data = useMemo(() => ({
     labels: label,
     datasets: [
       {
@@ -36,24 +36,24 @@ function RoiChart({roistream}:RoiChartProps) {
         borderWidth: 1,
       },
     ],
-  };
+  }), [roi, label]);
 
-  const options: ChartOptions<'line'> = {
+  const options: ChartOptions<'line'> = useMemo(() => ({
     interaction: {
-      mode: 'index' as const,
+      mode: 'index',
       intersect: false,
     },
     scales: {
       x: {
         grid: {
-          display: true, // 세로선
+          display: true,
         },
         min: label.length - 7,
-        max: label.length, // 처음에 최근 7개의 데이터만 표시
+        max: label.length,
       },
       y: {
         grid: {
-          display: true, //가로선
+          display: true,
         },
         position: 'right',
         min: -y_range,
@@ -77,7 +77,7 @@ function RoiChart({roistream}:RoiChartProps) {
         },
       },
     },
-  };
+  }), [label.length, y_range]);
 
   useEffect(() => {
     fetch(`http://localhost:30082/api/v1/invests/roi/daily`, {
@@ -92,17 +92,27 @@ function RoiChart({roistream}:RoiChartProps) {
         return res.json();
       })
       .then((data) => {
-        const roiData = data.total_roi.map((item: RoiData) => item.roi); // roi 값 배열 생성
-        const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]); // date 값 배열 생성
-        setRoi(roiData); // roi 상태 업데이트
-        setLabel(dateData); // label 상태 업데이트
+        console.log(data);
+        const roiData = data.total_roi.map((item: RoiData) => item.roi);
+        roiData.push(0);
 
+        const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]);
+        const today = new Date().toISOString().split('T')[0];
+        dateData.push(today);
+
+        setRoi(roiData);
+        setLabel(dateData);
       });
   }, []);
 
-  useEffect(()=>{
-    console.log(roi);
-  },[roistream])
+  useEffect(() => {
+    setRoi((prevArray) => {
+      const newArray = [...prevArray];
+      newArray[newArray.length - 1] = roistream;
+      return newArray;
+    });
+  }, [roistream]);
+
   return (
     <div className="w-full flex-grow flex justify-center items-center">
       <Line options={options} data={data} className="h-full" />

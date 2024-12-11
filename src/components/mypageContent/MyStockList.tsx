@@ -40,21 +40,21 @@ function MyStockList() {
       });
   }, []);
 
-  // 보유 주식 실시간 가격 변동
+  //보유 주식 실시간 가격 변동
   useEffect(() => {
     if (!isMarketOpen || !isLoaded) return ;
     
     const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime`,{withCredentials: true});
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data)
-      console.log(newData);
       
       setStockList((prevData)=>
       prevData.map((item=>
         item.symbol === newData.symbol?
         {...item, 
-          current_price:newData.current_price, 
-          price_difference:newData.price_difference, 
+          purchase_price:newData.total_investment,
+          current_price:newData.total_stock_value, 
+          price_difference:newData.price * newData.volume,
           roi:newData.roi, 
           total_stock_price:newData.total_stock_price 
         }
@@ -68,7 +68,7 @@ function MyStockList() {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [isLoaded]);
 
   return (
     <div className="flex flex-col justify-center items-center overflow-scroll m-[5px]">
@@ -96,7 +96,7 @@ function MyStockList() {
               <td className="text-right py-[10px] text-chart-font text-[17px] px-2">
                 <p>{(data.total_stock_prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</p>
                 <p className={`text-[13px] ${data.roi > 0 ? 'text-up' : 'text-down'}`}>
-                  {data.price_difference.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({data.roi})% 원
+                  {Math.floor(data.price_difference).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({data.roi})% 원
                 </p>
               </td>
             </tr>

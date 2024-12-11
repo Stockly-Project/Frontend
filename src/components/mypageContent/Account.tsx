@@ -38,7 +38,6 @@ function UserInfo() {
       .then((data) => {
         setUserAccount(data.data);
         setIsLoaded(true);
-        console.log(data)
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
@@ -54,7 +53,6 @@ function UserInfo() {
     });
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
-      console.log(newData);
       setUserAccount(newData);
     };
     eventSource.onerror = () => {
