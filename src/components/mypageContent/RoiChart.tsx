@@ -18,14 +18,15 @@ interface RoiChartProps {
 function RoiChart({ roistream }: RoiChartProps) {
   const [roi, setRoi] = useState<number[]>([]);
   const [label, setLabel] = useState<string[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const maxAbsoluteValue = useMemo(() => {
-    return roi.reduce((max, num) => Math.abs(num) > Math.abs(max) ? num : max, roi[0] || 0);
-  }, [roi]);
+  // const maxAbsoluteValue = useMemo(() => {
+  //   return roi.reduce((max, num) => (Math.abs(num) > Math.abs(max) ? num : max), roi[0] || 0);
+  // }, [roi]);
 
-  const y_range = useMemo(() => (Math.floor(maxAbsoluteValue / 10) + 1) * 10, [maxAbsoluteValue]);
+  //const y_range = useMemo(() => (Math.floor(maxAbsoluteValue / 10) + 1) * 10, [maxAbsoluteValue]);
 
-  const data = useMemo(() => ({
+  const data = {
     labels: label,
     datasets: [
       {
@@ -36,48 +37,33 @@ function RoiChart({ roistream }: RoiChartProps) {
         borderWidth: 1,
       },
     ],
-  }), [roi, label]);
-
-  const options: ChartOptions<'line'> = useMemo(() => ({
+  };
+  const options: ChartOptions<'line'> = {
     interaction: {
       mode: 'index',
       intersect: false,
     },
     scales: {
       x: {
-        grid: {
-          display: true,
-        },
+        grid: { display: true },
         min: label.length - 7,
         max: label.length,
       },
       y: {
-        grid: {
-          display: true,
-        },
+        grid: { display: true },
         position: 'right',
-        min: -y_range,
-        max: y_range,
+        // min: -y_range,
+        // max: y_range,
       },
     },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       zoom: {
-        pan: {
-          enabled: true,
-          mode: 'x',
-        },
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          mode: 'x',
-        },
+        pan: { enabled: true, mode: 'x' },
+        zoom: { wheel: { enabled: true }, mode: 'x' },
       },
     },
-  }), [label.length, y_range]);
+  };
 
   useEffect(() => {
     fetch(`http://localhost:30082/api/v1/invests/roi/daily`, {
@@ -87,30 +73,42 @@ function RoiChart({ roistream }: RoiChartProps) {
     })
       .then((res) => {
         if (!res.ok) {
-          console.log('네트워크 응답이 올바르지 않습니다');
+          throw new Error('네트워크 응답이 올바르지 않습니다');
         }
         return res.json();
       })
       .then((data) => {
-        const roiData = data.total_roi.map((item: RoiData) => item.roi);
-        roiData.push(0);
+        if (!data.total_roi || !Array.isArray(data.total_roi)) {
+          throw new Error('API 응답 데이터가 유효하지 않습니다');
+        }
 
+        const roiData = data.total_roi.map((item: RoiData) => item.roi);
         const dateData = data.total_roi.map((item: RoiData) => item.date.split('T')[0]);
+
+        roiData.push(0); // 더미 데이터 추가
         const today = new Date().toISOString().split('T')[0];
         dateData.push(today);
 
         setRoi(roiData);
         setLabel(dateData);
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.error('데이터 로드 중 오류 발생:', error);
       });
   }, []);
 
   useEffect(() => {
-    setRoi((prevArray) => {
-      const newArray = [...prevArray];
-      newArray[newArray.length - 1] = roistream;
-      return newArray;
-    });
-  }, [roistream]);
+    if (!isLoaded) return;
+
+    if (roi.length > 0) {
+      setRoi((prevArray) => {
+        const newArray = [...prevArray];
+        newArray[newArray.length - 1] = roistream;
+        return newArray;
+      });
+    }
+  }, [roistream, isLoaded]);
 
   return (
     <div className="w-full flex-grow flex justify-center items-center">
