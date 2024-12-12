@@ -41,17 +41,15 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
       credentials: 'include',
       body: JSON.stringify({
         order_type: '매수',
-        price_type: '시장가',
+        price_type: '지정가',
         symbol: symbol,
+        price: Number(price),
         quantity: Number(quantity),
       }),
     })
       .then((res) => {
-        if (res.status === 400) {
-          // 돈 부족 에러
-          alert('계좌에 돈이 부족합니다. 충전 후 이용해주세요.');
-        } else if (!res.ok) {
-          alert('네트워크 응답이 올바르지 않습니다.');
+        if (!res.ok) {
+          throw new Error('주문을 실패하였습니다.'); // 예외 발생
         }
         return res.json();
       })
@@ -59,6 +57,7 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
         alert('주문이 정상적으로 처리되었습니다.');
       })
       .catch((error) => {
+        alert(error.message || '오류가 발생하였습니다.'); // 실패 시 메시지 표시
         console.error('오류가 발생하였습니다:', error);
       });
   };

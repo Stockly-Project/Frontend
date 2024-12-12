@@ -53,6 +53,7 @@ const OrderBook = ({ symbol }: OrderBookProps) => {
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       setDatas(newData);
+
     };
     eventSource.onerror = () => {
       console.error('SSE connection error');

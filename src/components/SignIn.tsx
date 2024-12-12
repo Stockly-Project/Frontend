@@ -27,7 +27,7 @@ function SignIn() {
         gotoMain();
       } else {
         console.log('로그인 실패:', response); // 실패 응답 출력
-        alert('로그인 실패');
+        alert('이메일과 비밀번호가 일치하지 않습니다. 다시 시도해주세요');
       }
     } catch (error) {
       console.error('네트워크 오류:', error); // 네트워크 에러 출력

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import useMarketStore from '../../zustand/MarketStore';
+import { useNavigate } from 'react-router-dom';
 
 interface stockListItem {
   symbol: string;
@@ -13,9 +14,16 @@ interface stockListItem {
 }
 
 function MyStockList() {
-  const {isMarketOpen} = useMarketStore();
+  const navigate = useNavigate();
+  const { isMarketOpen } = useMarketStore();
   const [isLoaded, setIsLoaded] = useState(false);
   const [stocklist, setStockList] = useState<stockListItem[]>([]);
+
+  const gotoDetails = (symbol: string, name: string, initPrice: number, initRate: number, initRatePrice: number) => {
+    navigate(`/details/${symbol}`, {
+      state: { name: name, initPrice: initPrice, initRate: initRate, initRatePrice: initRatePrice },
+    });
+  };
 
   // 보유 주식 조회
   useEffect(() => {
@@ -42,25 +50,28 @@ function MyStockList() {
 
   //보유 주식 실시간 가격 변동
   useEffect(() => {
-    if (!isMarketOpen || !isLoaded) return ;
-    
-    const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime`,{withCredentials: true});
-    eventSource.onmessage = (event) => {
-      const newData = JSON.parse(event.data)
-      
-      setStockList((prevData)=>
-      prevData.map((item=>
-        item.symbol === newData.symbol?
-        {...item, 
-          purchase_price:newData.total_investment,
-          current_price:newData.total_stock_value, 
-          price_difference:newData.price * newData.volume,
-          roi:newData.roi, 
-          total_stock_price:newData.total_stock_price 
-        }
-        : item
-      )))
+    if (!isMarketOpen || !isLoaded) return;
 
+    const eventSource = new EventSource(`http://localhost:30082/api/v1/invests/roi/realtime`, {
+      withCredentials: true,
+    });
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data);
+
+      setStockList((prevData) =>
+        prevData.map((item) =>
+          item.symbol === newData.symbol
+            ? {
+                ...item,
+                purchase_price: newData.total_investment,
+                current_price: newData.total_stock_value,
+                price_difference: newData.price * newData.volume,
+                roi: newData.roi,
+                total_stock_price: newData.total_stock_price,
+              }
+            : item,
+        ),
+      );
     };
     eventSource.onerror = (error) => {
       console.error('SSE connection error', error);
@@ -75,28 +86,37 @@ function MyStockList() {
       <table className="w-full">
         <thead>
           <tr className="border-b border-[#dddddd]">
-            <th className="text-left w-[15%] py-[10px] text-chart-font px-2">종목</th>
-            <th className="text-right w-[15%] py-[10px] text-chart-font">구매가</th>
-            <th className="text-right w-[15%] py-[10px] text-chart-font">현재가</th>
+            <th className="text-left w-[20%] py-[10px] text-chart-font px-2">종목</th>
+            {/* <th className="text-right w-[15%] py-[10px] text-chart-font">구매가</th> */}
+            <th className="text-left w-[20%] py-[10px] text-chart-font">현재가</th>
             <th className="text-right w-[10%] py-[10px] text-chart-font">수량</th>
             <th className="text-right w-[20%] py-[10px] text-chart-font px-2">총합</th>
           </tr>
         </thead>
         <tbody>
           {stocklist.map((data, index) => (
-            <tr key={index} className="rounded-[5px] hover:bg-Bg-gray cursor-pointer">
+            <tr
+              key={index}
+              className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"
+              onClick={() => {
+                gotoDetails(data.symbol, data.name, data.current_price/data.volume, data.roi, data.price_difference);
+              }}
+            >
               <td className="text-left py-[10px] text-chart-font px-2 text-[17px]">{data.name}</td>
-              <td className="text-right py-[10px] text-chart-font text-[17px]">
+              {/* <td className="text-right py-[10px] text-chart-font text-[17px]">
                 {data.purchase_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원
-              </td>
-              <td className={`text-right py-[10px] text-chart-font text-[17px]`}>
+              </td> */}
+              <td className={`text-left py-[10px] text-chart-font text-[17px]`}>
                 {data.current_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
               </td>
               <td className="text-right py-[10px] text-chart-font text-[17px]">{data.volume}주</td>
               <td className="text-right py-[10px] text-chart-font text-[17px] px-2">
-                <p>{(data.total_stock_prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</p>
+                <p>{data.total_stock_prices.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</p>
                 <p className={`text-[13px] ${data.roi > 0 ? 'text-up' : 'text-down'}`}>
-                  {Math.floor(data.price_difference).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원 ({data.roi})% 원
+                  {Math.floor(data.price_difference)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  원 ({data.roi})% 원
                 </p>
               </td>
             </tr>

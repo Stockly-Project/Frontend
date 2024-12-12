@@ -92,6 +92,7 @@ function RoiChart({ roistream }: RoiChartProps) {
         setRoi(roiData);
         setLabel(dateData);
         setIsLoaded(true);
+        console.log(roiData)
       })
       .catch((error) => {
         console.error('데이터 로드 중 오류 발생:', error);

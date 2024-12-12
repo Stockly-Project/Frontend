@@ -143,7 +143,7 @@ function MyOrderList() {
       <div className="h-[20px]" />
       <table className="w-[98%]">
         <tr className="">
-          <th className="text-left w-[17%] py-[10px] text-chart-font px-1">날짜</th>
+          <th className="text-left w-[20%] py-[10px] text-chart-font px-1">날짜</th>
           <th className="text-right w-[14%] py-[10px] text-chart-font">종목</th>
           <th className="text-right w-[18%] py-[10px] text-chart-font">거래유형</th>
           <th className="text-right w-[13%] py-[10px] text-chart-font">수량</th>
@@ -152,7 +152,7 @@ function MyOrderList() {
         </tr>
         {filteredOrderList.map((order) => (
           <tr className="rounded-[5px] hover:bg-Bg-gray">
-            <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">{(order.date).split('T')[0]}</td>
+            <td className="text-left flex py-[10px] text-chart-font px-1 text-[18px]">{(order.date).split('T')[0]}&nbsp;{(order.date).split('T')[1]}</td>
             <td className="text-right py-[10px] text-chart-font text-[18px]">{order.company_name}</td>
             <td
               className={`text-right py-[10px] text-chart-font text-[18px] ${order.order_type === '매수' ? 'text-up' : 'text-down'}`}

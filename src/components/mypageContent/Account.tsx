@@ -17,11 +17,25 @@ interface userAccountData {
   total_asset: number;
 }
 
-function UserInfo() {
+interface AccountProps {
+  dirty: boolean;
+}
+
+const Blur = () => {
+  return (
+    <div className="w-full h-full flex flex-col justify-center items-center">
+      <p className="text-[22px]">주식을 구매하고 내 자산을 관리해보세요 !</p>
+      <a href="/" className="text-MainBlue text-[15px]">주식 구매하러 가기</a>
+    </div>
+  );
+};
+
+function UserInfo({ dirty }: AccountProps) {
   const { isMarketOpen } = useMarketStore();
-  const initData = { roi: 0, cash: 0, total_investment: 0, total_stock_value: 0, asset_difference: 0, total_asset:0};
+  const initData = { roi: 0, cash: 0, total_investment: 0, total_stock_value: 0, asset_difference: 0, total_asset: 0 };
   const [userAccount, setUserAccount] = useState<userAccountData>(initData); // 총자산, 예수금, 주식, 수익률 정보
   const [isLoaded, setIsLoaded] = useState(false);
+  const [openHoldings, setOpenHoldings] = useState(true);
 
   useEffect(() => {
     fetch('http://localhost:30082/api/v1/invests/roi/total/latest', {
@@ -38,6 +52,7 @@ function UserInfo() {
       .then((data) => {
         setUserAccount(data.data);
         setIsLoaded(true);
+        console.log(data);
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
@@ -64,7 +79,6 @@ function UserInfo() {
     };
   }, [isLoaded]);
 
-  const [openHoldings, setOpenHoldings] = useState(false);
   return (
     <div className="mx-[20px] my-[10px]">
       {/* 내 자산 */}
@@ -79,8 +93,15 @@ function UserInfo() {
             {userAccount.asset_difference.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원 ({userAccount.roi}%){' '}
           </div>
         </div>
-        <div>
-          <RoiChart roistream={userAccount.roi} />
+        <div className="relative w-full h-full">
+          <div className={`${!dirty && 'blur-[2px]'}`}>
+            <RoiChart roistream={userAccount.roi} />
+          </div>
+          {!dirty && (
+            <div className="absolute inset-0 bg-white/70 flex items-center justify-center ">
+              <Blur />
+            </div>
+          )}
         </div>
         <div className="h-[30px]" />
 

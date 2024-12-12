@@ -52,6 +52,7 @@ function TopNavBar({ color }: TopNavBarProps) {
   };
 
   const goToMypage = () => {
+    handleClick('mypage')
     navigate('/mypage');
   };
 
@@ -156,6 +157,14 @@ function TopNavBar({ color }: TopNavBarProps) {
               }}
             >
               <MenuItem> {name} 님, 반가워요</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  goToMypage();
+                }}
+              >
+                마이페이지
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   handleClose();

@@ -33,7 +33,13 @@ function SellLimit({ symbol, volume }: SellLimitProps) {
   };
 
   useEffect(() => {
-    if (Number(price) > 0 && price[0] !== '0' && Number(quantity) > 0 && quantity[0] !== '0' && volume >= Number(quantity)) {
+    if (
+      Number(price) > 0 &&
+      price[0] !== '0' &&
+      Number(quantity) > 0 &&
+      quantity[0] !== '0' &&
+      volume >= Number(quantity)
+    ) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -54,11 +60,8 @@ function SellLimit({ symbol, volume }: SellLimitProps) {
       }),
     })
       .then((res) => {
-        if (res.status === 400) {
-          // 돈 부족 에러
-          alert('보유 주식 수보다 많은 주식을 팔려고 하시네요.');
-        } else if (!res.ok) {
-          alert('네트워크 응답이 올바르지 않습니다.');
+        if (!res.ok) {
+          throw new Error('주문을 실패하였습니다.'); // 예외 발생
         }
         return res.json();
       })
@@ -66,6 +69,7 @@ function SellLimit({ symbol, volume }: SellLimitProps) {
         alert('주문이 정상적으로 처리되었습니다.');
       })
       .catch((error) => {
+        alert(error.message || '오류가 발생하였습니다.'); // 실패 시 메시지 표시
         console.error('오류가 발생하였습니다:', error);
       });
   };
