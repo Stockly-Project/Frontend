@@ -52,7 +52,7 @@ function UserInfo({ dirty }: AccountProps) {
       .then((data) => {
         setUserAccount(data.data);
         setIsLoaded(true);
-        console.log(data);
+        console.log("최신조회:", data);
       })
       .catch((error) => {
         console.error('오류가 발생하였습니다:', error);
@@ -69,6 +69,7 @@ function UserInfo({ dirty }: AccountProps) {
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       setUserAccount(newData);
+      console.log("실시간조회:",newData)
     };
     eventSource.onerror = () => {
       console.error('SSE connection error');

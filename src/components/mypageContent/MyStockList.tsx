@@ -64,10 +64,10 @@ function MyStockList() {
             ? {
                 ...item,
                 purchase_price: newData.total_investment,
-                current_price: newData.total_stock_value,
+                current_price: newData.current_price,
                 price_difference: newData.price * newData.volume,
                 roi: newData.roi,
-                total_stock_price: newData.total_stock_price,
+                total_stock_prices: newData.total_stock_value,
               }
             : item,
         ),
@@ -99,7 +99,7 @@ function MyStockList() {
               key={index}
               className="rounded-[5px] hover:bg-Bg-gray cursor-pointer"
               onClick={() => {
-                gotoDetails(data.symbol, data.name, data.current_price/data.volume, data.roi, data.price_difference);
+                gotoDetails(data.symbol, data.name, data.current_price, data.roi, data.price_difference);
               }}
             >
               <td className="text-left py-[10px] text-chart-font px-2 text-[17px]">{data.name}</td>
