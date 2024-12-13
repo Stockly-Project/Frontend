@@ -1,13 +1,13 @@
-import { IoHeart } from 'react-icons/io5';
+// import { IoHeart } from 'react-icons/io5';
 import { FaRegClock } from 'react-icons/fa6';
 import { FaBell } from 'react-icons/fa';
-import MenuBarLikeContent from './MenuBarLikeContent';
+// import MenuBarLikeContent from './MenuBarLikeContent';
 import MenuBarChartContent from './/MenuBarChartContent';
 import MenuBarAlertContent from './MenuBarAlertContent';
 import useDrawerStore from '../../zustand/MenuBarStore';
 
 function MenuBar() {
-  const { openDrawer, like, alert, chart, handleDrawer } = useDrawerStore();
+  const { openDrawer, alert, chart, handleDrawer } = useDrawerStore();
 
   return (
     <div className={`flex h-[100vh] fixed top-0 right-0 `}>
@@ -17,13 +17,13 @@ function MenuBar() {
         }`}
       >
         <>
-          {like && <MenuBarLikeContent />}
+          {/* {like && <MenuBarLikeContent />} */}
           {alert && <MenuBarAlertContent />}
           {chart && <MenuBarChartContent />}
         </>
       </div>
       <div className="w-[65px] bg-Bg-gray border-l solid border-[#cfcfcf] flex flex-col z-10">
-        <button
+        {/* <button
           className="flex flex-col justify-center items-center m-[10px] group"
           onClick={() => handleDrawer('like')}
         >
@@ -38,7 +38,7 @@ function MenuBar() {
               <p className="text-font-gray group-hover:text-[#06032d] text-[15px]">관심</p>
             </>
           )}
-        </button>
+        </button> */}
 
         <button
           className="flex flex-col justify-center items-center m-[10px] group"
