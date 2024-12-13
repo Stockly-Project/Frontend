@@ -55,7 +55,7 @@ const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
       if (newData.length === 1) {
         setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
       } else {
-        setStockData([...newData, dummyData]);
+        setStockData([...newData, newData[newData.length-1]]);
       }
     };
     eventSource.onerror = () => {
