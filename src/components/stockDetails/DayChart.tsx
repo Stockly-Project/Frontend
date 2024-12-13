@@ -45,11 +45,11 @@ const DayChart = ({symbol, newStockData} : DayChartProps) => {
         const today = new Date();
         const dummyData: StockData = {
           date: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`,
-          open: 0,
-          low: 0,
-          high: 0,
-          close: 0,
-          volume: 0,
+          open: data[data.length-1].open,
+          low: data[data.length-1].low,
+          high: data[data.length-1].high,
+          close: data[data.length-1].close,
+          volume: data[data.length-1].volume,
           rate: 0,
           rate_price: 0,
           symbol: '',
