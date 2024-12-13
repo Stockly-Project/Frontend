@@ -53,7 +53,7 @@ const MinChart = ({symbol, newStockData, filter} : MinChartProps) => {
     eventSource.onmessage = (event) => {
       const newData = JSON.parse(event.data);
       if (newData.length === 1) {
-        setStockData((prev) => [...prev.slice(0,-1), newData[0], dummyData]);
+        setStockData((prev) => [...prev.slice(0,-1), newData[0], newData[0]]);
       } else {
         setStockData([...newData, newData[newData.length-1]]);
       }
