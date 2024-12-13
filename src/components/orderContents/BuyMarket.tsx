@@ -41,7 +41,7 @@ function BuyMarket({ price, symbol, cash }: BuyMarketProps) {
       credentials: 'include',
       body: JSON.stringify({
         order_type: '매수',
-        price_type: '지정가',
+        price_type: '시장가',
         symbol: symbol,
         price: Number(price),
         quantity: Number(quantity),
